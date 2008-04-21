@@ -2,15 +2,47 @@ h1. lockdown
 
 h1. &#x2192; 'lockdown'
 
+h3. Lockdown has not been officially released!  This page is a Work-In-Progress. The first version will be released by May 1st. 
 
 h2. What
 
+Lockdown is a authentication/authorization system for Merb.  Rails support will be completed in future releases, more testing is needed for deployment.  Some model level access right functionality will also be added in the near future.
 
 h2. Installing
 
-<pre syntax="ruby">sudo gem install lockdown</pre>
+For the people who don't care to know the details and just want to get the system installed:
 
-h2. The basics
+<pre>
+$ sudo gem install lockdown
+$ cd <your_project_directory>
+$ lockdown .
+</pre>
+
+This will create a "lockdown" directory in the lib dir add two files: access.rb and session.rb.  Modify access.rb to define the rules that apply to your system.
+
+I recommend reading this page to get a feel for Lockdown's functionality.  
+
+h2. Some History
+
+Lockdown was initially designed as a authentication/authorization system to be configured by system administrators. This means it was database driven and had an interface to manage the access rights.  I didn't like the static methodology of using code scattered amongst the controllers to define my access rights for the system.  I also didn't like the fact that everything was accessible unless you restricted access.  So, I designed Lockdown to restrict access to all resources unless rights have been granted. 
+
+The system was nice and worked well until I had a project that required RSpec tests.  I don't have anything against testing frameworks (now that I've see the light) but what bothered me most what the fact that I would have to duplicate the information I already defined in my migrations as mock data.  I simply refused to do that extra work.  So, a serious refactoring of Lockdown was required.
+
+<blockquote>This is where the access.rb file was born. This file contains the rules that grant/deny access to your system.  More on this later.</blockquote>
+
+After the RSpec project was completed, the refactoring continued.  This time the focus was on releasing the code to the masses.  I like this system a lot and think both the system itself and the community could benefit from releasing this as an open source project.  
+
+In the middle of my refactoring for a public release, I made the decision to use Merb (when the choice was mine). This meant I needed to modify Lockdown for use with Merb.  So this is what I have done.
+
+There is code in place for using Lockdown with Rails, after all, that's where Lockdown was born.  However, I have not yet tested the Rails functionality after this last refactor.  In addition, the deployment mechanism for Rails has to be tested.
+
+Writing code for public release is difficult and much different from architecting/coding for a closed source project.  A lot of things you could get by with in a proprietary application won't be well received by the general public.  In addition, if you don't make things easy, the adoption rate will probably be non-existent.
+
+
+h2. Features
+
+The goal of Lockdown is to give you only what you want from the system.  Eventually, Lockdown
+<pre syntax="ruby">sudo gem install lockdown</pre>
 
 
 h2. Demonstration of usage
@@ -19,65 +51,22 @@ h2. Demonstration of usage
 
 h2. Forum
 
-"http://groups.google.com/group/lockdown":http://groups.google.com/group/lockdown
+"http://groups.google.com/group/stonean_lockdown?hl=en":http://groups.google.com/group/stonean_lockdown?hl=en
 
-TODO - create Google Group - lockdown
 
 h2. How to submit patches
 
+The Clone URL: git://github.com/stonean/lockdown.git
+
 Read the "8 steps for fixing other people's code":http://drnicwilliams.com/2007/06/01/8-steps-for-fixing-other-peoples-code/ and for section "8b: Submit patch to Google Groups":http://drnicwilliams.com/2007/06/01/8-steps-for-fixing-other-peoples-code/#8b-google-groups, use the Google Group above.
 
-TODO - pick SVN or Git instructions
-
-The trunk repository is <code>svn://rubyforge.org/var/svn/lockdown/trunk</code> for anonymous access.
-
-OOOORRRR
-
-You can fetch the source from either:
-
-<% if rubyforge_project_id %>
-
-* rubyforge: "http://rubyforge.org/scm/?group_id=<%= rubyforge_project_id %>":http://rubyforge.org/scm/?group_id=<%= rubyforge_project_id %>
-
-<pre>git clone git://rubyforge.org/lockdown.git</pre>
-
-<% else %>
-
-* rubyforge: MISSING IN ACTION
-
-TODO - You can not created a RubyForge project, OR have not run <code>rubyforge config</code>
-yet to refresh your local rubyforge data with this projects' id information.
-
-When you do this, this message will magically disappear!
-
-Or you can hack website/index.txt and make it all go away!!
-
-<% end %>
-
-* github: "http://github.com/GITHUB_USERNAME/lockdown/tree/master":http://github.com/GITHUB_USERNAME/lockdown/tree/master
-
-<pre>git clone git://github.com/GITHUB_USERNAME/lockdown.git</pre>
-
-
-TODO - add "github_username: username" to ~/.rubyforge/user-config.yml and newgem will reuse it for future projects.
-
-
-* gitorious: "git://gitorious.org/lockdown/mainline.git":git://gitorious.org/lockdown/mainline.git
-
-<pre>git clone git://gitorious.org/lockdown/mainline.git</pre>
-
-h3. Build and test instructions
-
-<pre>cd lockdown
-rake test
-rake install_gem</pre>
-
+I'm new to git and this whole opensource project admin gig, so please be patient with my stumbling around.
 
 h2. License
 
-This code is free to use under the terms of the MIT license. 
+This code is free to use under the terms of the MIT license.
 
 h2. Contact
 
-Comments are welcome. Send an email to "FIXME full name":mailto:FIXME email via the "forum":http://groups.google.com/group/lockdown
+Comments and suggestions are welcome via the "forum":http://groups.google.com/group/stonean_lockdown?hl=en
 

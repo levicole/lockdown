@@ -8,7 +8,12 @@ Rakefile
 config/hoe.rb
 config/requirements.rb
 lib/lockdown.rb
+lib/lockdown/controller.rb
+lib/lockdown/controller_inspector.rb
+lib/lockdown/helper.rb
+lib/lockdown/model.rb
 lib/lockdown/version.rb
+lib/lockdown/view.rb
 script/console
 script/destroy
 script/generate
