@@ -5,6 +5,7 @@ PostInstall.txt
 README
 README.txt
 Rakefile
+bin/lockdown
 config/hoe.rb
 config/requirements.rb
 lib/lockdown.rb
@@ -22,6 +23,8 @@ setup.rb
 tasks/deployment.rake
 tasks/environment.rake
 tasks/website.rake
+templates/access.rb
+templates/session.rb
 test/test_helper.rb
 test/test_lockdown.rb
 website/index.html

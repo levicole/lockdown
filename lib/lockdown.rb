@@ -60,3 +60,10 @@ module Lockdown
   end # class block
                        
 end
+
+require "lockdown/helper.rb"
+require "lockdown/controller_inspector.rb"
+require "lockdown/controller.rb"
+require "lockdown/model.rb"
+require "lockdown/view.rb"
+
