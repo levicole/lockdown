@@ -1,32 +1,38 @@
 = lockdown
 
-* FIX (url)
+http://lockdown.rubyforge.org
 
 == DESCRIPTION:
 
-FIX (describe your package)
+Lockdown is a authentication/authorization system for RubyOnRails and Merb. 
 
-== FEATURES/PROBLEMS:
-
-* FIX (list of features or problems)
-
-== SYNOPSIS:
-
-  FIX (code sample of usage)
+For more information please visit the rubyforge site.
 
 == REQUIREMENTS:
 
-* FIX (list of requirements)
+Lockdown currently supports:
+Frameworkds: RubyOnRails or Merb
+ORMs: ActiveRecord or DataMapper
 
 == INSTALL:
 
-* FIX (sudo gem install, anything else)
+# Install the gem
+sudo gem install lockdown
+
+# Go to your application root directory
+cd <your application>
+
+# Install lockdown to your application
+lockdown .
+
+# Modify lib/lockdown/access.rb to grant access to your application
+# Modify lib/lockdown/session.rb to add/remove session information
 
 == LICENSE:
 
 (The MIT License)
 
-Copyright (c) 2008 FIX
+Copyright (c) 2008 Andrew Stone
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
