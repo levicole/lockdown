@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require "rubygems"
 require "rubigen"
 require "rubigen/scripts/generate"
 
@@ -55,16 +56,21 @@ puts <<-MSG
 ... Installing Lockdown
 MSG
 
+begin
 source = RubiGen::PathSource.new(:application,
                                    File.join(File.dirname(__FILE__), "../app_generators"))
 RubiGen::Base.reset_sources
 RubiGen::Base.append_sources source
 RubiGen::Scripts::Generate.new.run(ARGV, :generator => 'lockdown')
 
-
-File.open(config, "a") do |f|
+File.open(config_file, "a") do |f|
   f << %Q(\nrequire "lockdown/access"\n)
   f << %Q(require "lockdown/session"\n\n)
+end
+
+rescue Exception => e
+  puts e.backtrace.join("\n")
+  raise e
 end
 
 puts <<-MSG

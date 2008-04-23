@@ -8,6 +8,8 @@ Rakefile
 app_generators/lockdown/USAGE
 app_generators/lockdown/lockdown_generator.rb
 app_generators/lockdown/lockdown_generator.rb.orig
+app_generators/lockdown/templates/access.rb
+app_generators/lockdown/templates/session.rb
 bin/lockdown
 config/hoe.rb
 config/requirements.rb
@@ -26,8 +28,6 @@ setup.rb
 tasks/deployment.rake
 tasks/environment.rake
 tasks/website.rake
-templates/access.rb
-templates/session.rb
 test/test_generator_helper.rb
 test/test_helper.rb
 test/test_lockdown.rb
