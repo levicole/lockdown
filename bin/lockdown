@@ -52,47 +52,67 @@ BANNER
   opts.parse!(ARGV)
 end 
 
+@configuration = File.open config_file do |f|
+   f.map {|line| line.chomp}
+end
+
+def configuration_file_has?(req)
+  @configuration.include?(req)
+end
+
 puts <<-MSG
-... Installing Lockdown
+\n------------------------------------------------------------
+Installing Lockdown
 MSG
 
 begin
-source = RubiGen::PathSource.new(:application,
+  source = RubiGen::PathSource.new(:application,
                                    File.join(File.dirname(__FILE__), "../app_generators"))
-RubiGen::Base.reset_sources
-RubiGen::Base.append_sources source
-RubiGen::Scripts::Generate.new.run(ARGV, :generator => 'lockdown')
+  RubiGen::Base.reset_sources
+  RubiGen::Base.append_sources source
+  RubiGen::Scripts::Generate.new.run(ARGV, :generator => 'lockdown')
 
-File.open(config_file, "a") do |f|
-  f << %Q(\nrequire "lockdown/access"\n)
-  f << %Q(require "lockdown/session"\n\n)
-end
+  File.open(config_file, "a") do |f|
+    require_access =  %Q(require "lockdown/access")
+    require_session = %Q(require "lockdown/session")
 
+    f << %Q(\n#{require_access}\n) unless configuration_file_has?(require_access)
+
+    f << %Q(#{require_session}\n\n) unless configuration_file_has?(require_session)
+  end
 rescue Exception => e
   puts e.backtrace.join("\n")
   raise e
 end
 
 puts <<-MSG
-... Modified #{config_file} by adding:
-    require "lockdown/access"
-    require "lockdown/session"
+------------------------------------------------------------\n
 MSG
 
 puts <<-MSG
-... You are now locked down.  To open up access to your application 
-    please modify lib/lockdown/access.rb.  This is where you'll 
-    add permissions and create user groups.
+\n------------------------------------------------------------
+Modified #{config_file} by adding:
+    require "lockdown/access"
+    require "lockdown/session"
+------------------------------------------------------------\n
+MSG
 
-    To modify the contents of your session and to add access 
-    methods, modify lib/lockdown/session.rb.
+puts <<-MSG
+\n------------------------------------------------------------
+You are now locked down.  To open up access to your application 
+please modify lib/lockdown/access.rb.  This is where you'll 
+add permissions and create user groups.
 
-    If you want to know more, please visit:
+To modify the contents of your session and to add access 
+methods, modify lib/lockdown/session.rb.
 
-    http://lockdown.rubyforge.org
+If you want to know more, please visit:
 
-    If you have any suggestions, comments or issues 
-    please visit the Lockdown Google group:
+http://lockdown.rubyforge.org
 
-    http://groups.google.com/group/stonean_lockdown?hl=en
+If you have any suggestions, comments or issues 
+please visit the Lockdown Google group:
+
+http://groups.google.com/group/stonean_lockdown?hl=en
+------------------------------------------------------------\n
 MSG

@@ -7,7 +7,9 @@ module Lockdown
     include Lockdown::Helper
     def set_session_user(user)
       if user.nil?
-        reset_session
+        session.each do |key,value|
+          session[key] = nil if key.to_s =~ /^user_|access_/
+        end
         return
       end
       session[:user_id] = user.id
@@ -17,11 +19,6 @@ module Lockdown
       if user.user_groups
         session[:user_groups] = syms_from_names(user.user_groups)
       end
-      #
-      # Have the helper repopulate the menu with the access allowed
-      # for the current user
-      #
-      session[:menu] = nil
     end
       
     def current_user
