@@ -31,25 +31,12 @@ module Lockdown
   #                                 "products/destroy"]
   #
   module Permissions
-    class << self
-      include Lockdown::ControllerInspector
-      
-      def[](sym)
-				raise NameError.new("#{sym} is not defined") unless respond_to?(sym)
-				send(sym)
-      end
-      
-      def access_rights_for(ary)
-        ary.collect{|m| send(m)}.flatten
-      end
-
-      def all
-        all_controllers
-      end
-      
+    class << self      
+            
       def sessions_management
-        all_methods :sessions
+       # all_methods :sessions
       end
+      
     end # end class block
   end # end Permissions module
   
@@ -59,30 +46,13 @@ module Lockdown
   # 
   module UserGroups
     class << self
-			def[](sym)
-				permissions(sym).collect{|rec| Lockdown::Permissions[rec]}.flatten
-      end
-
-			def permissions(sym)
-				if self.private_records.include?(sym)
-					return self.send(sym)
-				end
-
-			  static_permissions(sym)
-      end
-
-			def static_permissions(sym)
-				raise NameError.new("#{sym} is not defined") unless respond_to?(sym) 
-				send(sym)
-      end
-
       #
       # This method defines which UserGroups cannot be managed
       # via the management screens. 
       # 
       # Users can still be assigned to these groups.
       #
-			def private_records
+      def private_records
         [:administrators]
       end
       #
@@ -96,7 +66,7 @@ module Lockdown
       end
       
       # ** The administrator method is "special", please don't rename.
-      #			If you remove/rename, etc... YOU WILL BREAK STUFF
+      #     If you remove/rename, etc... YOU WILL BREAK STUFF
       #
       # Standard administrator user group.
       # Please don't alter without careful consideration.
@@ -106,7 +76,7 @@ module Lockdown
       end
       
       # ** The public_access method is "special", please don't rename.
-      #			If you remove/rename, etc... YOU WILL BREAK STUFF
+      #     If you remove/rename, etc... YOU WILL BREAK STUFF
       #
       # Standard public_access user group.  
       #
@@ -121,17 +91,18 @@ module Lockdown
       end
       
       # ** The registered_users method is "special", please don't rename.
-      #			Not as special as the others, but still...
+      #     Not as special as the others, but still...
       #
-			# All newly created users are assigned to this User Group by default
-			#
-			def registered_users
-				#[:my_account]
+      # All newly created users are assigned to this User Group by default
+      #
+      def registered_users
+        #[:my_account]
       end
 
       #
       # Define your own user groups below
       #
+      
     end # end class block
   end # end UserGroups module
 end # end Lockdown module

@@ -58,12 +58,57 @@ module Lockdown
 
     end
   end # class block
-                       
-end
+  
+  require "lockdown/helper.rb"
+  require "lockdown/controller_inspector.rb"
+  require "lockdown/controller.rb"
+  require "lockdown/model.rb"
+  require "lockdown/view.rb"
 
-require "lockdown/helper.rb"
-require "lockdown/controller_inspector.rb"
-require "lockdown/controller.rb"
-require "lockdown/model.rb"
-require "lockdown/view.rb"
+  module Permissions#:nodoc:
+    class << self
+      include Lockdown::ControllerInspector
+      
+      def[](sym)
+        raise NameError.new("#{sym} is not defined") unless respond_to?(sym)
+        send(sym)
+      end
+      
+      def access_rights_for(ary)
+        ary.collect{|m| send(m)}.flatten
+      end
+
+      def all
+        all_controllers
+      end
+    end # class block
+  end # permissions
+
+  module UserGroups#:nodoc:
+    class << self
+      def[](sym)
+        permissions(sym).collect{|rec| Lockdown::Permissions[rec]}.flatten
+      end
+
+      def permissions(sym)
+        if self.private_records.include?(sym)
+          return self.send(sym)
+        end
+
+        static_permissions(sym)
+      end
+
+      def static_permissions(sym)
+        raise NameError.new("#{sym} is not defined") unless respond_to?(sym)
+        send(sym)
+      end
+    end # class block
+  end # usergroups
+
+ # module Session
+ #   protected 
+ #   include Lockdown::Session
+ # 
+ # end
+end
 

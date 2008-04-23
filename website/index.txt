@@ -6,7 +6,13 @@ h3. Lockdown has not been officially released!  This page is a Work-In-Progress.
 
 h2. What
 
-Lockdown is a authentication/authorization system for Merb.  Rails support will be completed in future releases, more testing is needed for deployment.  Some model level access right functionality will also be added in the near future.
+Lockdown is a authentication/authorization system for RubyOnRails and Merb designed for simplicity and extensibility.  All access rules are in (initially) defined in lib/lockdown/access.rb.  With the included ORM support (ActiveRecord or DataMapper) and management screens you can add user defined rules to the system.
+
+If there is a "spec" directory, a test helper file will be included to provied some basic functionality for use with RSpec. This will show you how to create mock user objects and sign in as an adminstrator.
+
+Also included is functionality to auto-populate created_by and updated_by fields.
+
+Some model level access right functionality will also be added in the near future.
 
 h2. Installing
 
@@ -21,6 +27,134 @@ $ lockdown .
 This will create a "lockdown" directory in the lib dir add two files: access.rb and session.rb.  Modify access.rb to define the rules that apply to your system.
 
 I recommend reading this page to get a feel for Lockdown's functionality.  
+
+h2. How it works
+
+Lockdown stores an array of access rights in the session.  For example, if you have a standard REST users controller, the access rights would be:
+<pre>
+  users/index
+  users/show
+  users/edit
+  users/update
+  users/new
+  users/create
+  users/destroy (delete for Merb)
+</pre>
+
+The above list will be stored in the session as an array and each request is tested against this list.  So this means, you <strong>should not use client side session storage</strong>.  If you can, I recommend using memcache, but a database session store will suffice.
+
+To define access rights you need to modify lib/lockdown/access.rb.  This is the default access.rb included with Lockdown:
+<pre syntax="ruby">
+  require "lockdown"
+
+  module Lockdown
+  #
+  #
+  # Permissions are used to group access rights into logical components.
+  # Each method defined in the Permissions module represents an array
+  # of methods from a controller (or multiple controllers.)
+  # 
+  # Controller methods available are: 
+  #
+  #   # Returns all methods from all controllers
+  #   all_controllers
+  #  
+  #   # Returns all methods from all controllers listed
+  #   all_methods :controller1, controller2, ...
+  #  
+  #   # For a single controller, returns only methods listed
+  #   only_methods :controller1, :method1, :method2, ...
+  #  
+  #   # For a single controller, returns all methods except the methods listed
+  #   all_except_methods :controller1, :method1, :method2, ...
+  #
+  #   They all return an array of controller/action.  For example, if you had a
+  #   standard REST controller called products this would be the result:
+  #
+  #
+  #     all_methods :products  => [ "products/index , "products/show",
+  #                                 "products/new", "products/edit",
+  #                                 "products/create", "products/update",
+  #                                 "products/destroy"]
+  #
+    module Permissions
+      class << self
+ 
+        def sessions_management
+          # all_methods :sessions
+        end
+
+      end # end class block
+    end # end Permissions module
+ 
+  #
+  # UserGroups are used to group Permissions together to define role type
+  # functionality. Users may belong to multiple groups.
+  # 
+    module UserGroups
+      class << self
+
+        #
+        # This method defines which UserGroups cannot be managed
+        # via the management screens. 
+        # 
+        # Users can still be assigned to these groups.
+        #
+        def private_records
+          [:administrators]
+        end
+        #
+        # This method defines which UserGroups have limited access
+        # via the management screens. Deletion is not allowed.
+        # 
+        # Users can still be assigned to these groups.
+        #
+        def protected_records
+          [:public_access, :registered_users]
+        end
+         
+        # ** The administrator method is "special", please don't rename.
+        #			If you remove/rename, etc... YOU WILL BREAK STUFF
+        #
+        # Standard administrator user group.
+        # Please don't alter without careful consideration.
+        #
+        def administrators
+          [:all]
+        end
+         
+        # ** The public_access method is "special", please don't rename.
+        #			If you remove/rename, etc... YOU WILL BREAK STUFF
+        #
+        # Standard public_access user group.  
+        #
+        # Feel free to add Permissions to the array without issue.
+        #
+        # **Notice:  All permissions added to this public_access group will not be
+        #             restricted to logged in users.
+        #             So be careful what you add here!
+        #
+        def public_access
+          [:sessions_management] 
+        end
+ 
+        # ** The registered_users method is "special", please don't rename.
+        #			Not as special as the others, but still...
+        #
+        # All newly created users are assigned to this User Group by default
+        #
+        def registered_users
+          #[:my_account]
+        end
+
+        #
+        # Define your own user groups below
+        #
+      end # end class block
+    end # end UserGroups module
+  end # end Lockdown module
+</pre>
+
 
 h2. Some History
 
@@ -41,12 +175,24 @@ Writing code for public release is difficult and much different from architectin
 
 h2. Features
 
-The goal of Lockdown is to give you only what you want from the system.  Eventually, Lockdown
-<pre syntax="ruby">sudo gem install lockdown</pre>
+<strong>I have these components (for the most part)...figuring out how to package them.  The following is just an idea right now... </strong>
+<br/>
+<br/>
+The goal of Lockdown is to give you only what you want from the system.  
 
+The initial install is all that is required to lock down your system.  However, you'll probably want the authorization functionality.  You can get this by: 
 
-h2. Demonstration of usage
+<pre syntax="ruby">rake lockdown:install:authorization</pre>
 
+If you want to install ORM support:
+
+<pre syntax="ruby">rake lockdown:install:orm</pre>
+
+If you want to install management screens (ORM support included):
+<pre syntax="ruby">rake lockdown:install:management</pre>
+
+If you want to install authorization + management screens:
+<pre syntax="ruby">rake lockdown:install:all</pre>
 
 
 h2. Forum

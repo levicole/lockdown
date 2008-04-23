@@ -5,6 +5,9 @@ PostInstall.txt
 README
 README.txt
 Rakefile
+app_generators/lockdown/USAGE
+app_generators/lockdown/lockdown_generator.rb
+app_generators/lockdown/lockdown_generator.rb.orig
 bin/lockdown
 config/hoe.rb
 config/requirements.rb
@@ -25,8 +28,10 @@ tasks/environment.rake
 tasks/website.rake
 templates/access.rb
 templates/session.rb
+test/test_generator_helper.rb
 test/test_helper.rb
 test/test_lockdown.rb
+test/test_lockdown_generator.rb
 website/index.html
 website/index.txt
 website/javascripts/rounded_corners_lite.inc.js

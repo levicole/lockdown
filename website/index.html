@@ -44,7 +44,16 @@
 	<h2>What</h2>
 
 
-	<p>Lockdown is a authentication/authorization system for Merb.  Rails support will be completed in future releases, more testing is needed for deployment.  Some model level access right functionality will also be added in the near future.</p>
+	<p>Lockdown is a authentication/authorization system for RubyOnRails and Merb designed for simplicity and extensibility.  All access rules are in (initially) defined in lib/lockdown/access.rb.  With the included <span class="caps">ORM</span> support (ActiveRecord or DataMapper) and management screens you can add user defined rules to the system.</p>
+
+
+	<p>If there is a &#8220;spec&#8221; directory, a test helper file will be included to provied some basic functionality for use with RSpec. This will show you how to create mock user objects and sign in as an adminstrator.</p>
+
+
+	<p>Also included is functionality to auto-populate created_by and updated_by fields.</p>
+
+
+	<p>Some model level access right functionality will also be added in the near future.</p>
 
 
 	<h2>Installing</h2>
@@ -62,7 +71,137 @@ $ lockdown .
 	<p>This will create a &#8220;lockdown&#8221; directory in the lib dir add two files: access.rb and session.rb.  Modify access.rb to define the rules that apply to your system.</p>
 
 
-	<p>I would recommend reading this page to get a feel for Lockdown&#8217;s functionality.</p>
+	<p>I recommend reading this page to get a feel for Lockdown&#8217;s functionality.</p>
+
+
+	<h2>How it works</h2>
+
+
+Lockdown stores an array of access rights in the session.  For example, if you have a standard <span class="caps">REST</span> users controller, the access rights would be:
+<pre>
+  users/index
+  users/show
+  users/edit
+  users/update
+  users/new
+  users/create
+  users/destroy (delete for Merb)
+</pre>
+
+	<p>The above list will be stored in the session as an array and each request is tested against this list.  So this means, you <strong>should not use client side session storage</strong>.  If you can, I recommend using memcache, but a database session store will suffice.</p>
+
+
+	<p>To define access rights you need to modify lib/lockdown/access.rb.  This is the default access.rb included with Lockdown:
+<pre class='syntax'>
+  <span class="ident">require</span> <span class="punct">&quot;</span><span class="string">lockdown</span><span class="punct">&quot;</span>
+
+  <span class="keyword">module </span><span class="module">Lockdown</span>
+  <span class="comment">#</span>
+  <span class="comment">#</span>
+  <span class="comment"># Permissions are used to group access rights into logical components.</span>
+  <span class="comment"># Each method defined in the Permissions module represents an array</span>
+  <span class="comment"># of methods from a controller (or multiple controllers.)</span>
+  <span class="comment"># </span>
+  <span class="comment"># Controller methods available are: </span>
+  <span class="comment">#</span>
+  <span class="comment">#   # Returns all methods from all controllers</span>
+  <span class="comment">#   all_controllers</span>
+  <span class="comment">#  </span>
+  <span class="comment">#   # Returns all methods from all controllers listed</span>
+  <span class="comment">#   all_methods :controller1, controller2, ...</span>
+  <span class="comment">#  </span>
+  <span class="comment">#   # For a single controller, returns only methods listed</span>
+  <span class="comment">#   only_methods :controller1, :method1, :method2, ...</span>
+  <span class="comment">#  </span>
+  <span class="comment">#   # For a single controller, returns all methods except the methods listed</span>
+  <span class="comment">#   all_except_methods :controller1, :method1, :method2, ...</span>
+  <span class="comment">#</span>
+  <span class="comment">#   They all return an array of controller/action.  For example, if you had a</span>
+  <span class="comment">#   standard REST controller called products this would be the result:</span>
+  <span class="comment">#</span>
+  <span class="comment">#</span>
+  <span class="comment">#     all_methods :products  =&gt; [ &quot;products/index , &quot;products/show&quot;,</span>
+  <span class="comment">#                                 &quot;products/new&quot;, &quot;products/edit&quot;,</span>
+  <span class="comment">#                                 &quot;products/create&quot;, &quot;products/update&quot;,</span>
+  <span class="comment">#                                 &quot;products/destroy&quot;]</span>
+  <span class="comment">#</span>
+    <span class="keyword">module </span><span class="module">Permissions</span>
+      <span class="keyword">class </span><span class="punct">&lt;&lt;</span> <span class="constant">self</span>
+ 
+        <span class="keyword">def </span><span class="method">sessions_management</span>
+          <span class="ident">all_methods</span> <span class="symbol">:sessions</span>
+        <span class="keyword">end</span>
+
+      <span class="keyword">end</span> <span class="comment"># end class block</span>
+    <span class="keyword">end</span> <span class="comment"># end Permissions module</span>
+ 
+  <span class="comment">#</span>
+  <span class="comment"># UserGroups are used to group Permissions together to define role type</span>
+  <span class="comment"># functionality. Users may belong to multiple groups.</span>
+  <span class="comment"># </span>
+    <span class="keyword">module </span><span class="module">UserGroups</span>
+      <span class="keyword">class </span><span class="punct">&lt;&lt;</span> <span class="constant">self</span>
+
+        <span class="comment">#</span>
+        <span class="comment"># This method defines which UserGroups cannot be managed</span>
+        <span class="comment"># via the management screens. </span>
+        <span class="comment"># </span>
+        <span class="comment"># Users can still be assigned to these groups.</span>
+        <span class="comment">#</span>
+        <span class="keyword">def </span><span class="method">private_records</span>
+          <span class="punct">[</span><span class="symbol">:administrators</span><span class="punct">]</span>
+        <span class="keyword">end</span>
+        <span class="comment">#</span>
+        <span class="comment"># This method defines which UserGroups have limited access</span>
+        <span class="comment"># via the management screens. Deletion is not allowed.</span>
+        <span class="comment"># </span>
+        <span class="comment"># Users can still be assigned to these groups.</span>
+        <span class="comment">#</span>
+        <span class="keyword">def </span><span class="method">protected_records</span>
+          <span class="punct">[</span><span class="symbol">:public_access</span><span class="punct">,</span> <span class="symbol">:registered_users</span><span class="punct">]</span>
+        <span class="keyword">end</span>
+         
+        <span class="comment"># ** The administrator method is &quot;special&quot;, please don't rename.</span>
+        <span class="comment">#			If you remove/rename, etc... YOU WILL BREAK STUFF</span>
+        <span class="comment">#</span>
+        <span class="comment"># Standard administrator user group.</span>
+        <span class="comment"># Please don't alter without careful consideration.</span>
+        <span class="comment">#</span>
+        <span class="keyword">def </span><span class="method">administrators</span>
+          <span class="punct">[</span><span class="symbol">:all</span><span class="punct">]</span>
+        <span class="keyword">end</span>
+         
+        <span class="comment"># ** The public_access method is &quot;special&quot;, please don't rename.</span>
+        <span class="comment">#			If you remove/rename, etc... YOU WILL BREAK STUFF</span>
+        <span class="comment">#</span>
+        <span class="comment"># Standard public_access user group.  </span>
+        <span class="comment">#</span>
+        <span class="comment"># Feel free to add Permissions to the array without issue.</span>
+        <span class="comment">#</span>
+        <span class="comment"># **Notice:  All permissions added to this public_access group will not be</span>
+        <span class="comment">#             restricted to logged in users.</span>
+        <span class="comment">#             So be careful what you add here!</span>
+        <span class="comment">#</span>
+        <span class="keyword">def </span><span class="method">public_access</span>
+          <span class="punct">[</span><span class="symbol">:sessions_management</span><span class="punct">]</span> 
+        <span class="keyword">end</span>
+ 
+        <span class="comment"># ** The registered_users method is &quot;special&quot;, please don't rename.</span>
+        <span class="comment">#			Not as special as the others, but still...</span>
+        <span class="comment">#</span>
+        <span class="comment"># All newly created users are assigned to this User Group by default</span>
+        <span class="comment">#</span>
+        <span class="keyword">def </span><span class="method">registered_users</span>
+          <span class="comment">#[:my_account]</span>
+        <span class="keyword">end</span>
+
+        <span class="comment">#</span>
+        <span class="comment"># Define your own user groups below</span>
+        <span class="comment">#</span>
+      <span class="keyword">end</span> <span class="comment"># end class block</span>
+    <span class="keyword">end</span> <span class="comment"># end UserGroups module</span>
+  <span class="keyword">end</span> <span class="comment"># end Lockdown module</span>
+</pre></p>
 
 
 	<h2>Some History</h2>
@@ -82,7 +221,7 @@ $ lockdown .
 	<p>In the middle of my refactoring for a public release, I made the decision to use Merb (when the choice was mine). This meant I needed to modify Lockdown for use with Merb.  So this is what I have done.</p>
 
 
-	<p>There is code in place for using Lockdown with Rails, after all, that&#8217;s where Lockdown was born.  However, I have not yet testing the Rails functionality after this last refactor.  In addition, the deployment mechanism for Rails has to be tested.</p>
+	<p>There is code in place for using Lockdown with Rails, after all, that&#8217;s where Lockdown was born.  However, I have not yet tested the Rails functionality after this last refactor.  In addition, the deployment mechanism for Rails has to be tested.</p>
 
 
 	<p>Writing code for public release is difficult and much different from architecting/coding for a closed source project.  A lot of things you could get by with in a proprietary application won&#8217;t be well received by the general public.  In addition, if you don&#8217;t make things easy, the adoption rate will probably be non-existent.</p>
@@ -91,10 +230,30 @@ $ lockdown .
 	<h2>Features</h2>
 
 
-	<p><pre class='syntax'><span class="ident">sudo</span> <span class="ident">gem</span> <span class="ident">install</span> <span class="ident">lockdown</span></pre></p>
+	<p><strong>I have these components (for the most part)...figuring out how to package them.  The following is just an idea right now&#8230; </strong>
+<br/>
+<br/>
+The goal of Lockdown is to give you only what you want from the system.</p>
 
 
-	<h2>Demonstration of usage</h2>
+	<p>The initial install is all that is required to lock down your system.  However, you&#8217;ll probably want the authorization functionality.  You can get this by:</p>
+
+
+	<p><pre class='syntax'><span class="ident">rake</span> <span class="ident">lockdown</span><span class="symbol">:install:authorization</span></pre></p>
+
+
+	<p>If you want to install <span class="caps">ORM</span> support:</p>
+
+
+	<p><pre class='syntax'><span class="ident">rake</span> <span class="ident">lockdown</span><span class="symbol">:install:orm</span></pre></p>
+
+
+	<p>If you want to install management screens (ORM support included):
+<pre class='syntax'><span class="ident">rake</span> <span class="ident">lockdown</span><span class="symbol">:install:management</span></pre></p>
+
+
+	<p>If you want to install authorization + management screens:
+<pre class='syntax'><span class="ident">rake</span> <span class="ident">lockdown</span><span class="symbol">:install:all</span></pre></p>
 
 
 	<h2>Forum</h2>
@@ -126,7 +285,7 @@ $ lockdown .
 
 	<p>Comments and suggestions are welcome via the <a href="http://groups.google.com/group/stonean_lockdown?hl=en">forum</a></p>
     <p class="coda">
-      20th April 2008<br/>
+      22nd April 2008<br/>
       Theme extended from <a href="http://rb2js.rubyforge.org/">Paul Battley</a>
     </p>
 </div>

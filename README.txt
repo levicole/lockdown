@@ -11,21 +11,27 @@ For more information please visit the rubyforge site.
 == REQUIREMENTS:
 
 Lockdown currently supports:
-Frameworkds: RubyOnRails or Merb
+
+Frameworks: RubyOnRails or Merb
+
 ORMs: ActiveRecord or DataMapper
 
 == INSTALL:
 
 # Install the gem
+
 sudo gem install lockdown
 
 # Go to your application root directory
+
 cd <your application>
 
 # Install lockdown to your application
+
 lockdown .
 
 # Modify lib/lockdown/access.rb to grant access to your application
+
 # Modify lib/lockdown/session.rb to add/remove session information
 
 == LICENSE:

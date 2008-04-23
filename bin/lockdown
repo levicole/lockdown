@@ -1,12 +1,16 @@
 #!/usr/bin/env ruby
+
+require "rubigen"
+require "rubigen/scripts/generate"
+
+require File.join(File.dirname(__FILE__), "..", "lib", "lockdown_generator")
+
 #
 #  Created on 2008-4-21.
 #  Copyright (c) 2008. All rights reserved.
 
 MERB_CONFIG = 'config/init.rb'
 RAILS_CONFIG = 'config/environment.rb'
-LIB_DIR = "lib/lockdown"
-GEM_DIR =  File.join File.expand_path(File.dirname(__FILE__)), ".."
 
 def config_file
   if File.exists?(MERB_CONFIG)
@@ -47,37 +51,16 @@ BANNER
   opts.parse!(ARGV)
 end 
 
-path = OPTIONS[:path]
-
-config = config_file
-
-require "fileutils"
-
 puts <<-MSG
 ... Installing Lockdown
 MSG
 
-unless File.exists?(LIB_DIR)
-  FileUtils.mkdir_p("lib/lockdown")
-puts <<-MSG
-... Created directory lib/lockdown
-MSG
-end
+source = RubiGen::PathSource.new(:application,
+                                   File.join(File.dirname(__FILE__), "../app_generators"))
+RubiGen::Base.reset_sources
+RubiGen::Base.append_sources source
+RubiGen::Scripts::Generate.new.run(ARGV, :generator => 'lockdown')
 
-src_access_file = File.join(GEM_DIR, "templates", "access.rb")
-dest_access_file = File.join(LIB_DIR, "access.rb")
-FileUtils.cp(src_access_file, dest_access_file)
-
-puts <<-MSG
-... Copied access.rb template to lib/lockdown
-MSG
-
-src_session_file = File.join(GEM_DIR, "templates", "session.rb")
-dest_session_file = File.join(LIB_DIR, "session.rb")
-FileUtils.cp(src_session_file, dest_session_file)
-puts <<-MSG
-... Copied sesion.rb template to lib/lockdown
-MSG
 
 File.open(config, "a") do |f|
   f << %Q(\nrequire "lockdown/access"\n)
@@ -85,7 +68,7 @@ File.open(config, "a") do |f|
 end
 
 puts <<-MSG
-... Modified #{config} by adding:
+... Modified #{config_file} by adding:
     require "lockdown/access"
     require "lockdown/session"
 MSG

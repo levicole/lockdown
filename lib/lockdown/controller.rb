@@ -149,9 +149,12 @@ module Lockdown
         def self.included(base)
           base.class_eval do
             alias :send_to  :redirect_to
-            alias :sent_from_uri  :request_uri
           end
           base.send :include, Lockdown::Controller::Core
+        end
+
+        def sent_from_uri
+          request.request_uri
         end
 
         def authorized?(options)
