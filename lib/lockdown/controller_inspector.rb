@@ -28,7 +28,7 @@ module Lockdown
       # e.g all_except_methods(:users, :destroy)
       #
       def all_except_methods(sym, *methods)
-        paths_for(sym) - paths_for(sym, methods) 
+        paths_for(sym) - paths_for(sym, *methods) 
       end
     
       #
@@ -39,7 +39,7 @@ module Lockdown
       # e.g only_methods(:users, :index, :show)
       #
       def only_methods(sym, *methods)
-        paths_for(sym, methods)
+        paths_for(sym, *methods)
       end
 
       #
@@ -64,17 +64,7 @@ module Lockdown
           klass = get_controller_class(str)
           methods = available_actions(klass) 
         end
-        paths = methods.collect{|meth| ctr_path(str) + "/" + meth.to_s }
-
-        #
-        # Allow for a /users request, which is actually
-        # /users/index
-        #
-        if methods.include? "index"
-          paths.push ctr_path(str)
-        else
-          paths
-        end
+        methods.collect{|meth| ctr_path(str) + "/" + meth.to_s }
       end
     
       def get_controller_class(str)

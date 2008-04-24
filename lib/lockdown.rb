@@ -5,6 +5,8 @@ module Lockdown
   class << self
     def format_controller_action(url)
       url.split("/").delete_if{|p| p.to_i > 0 || p.length == 0}.join("/")
+      url += "/index" unless url =~ /\//
+      url
     end
 
     def format_controller(ctr)
@@ -105,6 +107,62 @@ module Lockdown
     end # class block
   end # usergroups
 
+  module Session
+    include Lockdown::Helper
+
+    def nil_lockdown_values
+      session.each do |key,value|
+        session[key] = nil if key.to_s =~ /^user_|access_|expiry/
+      end
+    end 
+    
+    #
+    # Does the current user have access to at least one permission
+    # in the user group?
+    #
+    def current_user_access_in_group?(grp)
+      return true if current_user_is_admin?
+        Lockdown::UserGroups.permissions(grp).each do |perm|
+          return true if access_in_perm?(perm)
+        end
+      false
+    end
+
+    def current_user_is_admin?
+      session[:access_rights] == :all
+    end
+
+    private
+
+    #
+    # session[:user_group] and session[:access_rights] are the keys to Lockdown.
+    #
+    # session[:access_rights] holds the array of "controller/action" strings 
+    # allowed for the user.
+    #
+    #
+    def add_lockdown_session_values(user)
+      session[:access_rights] = user.access_rights.delete_if{|ar| ar.nil? || ar.strip.length == 0}
+      if user.user_groups
+        groups = syms_from_names(user.user_groups)
+        if groups.include? :administrators
+          session[:access_rights] = :all
+        end
+      end
+    end
+
+    def access_in_perm?(perm)
+      Lockdown::Permissions[perm].each do |ar|
+        return true if session_access_rights_include?(ar)
+      end
+      false
+    end
+
+    def session_access_rights_include?(str)
+      return false unless session[:access_rights]
+      session[:access_rights].include?(str)
+    end
+  end
  # module Session
  #   protected 
  #   include Lockdown::Session

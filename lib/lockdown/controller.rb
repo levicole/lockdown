@@ -45,7 +45,7 @@ module Lockdown
         
         def check_session_expiry
           if session[:expiry_time] && session[:expiry_time] < Time.now
-            reset_session
+            nil_lockdown_values
           end
           session[:expiry_time] = Time.now + Lockdown::SESSION_TIMEOUT
         end
@@ -159,13 +159,14 @@ module Lockdown
 
         def authorized?(options)
           return true if current_user_is_admin?
-        
+
           url_parts = URI::split url_for(options)
         
           path = url_parts[5]
+
           # See if path is known
           return true if path_allowed?(path)
-        
+
           if options.is_a?(String)
             # Test for a named routed
             begin
@@ -178,6 +179,7 @@ module Lockdown
           
           # Test to see if using a get method (show)
           path += "/show" if path.split("/").last.to_i > 0
+
           return true if path_allowed?(path)
 
           return false
