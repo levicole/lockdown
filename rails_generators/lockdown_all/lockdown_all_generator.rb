@@ -1,3 +1,5 @@
+require "rubigen"
+
 class LockdownAllGenerator < RubiGen::Base
   
   default_options :author => nil
