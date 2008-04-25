@@ -13,6 +13,7 @@ EXTRA_DEPENDENCIES = [
 
 @config_file = "~/.rubyforge/user-config.yml"
 @config = nil
+RUBYFORGE_USERNAME = 'astone'
 def rubyforge_username
   unless @config
     begin
