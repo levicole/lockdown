@@ -1,14 +1,14 @@
 require 'lockdown/version'
 
-AUTHOR = 'FIXME full name'  # can also be an array of Authors
-EMAIL = "FIXME email"
-DESCRIPTION = "description of gem"
+AUTHOR = 'Andrew Stone'  # can also be an array of Authors
+EMAIL = "andrew.n.stone@gmail.com"
+DESCRIPTION = "Authorization/Authentication system for RubyOnRails and Merb"
 GEM_NAME = 'lockdown' # what ppl will type to install your gem
 RUBYFORGE_PROJECT = 'lockdown' # The unix name for your project
 HOMEPATH = "http://#{RUBYFORGE_PROJECT}.rubyforge.org"
 DOWNLOAD_PATH = "http://rubyforge.org/projects/#{RUBYFORGE_PROJECT}"
 EXTRA_DEPENDENCIES = [
-#  ['activesupport', '>= 1.3.1']
+  ['rubigen', '>=1.2.4']
 ]    # An array of rubygem dependencies [name, version]
 
 @config_file = "~/.rubyforge/user-config.yml"

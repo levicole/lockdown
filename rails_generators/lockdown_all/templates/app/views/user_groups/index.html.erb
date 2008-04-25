@@ -1,0 +1,20 @@
+<h1>Listing User Groups</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+  </tr>
+
+<% for user_group in @user_groups %>
+  <tr>
+    <td><%=h user_group.name %></td>
+    <td><%= link_to 'Show', user_group %></td>
+    <td><%= link_to('Edit', edit_user_group_path(user_group)) unless user_group.private_record? %></td>
+    <td><%= link_to('Destroy', user_group, :confirm => 'Are you sure?', :method => :delete) unless user_group.system_assigned? %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New User Group', new_user_group_path %>
