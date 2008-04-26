@@ -33,7 +33,7 @@
     <h1>lockdown</h1>
     <div id="version" class="clickable" onclick='document.location = "http://rubyforge.org/projects/lockdown"; return false'>
       <p>Get Version</p>
-      <a href="http://rubyforge.org/projects/lockdown" class="numbers">0.1.4</a>
+      <a href="http://rubyforge.org/projects/lockdown" class="numbers">0.2.0</a>
     </div>
     <h1>&#x2192; &#8216;lockdown&#8217;</h1>
 
@@ -70,6 +70,12 @@ $ lockdown .
 
 	<p>This will create a &#8220;lockdown&#8221; directory in the lib dir add two files: access.rb and session.rb.  Modify access.rb to define the rules that apply to your system.</p>
 
+
+If you want the full &#8216;subsystem&#8217; (models, views, controllers, helpers):
+<pre>
+$ cd &lt;your_project_directory&gt;
+$ ./script/generate lockdown_all
+</pre>
 
 	<p>I recommend reading this page to get a feel for Lockdown&#8217;s functionality.</p>
 
@@ -191,8 +197,11 @@ Lockdown stores an array of access rights in the session.  For example, if you h
         <span class="comment">#</span>
         <span class="comment"># All newly created users are assigned to this User Group by default</span>
         <span class="comment">#</span>
+        <span class="comment">#  Sample registered_users permission:</span>
+        <span class="comment"># [:my_account]</span>
+        <span class="comment">#</span>
         <span class="keyword">def </span><span class="method">registered_users</span>
-          <span class="comment">#[:my_account]</span>
+          <span class="punct">[]</span>
         <span class="keyword">end</span>
 
         <span class="comment">#</span>
@@ -227,36 +236,10 @@ Lockdown stores an array of access rights in the session.  For example, if you h
 	<p>Writing code for public release is difficult and much different from architecting/coding for a closed source project.  A lot of things you could get by with in a proprietary application won&#8217;t be well received by the general public.  In addition, if you don&#8217;t make things easy, the adoption rate will probably be non-existent.</p>
 
 
-	<h2>Features</h2>
-
-
-	<p><strong>I have these components (for the most part)...figuring out how to package them.  The following is just an idea right now&#8230; </strong>
-<br/>
-<br/>
-The goal of Lockdown is to give you only what you want from the system.</p>
-
-
-	<p>The initial install is all that is required to lock down your system.  However, you&#8217;ll probably want the authorization functionality.  You can get this by:</p>
-
-
-	<p><pre class='syntax'><span class="ident">rake</span> <span class="ident">lockdown</span><span class="symbol">:install:authorization</span></pre></p>
-
-
-	<p>If you want to install <span class="caps">ORM</span> support:</p>
-
-
-	<p><pre class='syntax'><span class="ident">rake</span> <span class="ident">lockdown</span><span class="symbol">:install:orm</span></pre></p>
-
-
-	<p>If you want to install management screens (ORM support included):
-<pre class='syntax'><span class="ident">rake</span> <span class="ident">lockdown</span><span class="symbol">:install:management</span></pre></p>
-
-
-	<p>If you want to install authorization + management screens:
-<pre class='syntax'><span class="ident">rake</span> <span class="ident">lockdown</span><span class="symbol">:install:all</span></pre></p>
-
-
 	<h2>Forum</h2>
+
+
+	<p>If you are having a problem understanding how to use Lockdown, please post your question on the lockdown group.  If it&#8217;s documentation related, I will keep this page updated to help everyone.</p>
 
 
 	<p><a href="http://groups.google.com/group/stonean_lockdown?hl=en">http://groups.google.com/group/stonean_lockdown?hl=en</a></p>
@@ -285,7 +268,7 @@ The goal of Lockdown is to give you only what you want from the system.</p>
 
 	<p>Comments and suggestions are welcome via the <a href="http://groups.google.com/group/stonean_lockdown?hl=en">forum</a></p>
     <p class="coda">
-      22nd April 2008<br/>
+      25th April 2008<br/>
       Theme extended from <a href="http://rb2js.rubyforge.org/">Paul Battley</a>
     </p>
 </div>

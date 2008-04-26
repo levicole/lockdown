@@ -9,11 +9,9 @@ class CreateProfiles < ActiveRecord::Migration
 
       t.timestamps
     end
-    define_foreign_key_column :profiles, :updated_by, :profiles
   end
 
   def self.down
-    remove_foreign_key_column :profiles, :updated_by
     drop_table :profiles
   end
 end

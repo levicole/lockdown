@@ -95,6 +95,8 @@ class UserGroup < ActiveRecord::Base
     # to errors by mistakingly removing them.
 		#
 		def find_assignable_for_user(usr)
+      return [] if usr.nil?
+
 			if usr.administrator?
 				find :all, 
 							:conditions => "name != 'Public Access' and name != 'Registered Users'", 
@@ -121,6 +123,8 @@ class UserGroup < ActiveRecord::Base
     # 
 		#
 		def find_content_assignable_for_user(usr)
+      return [] if usr.nil?
+
 			if usr.administrator?
 				find :all
 			else

@@ -52,7 +52,7 @@ module Lockdown
     end
 
     def current_user
-      return User.find(current_user_id, :include => [:profile, :user_groups])
+      return current_user_id > 0 ? User.find(current_user_id, :include => [:profile, :user_groups]) : nil
     end
   
   end # Session module

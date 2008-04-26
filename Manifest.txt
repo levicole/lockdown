@@ -30,6 +30,7 @@ rails_generators/lockdown_all/templates/app/helpers/permissions_helper.rb
 rails_generators/lockdown_all/templates/app/helpers/user_groups_helper.rb
 rails_generators/lockdown_all/templates/app/helpers/users_helper.rb
 rails_generators/lockdown_all/templates/app/models/permission.rb
+rails_generators/lockdown_all/templates/app/models/profile.rb
 rails_generators/lockdown_all/templates/app/models/user.rb
 rails_generators/lockdown_all/templates/app/models/user_group.rb
 rails_generators/lockdown_all/templates/app/views/permissions/_data.html.erb
@@ -49,8 +50,9 @@ rails_generators/lockdown_all/templates/app/views/users/edit.html.erb
 rails_generators/lockdown_all/templates/app/views/users/index.html.erb
 rails_generators/lockdown_all/templates/app/views/users/new.html.erb
 rails_generators/lockdown_all/templates/app/views/users/show.html.erb
+rails_generators/lockdown_all/templates/db/migrate/create_base_user_groups.rb
 rails_generators/lockdown_all/templates/db/migrate/create_permissions.rb
-rails_generators/lockdown_all/templates/db/migrate/create_profile.rb
+rails_generators/lockdown_all/templates/db/migrate/create_profiles.rb
 rails_generators/lockdown_all/templates/db/migrate/create_user_groups.rb
 rails_generators/lockdown_all/templates/db/migrate/create_users.rb
 script/console

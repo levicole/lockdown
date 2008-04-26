@@ -95,8 +95,10 @@ module Lockdown
       #
       # All newly created users are assigned to this User Group by default
       #
+      # Sample registered user permission:
+      # [:my_account]
       def registered_users
-        #[:my_account]
+        []
       end
 
       #

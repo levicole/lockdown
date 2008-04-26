@@ -5,7 +5,12 @@ require "rubigen"
 require "rubigen/scripts/generate"
 require 'optparse'
 
-#require File.join(File.dirname(__FILE__), "..", "lib", "lockdown_generator")
+if %w(-v --version).include? ARGV.first
+  require 'lockdown/version'
+  puts "#{File.basename($0)} #{Lockdown::VERSION::STRING}"
+  exit(0)
+end
+
 
 #
 #  Created on 2008-4-21.

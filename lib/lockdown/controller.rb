@@ -190,7 +190,7 @@ module Lockdown
           respond_to do |accepts|
             accepts.html do
               store_location
-              send_to login_path
+              send_to "/"
             end
             accepts.xml do
               headers["Status"] = "Unauthorized"

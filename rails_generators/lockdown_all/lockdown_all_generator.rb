@@ -1,16 +1,5 @@
-require "rubigen"
-
-class LockdownAllGenerator < RubiGen::Base
-  
-  default_options :author => nil
-  
-  attr_reader :name
-  
-  def initialize(runtime_args, runtime_options = {})
-    super
-    usage if args.empty?
-    @name = args.shift
-  end
+class LockdownAllGenerator < Rails::Generator::Base
+  attr_accessor :file_name
 
   def manifest
     record do |m|
@@ -28,11 +17,28 @@ class LockdownAllGenerator < RubiGen::Base
       m.file "app/controllers/permissions_controller.rb",  "app/controllers/permissions_controller.rb"
       m.file "app/controllers/users_controller.rb",        "app/controllers/users_controller.rb"
       m.file "app/controllers/user_groups_controller.rb",  "app/controllers/user_groups_controller.rb"
+      m.file "app/controllers/sessions_controller.rb",  "app/controllers/sessions_controller.rb"
 
       #Models
       m.file "app/models/permission.rb",  "app/models/permission.rb"
       m.file "app/models/user.rb",        "app/models/user.rb"
       m.file "app/models/user_group.rb",  "app/models/user_group.rb"
+      m.file "app/models/profile.rb",  "app/models/profile.rb"
+
+
+
+      #Migrations
+      m.migration_template "db/migrate/create_profiles.rb", "db/migrate", :migration_file_name => "create_profiles"
+      m.migration_template "db/migrate/create_users.rb", "db/migrate", :migration_file_name => "create_users"
+      m.migration_template "db/migrate/create_user_groups.rb", "db/migrate", :migration_file_name => "create_user_groups"
+      m.migration_template "db/migrate/create_permissions.rb", "db/migrate", :migration_file_name => "create_permissions"
+      m.migration_template "db/migrate/create_base_user_groups.rb", "db/migrate", :migration_file_name => "create_base_user_groups"
+
+      #Route file (i like having them on individual lines)
+      m.route_resources "permissions"
+      m.route_resources "user_groups"
+      m.route_resources "users"
+      m.route_resources "sessions"
 
       #Helpers
       m.file "app/helpers/permissions_helper.rb",  "app/helpers/permissions_helper.rb"
@@ -45,7 +51,9 @@ class LockdownAllGenerator < RubiGen::Base
 
       copy_views(m, "user_groups")
 
-      copy_views(m, "permissions")
+      m.file "app/views/permissions/_data.html.erb", "app/views/permissions/_data.html.erb"
+      m.file "app/views/permissions/index.html.erb", "app/views/permissions/index.html.erb"
+      m.file "app/views/permissions/show.html.erb", "app/views/permissions/show.html.erb"
 
       m.file "app/views/sessions/new.html.erb", "app/views/sessions/new.html.erb"
     end
@@ -54,9 +62,10 @@ class LockdownAllGenerator < RubiGen::Base
   protected
     def banner
       <<-EOS
-Creates a ...
+Installs the lockdown framework to managing users user_groups and viewing permissions. 
+Also includes a login screen.
 
-USAGE: #{$0} #{spec.name} name
+USAGE: #{$0} #{spec.name} 
 EOS
     end
 

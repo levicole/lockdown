@@ -5,11 +5,15 @@ class CreatePermissions < ActiveRecord::Migration
 
       t.timestamps
     end
-		create_join_table :permissions, :user_groups
+
+		create_table :permissions_user_groups, :id => false do |t|
+      t.integer :permission_id
+      t.integer :user_group_id
+    end
   end
 
   def self.down
-		drop_join_table :permissions, :user_groups
+		drop_table :permissions_user_groups
     drop_table :permissions
   end
 end

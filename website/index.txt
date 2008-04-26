@@ -26,6 +26,13 @@ $ lockdown .
 
 This will create a "lockdown" directory in the lib dir add two files: access.rb and session.rb.  Modify access.rb to define the rules that apply to your system.
 
+If you want the full 'subsystem' (models, views, controllers, helpers):
+
+<pre>
+$ cd <your_project_directory>
+$ ./script/generate lockdown_all
+</pre>
+
 I recommend reading this page to get a feel for Lockdown's functionality.  
 
 h2. How it works
@@ -143,8 +150,11 @@ To define access rights you need to modify lib/lockdown/access.rb.  This is the 
         #
         # All newly created users are assigned to this User Group by default
         #
+        #  Sample registered_users permission:
+        # [:my_account]
+        #
         def registered_users
-          #[:my_account]
+          []
         end
 
         #
@@ -154,6 +164,7 @@ To define access rights you need to modify lib/lockdown/access.rb.  This is the 
     end # end UserGroups module
   end # end Lockdown module
 </pre>
+
 
 
 h2. Some History
@@ -173,29 +184,9 @@ There is code in place for using Lockdown with Rails, after all, that's where Lo
 Writing code for public release is difficult and much different from architecting/coding for a closed source project.  A lot of things you could get by with in a proprietary application won't be well received by the general public.  In addition, if you don't make things easy, the adoption rate will probably be non-existent.
 
 
-h2. Features
-
-<strong>I have these components (for the most part)...figuring out how to package them.  The following is just an idea right now... </strong>
-<br/>
-<br/>
-The goal of Lockdown is to give you only what you want from the system.  
-
-The initial install is all that is required to lock down your system.  However, you'll probably want the authorization functionality.  You can get this by: 
-
-<pre syntax="ruby">rake lockdown:install:authorization</pre>
-
-If you want to install ORM support:
-
-<pre syntax="ruby">rake lockdown:install:orm</pre>
-
-If you want to install management screens (ORM support included):
-<pre syntax="ruby">rake lockdown:install:management</pre>
-
-If you want to install authorization + management screens:
-<pre syntax="ruby">rake lockdown:install:all</pre>
-
-
 h2. Forum
+
+If you are having a problem understanding how to use Lockdown, please post your question on the lockdown group.  If it's documentation related, I will keep this page updated to help everyone. 
 
 "http://groups.google.com/group/stonean_lockdown?hl=en":http://groups.google.com/group/stonean_lockdown?hl=en
 
