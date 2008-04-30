@@ -41,22 +41,6 @@ class LockdownAllGenerator < Rails::Generator::Base
 
 
 
-      #Migrations
-      m.migration_template "db/migrate/create_profiles.rb", "db/migrate", 
-														:migration_file_name => "create_profiles"
-
-      m.migration_template "db/migrate/create_users.rb", "db/migrate", 
-														:migration_file_name => "create_users"
-
-      m.migration_template "db/migrate/create_user_groups.rb", "db/migrate", 
-														:migration_file_name => "create_user_groups"
-
-      m.migration_template "db/migrate/create_permissions.rb", "db/migrate", 
-														:migration_file_name => "create_permissions"
-
-      m.migration_template "db/migrate/create_admin_user_and_user_group.rb", 
-														"db/migrate", 
-														:migration_file_name => "create_admin_user_and_user_group"
 
       #Route file (i like having them on individual lines)
       m.route_resources "permissions"
@@ -93,6 +77,47 @@ class LockdownAllGenerator < Rails::Generator::Base
 
       m.file "app/views/sessions/new.html.erb",
 							"app/views/sessions/new.html.erb"
+
+      #Migrations
+			begin
+				m.migration_template "db/migrate/create_profiles.rb", "db/migrate", 
+															:migration_file_name => "create_profiles"
+			rescue 
+				puts "Profiles migration exists"
+			end
+
+			begin
+      m.migration_template "db/migrate/create_users.rb", "db/migrate", 
+														:migration_file_name => "create_users"
+
+			rescue
+				puts "Users migration exists"
+			end
+
+			begin
+      m.migration_template "db/migrate/create_user_groups.rb", "db/migrate", 
+														:migration_file_name => "create_user_groups"
+
+			rescue 
+				puts "User Groups migration exists"
+			end
+
+			begin
+      m.migration_template "db/migrate/create_permissions.rb", "db/migrate", 
+														:migration_file_name => "create_permissions"
+
+			rescue
+				puts "Permissions migration exists"
+			end
+
+			begin
+      m.migration_template "db/migrate/create_admin_user_and_user_group.rb", 
+														"db/migrate", 
+														:migration_file_name => "create_admin_user_and_user_group"
+
+			rescue
+				puts "Admin User Group... migration exists"
+			end
     end
   end
 

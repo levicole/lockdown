@@ -1,3 +1,6 @@
+== 0.3.2 2008-04-29
+* Management screens looking good.  Now moving on to testing with starter application.
+
 == 0.3.1 2008-04-29
 * Some initital testing done.  
 

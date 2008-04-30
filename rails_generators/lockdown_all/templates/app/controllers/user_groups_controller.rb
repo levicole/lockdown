@@ -1,6 +1,5 @@
 class UserGroupsController < ApplicationController
 	before_filter :find_user_group, :only => [:show, :edit, :update, :destroy]
-	before_filter :protect_private, :only => [:edit, :update]
 	after_filter :update_permissions, :only => [:create, :update]
 
   # GET /user_groups
@@ -27,7 +26,7 @@ class UserGroupsController < ApplicationController
   # GET /user_groups/new.xml
   def new
     @user_group = UserGroup.new
-		@all_permissions = Lockdown::System.get_permissions
+		@all_permissions = Lockdown::System.permissions_assignable_for_user(current_user)
 
     respond_to do |format|
       format.html # new.html.erb
@@ -37,7 +36,7 @@ class UserGroupsController < ApplicationController
 
   # GET /user_groups/1/edit
   def edit
-		@all_permissions = Lockdown::System.get_permissions
+		@all_permissions = Lockdown::System.permissions_assignable_for_user(current_user)
   end
 
   # POST /user_groups
@@ -51,6 +50,7 @@ class UserGroupsController < ApplicationController
         format.html { redirect_to(@user_group) }
         format.xml  { render :xml => @user_group, :status => :created, :location => @user_group }
       else
+				@all_permissions = Lockdown::System.permissions_assignable_for_user(current_user)
         format.html { render :action => "new" }
         format.xml  { render :xml => @user_group.errors, :status => :unprocessable_entity }
       end
@@ -87,10 +87,6 @@ class UserGroupsController < ApplicationController
 
 	def find_user_group
     @user_group = UserGroup.find(params[:id])
-  end
-
-	def protect_private
-		@user_group.protect_private
   end
 
 	def update_permissions

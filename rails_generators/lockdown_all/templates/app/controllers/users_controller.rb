@@ -48,6 +48,7 @@ class UsersController < ApplicationController
 			flash[:notice] = "Thanks for signing up!"
 			redirect_to(users_path)
 		else
+			@user_groups_for_user = Lockdown::System.user_groups_assignable_for_user(current_user)
 			flash[:error] = "Please correct the following issues"
 			render :action => "new" 
     end

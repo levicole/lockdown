@@ -65,13 +65,35 @@ module Lockdown
 			#
 			def create_user_group(str_sym)
 				return unless @options[:use_db_models]
-				UserGroup.create(:name => string_name(str_sym))
+				ug = UserGroup.create(:name => string_name(str_sym))
+				#
+				# No need to create permissions records for administrators
+				#
+				ug_sym = symbol_name(ug.name)
+				return if ug_sym == administrator_group_symbol
+
+				if self.has_user_group?(ug)
+					@user_groups[ug_sym].collect do |perm|
+						Permission.create(:name => string_name(perm))
+					end
+				end
 			end
 
 			def create_administrator_user_group
 				return unless @options[:use_db_models]
 				Lockdown::System.create_user_group administrator_group_symbol
   		end
+
+			#
+			# Determine if the user group is defined in init.rb
+			#
+			def has_user_group?(ug)
+				return true if symbol_name(ug.name) == administrator_group_symbol
+				@user_groups.each do |key,value|
+					return true if key == symbol_name(ug.name)
+				end
+				return false
+			end
 
 			#
 			# Delete a user group record from the database
@@ -121,6 +143,21 @@ module Lockdown
 							and user_groups_users.user_id = #{usr.id}	 
 						order by user_groups.name
 					SQL
+				end
+			end
+
+			#
+			# Similar to user_groups_assignable_for_user, this method should be
+      # used to restrict users from creating a user group with more power than
+      # they have been allowed.
+			#
+			def permissions_assignable_for_user(usr)
+				return [] if usr.nil?
+				if administrator?(usr)
+					@permissions.keys.collect{|k| Permission.find_by_name(string_name(k)) }.compact
+				else
+					groups = user_groups_assignable_for_user(usr)
+					groups.collect{|g| g.permissions}.flatten.compact
 				end
 			end
 
