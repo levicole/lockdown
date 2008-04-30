@@ -61,51 +61,12 @@ module Lockdown
     end
   end # class block
   
-  require "lockdown/helper.rb"
-  require "lockdown/controller_inspector.rb"
-  require "lockdown/controller.rb"
-  require "lockdown/model.rb"
-  require "lockdown/view.rb"
-
-  module Permissions#:nodoc:
-    class << self
-      include Lockdown::ControllerInspector
-      
-      def[](sym)
-        raise NameError.new("#{sym} is not defined") unless respond_to?(sym)
-        send(sym)
-      end
-      
-      def access_rights_for(ary)
-        ary.collect{|m| send(m)}.flatten
-      end
-
-      def all
-        all_controllers
-      end
-    end # class block
-  end # permissions
-
-  module UserGroups#:nodoc:
-    class << self
-      def[](sym)
-        permissions(sym).collect{|rec| Lockdown::Permissions[rec]}.flatten
-      end
-
-      def permissions(sym)
-        if self.private_records.include?(sym)
-          return self.send(sym)
-        end
-
-        static_permissions(sym)
-      end
-
-      def static_permissions(sym)
-        raise NameError.new("#{sym} is not defined") unless respond_to?(sym)
-        send(sym)
-      end
-    end # class block
-  end # usergroups
+  require File.join("lockdown", "helper.rb")
+  require File.join("lockdown", "controller_inspector.rb")
+  require File.join("lockdown", "system.rb")
+  require File.join("lockdown", "controller.rb")
+  require File.join("lockdown", "model.rb")
+  require File.join("lockdown", "view.rb")
 
   module Session
     include Lockdown::Helper
@@ -122,7 +83,7 @@ module Lockdown
     #
     def current_user_access_in_group?(grp)
       return true if current_user_is_admin?
-        Lockdown::UserGroups.permissions(grp).each do |perm|
+        Lockdown::System.user_groups[grp].each do |perm|
           return true if access_in_perm?(perm)
         end
       false
@@ -142,19 +103,21 @@ module Lockdown
     #
     #
     def add_lockdown_session_values(user)
-      session[:access_rights] = user.access_rights.delete_if{|ar| ar.nil? || ar.strip.length == 0}
+      session[:access_rights] = user.access_rights.delete_if do |ar| 
+					ar.nil? || ar.strip.length == 0
+      end
       if user.user_groups
         groups = syms_from_names(user.user_groups)
-        if groups.include? :administrators
+        if groups.include? administrator_group_symbol
           session[:access_rights] = :all
         end
       end
     end
 
     def access_in_perm?(perm)
-      Lockdown::Permissions[perm].each do |ar|
+      Lockdown::System.permissions[perm].each do |ar|
         return true if session_access_rights_include?(ar)
-      end
+      end unless Lockdown::System.permissions[perm].nil?
       false
     end
 
@@ -163,10 +126,5 @@ module Lockdown
       session[:access_rights].include?(str)
     end
   end
- # module Session
- #   protected 
- #   include Lockdown::Session
- # 
- # end
 end
 

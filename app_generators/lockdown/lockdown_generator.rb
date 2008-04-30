@@ -19,7 +19,7 @@ class LockdownGenerator < RubiGen::Base
     record do |m|
       m.directory "lib/lockdown"
       m.template "session.rb", "lib/lockdown/session.rb"
-      m.file "access.rb", "lib/lockdown/access.rb"
+      m.file "init.rb", "lib/lockdown/init.rb"
     end
   end
 end

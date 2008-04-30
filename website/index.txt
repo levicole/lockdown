@@ -6,7 +6,7 @@ h3. Lockdown has not been officially released!  This page is a Work-In-Progress.
 
 h2. What
 
-Lockdown is a authentication/authorization system for RubyOnRails and Merb designed for simplicity and extensibility.  All access rules are in (initially) defined in lib/lockdown/access.rb.  With the included ORM support (ActiveRecord or DataMapper) and management screens you can add user defined rules to the system.
+Lockdown is a authentication/authorization system for RubyOnRails and Merb designed for simplicity and extensibility.  All access rules are defined in lib/lockdown/init.rb.  With the included ORM support (ActiveRecord or DataMapper) and management screens you can add user defined rules to the system.
 
 If there is a "spec" directory, a test helper file will be included to provied some basic functionality for use with RSpec. This will show you how to create mock user objects and sign in as an adminstrator.
 
@@ -24,7 +24,7 @@ $ cd <your_project_directory>
 $ lockdown .
 </pre>
 
-This will create a "lockdown" directory in the lib dir add two files: access.rb and session.rb.  Modify access.rb to define the rules that apply to your system.
+This will create a "lockdown" directory in the lib dir add two files: init.rb and session.rb.  Modify init.rb to set defaults and define the rules that apply to your system.
 
 If you want the full 'subsystem' (models, views, controllers, helpers):
 
@@ -50,7 +50,7 @@ Lockdown stores an array of access rights in the session.  For example, if you h
 
 The above list will be stored in the session as an array and each request is tested against this list.  So this means, you <strong>should not use client side session storage</strong>.  If you can, I recommend using memcache, but a database session store will suffice.
 
-To define access rights you need to modify lib/lockdown/access.rb.  This is the default access.rb included with Lockdown:
+To define access rights you need to modify lib/lockdown/init.rb.  This is the default init.rb included with Lockdown:
 <pre syntax="ruby">
   require "lockdown"
 
@@ -173,7 +173,6 @@ Lockdown was initially designed as a authentication/authorization system to be c
 
 The system was nice and worked well until I had a project that required RSpec tests.  I don't have anything against testing frameworks (now that I've see the light) but what bothered me most what the fact that I would have to duplicate the information I already defined in my migrations as mock data.  I simply refused to do that extra work.  So, a serious refactoring of Lockdown was required.
 
-<blockquote>This is where the access.rb file was born. This file contains the rules that grant/deny access to your system.  More on this later.</blockquote>
 
 After the RSpec project was completed, the refactoring continued.  This time the focus was on releasing the code to the masses.  I like this system a lot and think both the system itself and the community could benefit from releasing this as an open source project.  
 

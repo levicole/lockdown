@@ -1,5 +1,3 @@
-require File.join(File.dirname(__FILE__), "helper") unless Lockdown.const_defined?("Helper")
-
 module Lockdown
   module Model
     def self.included(base)

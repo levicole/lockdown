@@ -60,7 +60,7 @@ end
 
   parser = OptionParser.new do |opts|
     opts.banner = <<-BANNER
-    Lockdown will add access.rb and session.rb to the lib/lockdown directory and require them in #{config_file}.
+    Lockdown will add init.rb and session.rb to the lib/lockdown directory and require them in #{config_file}.
 
     Usage: #{File.basename($0)} [options]
 
@@ -100,12 +100,9 @@ begin
   RubiGen::Scripts::Generate.new.run(ARGV, :generator => 'lockdown', :framework => @framework)
 
   File.open(config_file, "a") do |f|
-    require_access =  %Q(require "lockdown/access")
-    require_session = %Q(require "lockdown/session")
+    require_lockdown =  %Q(require "lockdown/init")
 
-    f << %Q(\n#{require_access}\n) unless configuration_file_has?(require_access)
-
-    f << %Q(#{require_session}\n\n) unless configuration_file_has?(require_session)
+    f << %Q(#{require_lockdown}\n\n) unless configuration_file_has?(require_lockdown)
   end
 rescue Exception => e
   puts e.backtrace.join("\n")
@@ -119,15 +116,14 @@ MSG
 puts <<-MSG
 \n------------------------------------------------------------
 Modified #{config_file} by adding:
-    require "lockdown/access"
-    require "lockdown/session"
+    require "lockdown/init"
 ------------------------------------------------------------\n
 MSG
 
 puts <<-MSG
 \n------------------------------------------------------------
 You are now locked down.  To open up access to your application 
-please modify lib/lockdown/access.rb.  This is where you'll 
+please modify lib/lockdown/init.rb.  This is where you'll 
 add permissions and create user groups.
 
 To modify the contents of your session and to add access 

@@ -27,7 +27,7 @@ class UserGroupsController < ApplicationController
   # GET /user_groups/new.xml
   def new
     @user_group = UserGroup.new
-		@all_permissions = Permission.all_but_public
+		@all_permissions = Lockdown::System.get_permissions
 
     respond_to do |format|
       format.html # new.html.erb
@@ -37,7 +37,7 @@ class UserGroupsController < ApplicationController
 
   # GET /user_groups/1/edit
   def edit
-		@all_permissions = Permission.all_but_public
+		@all_permissions = Lockdown::System.get_permissions
   end
 
   # POST /user_groups

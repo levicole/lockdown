@@ -8,7 +8,7 @@ Rakefile
 app_generators/lockdown/USAGE
 app_generators/lockdown/lockdown_generator.rb
 app_generators/lockdown/lockdown_generator.rb.orig
-app_generators/lockdown/templates/access.rb
+app_generators/lockdown/templates/init.rb
 app_generators/lockdown/templates/session.rb
 bin/lockdown
 config/hoe.rb
@@ -18,6 +18,7 @@ lib/lockdown/controller.rb
 lib/lockdown/controller_inspector.rb
 lib/lockdown/helper.rb
 lib/lockdown/model.rb
+lib/lockdown/system.rb
 lib/lockdown/version.rb
 lib/lockdown/view.rb
 rails_generators/lockdown_all/USAGE
@@ -50,7 +51,7 @@ rails_generators/lockdown_all/templates/app/views/users/edit.html.erb
 rails_generators/lockdown_all/templates/app/views/users/index.html.erb
 rails_generators/lockdown_all/templates/app/views/users/new.html.erb
 rails_generators/lockdown_all/templates/app/views/users/show.html.erb
-rails_generators/lockdown_all/templates/db/migrate/create_base_user_groups.rb
+rails_generators/lockdown_all/templates/db/migrate/create_admin_user_and_user_group.rb
 rails_generators/lockdown_all/templates/db/migrate/create_permissions.rb
 rails_generators/lockdown_all/templates/db/migrate/create_profiles.rb
 rails_generators/lockdown_all/templates/db/migrate/create_user_groups.rb
@@ -69,7 +70,6 @@ test/test_lockdown.rb
 test/test_lockdown_all_generator.rb
 test/test_lockdown_generator.rb
 test/test_lockdown_models_generator.rb
-website/index.html
 website/index.txt
 website/javascripts/rounded_corners_lite.inc.js
 website/stylesheets/screen.css

@@ -30,7 +30,8 @@ cd <your application>
 
 lockdown .
 
-# Modify lib/lockdown/access.rb to grant access to your application
+# Modify lib/lockdown/init.rb to set defaults and grant access 
+  to your application
 
 # Modify lib/lockdown/session.rb to add/remove session information
 

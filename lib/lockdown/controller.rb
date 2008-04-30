@@ -36,7 +36,7 @@ module Lockdown
 
         def path_allowed?(url)
           req = Lockdown.format_controller_action(url)
-          session[:access_rights] ||= Lockdown::UserGroups[:public_access]
+          session[:access_rights] ||= Lockdown::System.public_access
           session[:access_rights].each do |ar|
             return true if req =~ /#{ar}$/
           end
@@ -47,7 +47,7 @@ module Lockdown
           if session[:expiry_time] && session[:expiry_time] < Time.now
             nil_lockdown_values
           end
-          session[:expiry_time] = Time.now + Lockdown::SESSION_TIMEOUT
+          session[:expiry_time] = Time.now + Lockdown::System[:session_timeout]
         end
               
         def store_location
@@ -112,7 +112,7 @@ module Lockdown
         # Can log Error => e if desired, I don't desire to now.
         # For now, just send home, but will probably make this configurable
         def access_denied(e)
-          send_to "/"
+          send_to Lockdown::Session[:access_denied_path]
         end
 
         def path_from_hash(hsh)
@@ -186,11 +186,13 @@ module Lockdown
         end
       
         def access_denied(e)
-          reset_session
+					if Lockdown::System[:logout_on_access_violation]
+						reset_session
+					end
           respond_to do |accepts|
             accepts.html do
               store_location
-              send_to "/"
+              send_to Lockdown::System[:access_denied_path]
             end
             accepts.xml do
               headers["Status"] = "Unauthorized"

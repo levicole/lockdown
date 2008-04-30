@@ -1,3 +1,10 @@
+== 0.3.0 2008-04-29
+* Big change in how the system is installed and configured in the project. 
+	Introduced lib/lockdown/init.rb.
+	Removed lib/lockdown/access.rb.
+	Now use more of a Rails-ish initializer functionality.  This adds flexibility
+	and places the core code back in the gem, that's what I was after.
+
 == 0.2.0 2008-04-25
 * First full implementation of generate script "lockdown_all".  Warranted a bump up of the minor version.
 
@@ -14,7 +21,7 @@
 * Fixed bug with session cleanup.
 
 == 0.1.0 2008-04-18
-* Nearing public release status.  Will release at a minor version of 1
+* Nearing public release status.  
   * In bug testing mode now.
 
 == 0.0.1 2008-04-18

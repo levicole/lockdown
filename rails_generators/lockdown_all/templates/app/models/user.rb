@@ -20,11 +20,10 @@ class User < ActiveRecord::Base
   
 	before_save :prepare_for_save
 
-	after_create :assign_registered_users_user_group
-  
   attr_accessible :login, :password, :password_confirmation
   
-  # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
+  # Authenticates a user by their login name and unencrypted password.  
+  # Returns the user or nil.
   def self.authenticate(login, password)
     u = find :first, :conditions => ['login = ?', login] # need to get the salt
     u && u.authenticated?(password) ? u : nil
@@ -33,10 +32,6 @@ class User < ActiveRecord::Base
   # Encrypts some data with the salt.
   def self.encrypt(password, salt)
     Digest::SHA1.hexdigest("--#{salt}--#{password}--")
-  end
-
-	def self.all
-		find :all, :include => [:profile, :user_groups] 
   end
 
   # Encrypts the password with the user salt
@@ -48,13 +43,7 @@ class User < ActiveRecord::Base
     crypted_password == encrypt(password)
   end
   
-  def access_rights
-    rvalue = Lockdown::UserGroups[:public_access]
-    self.user_groups.each{|grp| rvalue += grp.access_rights}
-    rvalue
-  end
-
-  def email
+   def email
     self.profile.email
   end
   
@@ -62,35 +51,23 @@ class User < ActiveRecord::Base
     self.profile.first_name + " " + self.profile.last_name
   end
   
-	def administrator?
-		has_user_group? :administrators
-  end
-
-  def has_user_group?(sym)
-    self.user_groups.each do |ug|
-      return true if convert_reference_name(ug.name) == sym
-    end
-    false
-  end
-
   protected
-		def assign_registered_users_user_group
-			self.user_groups << UserGroup.find_by_sym(:registered_users)
-    end 
 
-    def prepare_for_save
-			encrypt_password
-			self.profile.save
-    end
+	def prepare_for_save
+		encrypt_password
+		self.profile.save
+	end
       
-    def encrypt_password
-      return if password.blank?
-      self.salt = Digest::SHA1.hexdigest("--#{Time.now.to_s}--#{login}--") if new_record?
-      self.crypted_password = encrypt(password)
-    end
+	def encrypt_password
+		return if password.blank?
+		if new_record?
+			self.salt = Digest::SHA1.hexdigest("--#{Time.now.to_s}--#{login}--") 
+		end
+		self.crypted_password = encrypt(password)
+	end
     
-    def password_required?
-      (crypted_password.blank? || !password.blank?)
-    end
+	def password_required?
+		(crypted_password.blank? || !password.blank?)
+	end
     
 end

@@ -25,7 +25,7 @@ class UsersController < ApplicationController
   def new
 		@user = User.new
 		@profile = Profile.new
-    @user_groups_for_user = UserGroup.find_assignable_for_user(current_user)
+    @user_groups_for_user = Lockdown::System.user_groups_assignable_for_user(current_user)
 		respond_to do |format|
      format.html # new.html.erb
      format.xml  { render :xml => @user }
@@ -34,7 +34,7 @@ class UsersController < ApplicationController
 
   # GET /users/1/edit
   def edit
-    @user_groups_for_user = UserGroup.find_assignable_for_user(current_user)
+    @user_groups_for_user = Lockdown::System.user_groups_assignable_for_user(current_user)
   end
   
   # POST /users

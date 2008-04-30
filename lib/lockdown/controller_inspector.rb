@@ -1,5 +1,3 @@
-require File.join(File.dirname(__FILE__), "helper") unless Lockdown.const_defined?("Helper")
-
 module Lockdown
   module ControllerInspector
     def self.included(base)
@@ -58,8 +56,8 @@ module Lockdown
     
       private 
 
-      def paths_for(sym_str, *methods)
-        str = sym_str.to_s if sym_str.is_a?(Symbol)
+      def paths_for(str_sym, *methods)
+        str = str_sym.to_s if str_sym.is_a?(Symbol)
         if methods.empty?
           klass = get_controller_class(str)
           methods = available_actions(klass) 
@@ -129,12 +127,12 @@ module Lockdown
       # Convert the str parameter (originally the symbol) to the 
       # class name.
       #
-      # For a controller defined as :users in access.rb, the str
+      # For a controller defined as :users in init.rb, the str
       # parameter here would be "users". The result of this method
       # would be "/users"
       #
       # For a namespaced controller:
-      # In access.rb it would be defined as :admin__users.
+      # In init.rb it would be defined as :admin__users.
       # The str paramter would be "admin__users".
       # The result would be "/admin/users".
       #
@@ -150,7 +148,7 @@ module Lockdown
       # Convert the str parameter (originally the symbol) to the 
       # class name.
       #
-      # For a controller defined as :users in access.rb, the str
+      # For a controller defined as :users in init.rb, the str
       # parameter here would be "users". The result of this method
       # would be "Users"
       #
@@ -166,7 +164,7 @@ module Lockdown
       # The reverse of controller_class_name.  Convert the controllers
       # class name to the string version of the symbols used in acces.rb.
       #
-      # For a controller defined as :users in access.rb, the klass 
+      # For a controller defined as :users in init.rb, the klass 
       # parameter here would be Users (the class). The result of this method
       # would be "users", the string version of :users.
       #

@@ -1,7 +1,4 @@
 module Lockdown
-  # 1 hour
-  SESSION_TIMEOUT = 60 * 60
-  
   #
   # The Lockdown gem defines additional Session methods:
   #
