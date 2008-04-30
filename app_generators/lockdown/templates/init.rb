@@ -78,4 +78,6 @@ Lockdown::System.configure do |c|
 	#			:catalog_management is the name of the user group
 	#			:category_management and :product_management refer to permission names
 	#
+	
+	# Add your configuration below:
 end 

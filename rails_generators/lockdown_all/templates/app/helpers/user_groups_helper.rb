@@ -13,7 +13,7 @@ module UserGroupsHelper
     else
 			rvalue = %{<ul id="all_permissions" class="checklist">}
 			@all_permissions.each_with_index do |perm,i|
-				bg = row_class(i)
+				bg = ( i % 2 == 0 ) ? "even" : "odd"
 				input_id = "perm_#{perm.id}"
 				checked = (@user_group.permission_ids.include?(perm.id) ? "checked" : "")
 				bg << "_" << checked if checked.length > 0

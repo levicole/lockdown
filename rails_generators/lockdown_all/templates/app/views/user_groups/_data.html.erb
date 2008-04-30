@@ -1,3 +1,33 @@
+<!-- 
+take the style block out.  this is duplicated in users/_data.html.erb
+without this, the user group selection is just no good
+-->
+<style>
+.checklist{
+  overflow: auto;
+  border: 1px solid #ccc;
+  list-style: none;
+  height: 300px;
+  text-align: left;
+  list-style: none;
+  margin-left: 12px;
+}
+
+.checklist li{
+  padding-left: 6px;
+}
+
+li.even_checked,
+li.even{
+  background: #DFDFDF;
+}
+
+li.even_checked,
+li.odd_checked{
+  color: red;
+}
+</style>
+
 <p>
   <b>Name</b><br />
   <%= user_group_name_value %>
@@ -12,4 +42,3 @@
 		<%= user_group_users_value  %>
 	</p>
 <% end%>
-

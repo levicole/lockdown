@@ -1,3 +1,6 @@
+== 0.3.5 2008-04-30
+* Added: Basic configuations to config/lockdown/init.rb when using the generator
+
 == 0.3.4 2008-04-30
 * Fixed: Addition of require 'lockdown/init' to config file
 

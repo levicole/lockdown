@@ -118,6 +118,9 @@ class LockdownAllGenerator < Rails::Generator::Base
 			rescue
 				puts "Admin User Group... migration exists"
 			end
+
+			add_standard_routes(m)
+			add_permissions(m)
     end
   end
 
@@ -139,5 +142,43 @@ EOS
 		m.file "app/views/#{vw}/show.html.erb", "app/views/#{vw}/show.html.erb"
 		m.file "app/views/#{vw}/edit.html.erb", "app/views/#{vw}/edit.html.erb"
 		m.file "app/views/#{vw}/new.html.erb", "app/views/#{vw}/new.html.erb"
+	end
+
+	def add_standard_routes(m)
+		home = %Q(map.home '', :controller => 'sessions', :action => 'new')
+		login = %Q(map.login '/login', :controller => 'sessions', :action => 'new')
+		logout =%Q(map.logout '/logout', :controller => 'sessions', :action => 'destroy')
+			
+		sentinel = 'ActionController::Routing::Routes.draw do |map|'
+
+		m.gsub_file 'config/routes.rb', /(#{Regexp.escape(sentinel)})/mi do |match|
+				"#{match}\n #{home}\n #{login}\n #{logout}"
+		end
+  end
+
+	def add_permissions(m)
+		perms = <<-PERMS
+
+  set_permission :sessions_management, all_methods(:sessions)
+
+  set_permission :users_management, all_methods(:users)
+
+  set_permission :user_groups_management, all_methods(:user_groups)
+
+  set_permission :permissions_management, all_methods(:permissions)
+
+  set_permission :my_account, only_methods(:users, :edit, :update, :show)
+
+
+  set_public_access :sessions_management
+
+  set_protected_access :my_account
+		PERMS
+
+		sentinel = '# Add your configuration below:'
+
+		m.gsub_file 'lib/lockdown/init.rb', /(#{Regexp.escape(sentinel)})/mi do |match|
+				"#{match}\n#{perms}"
+		end
 	end
 end

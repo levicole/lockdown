@@ -58,7 +58,7 @@ module UsersHelper
       # him/herself.
       #
       @user_groups_for_user.each_with_index do |ug,i|
-        bg = row_class(i)
+        bg =  ( i % 2 == 0 ) ? "even" : "odd"
         input_id = "ug_#{ug.id}"
         checked = (@user.user_group_ids.include?(ug.id) ? "checked" : "")
         bg << "_" << checked if checked.length > 0
