@@ -1,6 +1,0 @@
-<%= render :partial => "data",  :locals => {:f => nil} %>
-
-<% unless Lockdown::System.has_user_group?(@user_group) %>
-  <%= link_to 'Edit', edit_user_group_path(@user_group) %> |
-<% end %>
-<%= link_to 'Back', user_groups_path %>

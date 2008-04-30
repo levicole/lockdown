@@ -102,7 +102,7 @@ begin
   File.open(config_file, "a") do |f|
     require_lockdown =  %Q(require "lockdown/init")
 
-    f << %Q(#{require_lockdown}\n\n) unless configuration_file_has?(require_lockdown)
+    f << %Q(\n\n#{require_lockdown}\n\n) unless configuration_file_has?(require_lockdown)
   end
 rescue Exception => e
   puts e.backtrace.join("\n")

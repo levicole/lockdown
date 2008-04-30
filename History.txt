@@ -1,7 +1,10 @@
-== 0.3.3 2008-04-29
+== 0.3.4 2008-04-30
+* Fixed: Addition of require 'lockdown/init' to config file
+
+== 0.3.3 2008-04-30
 * Spoke too soon.  Omitted user_group controller change.
 
-== 0.3.2 2008-04-29
+== 0.3.2 2008-04-30
 * Management screens looking good.  Now moving on to testing with starter application.
 
 == 0.3.1 2008-04-29
