@@ -1,3 +1,6 @@
+== 0.3.1 2008-04-29
+* Some initital testing done.  
+
 == 0.3.0 2008-04-29
 * Big change in how the system is installed and configured in the project. 
 	Introduced lib/lockdown/init.rb.

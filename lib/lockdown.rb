@@ -96,22 +96,14 @@ module Lockdown
     private
 
     #
-    # session[:user_group] and session[:access_rights] are the keys to Lockdown.
+    # session[:access_rights] are the keys to Lockdown.
     #
     # session[:access_rights] holds the array of "controller/action" strings 
     # allowed for the user.
     #
     #
     def add_lockdown_session_values(user)
-      session[:access_rights] = user.access_rights.delete_if do |ar| 
-					ar.nil? || ar.strip.length == 0
-      end
-      if user.user_groups
-        groups = syms_from_names(user.user_groups)
-        if groups.include? administrator_group_symbol
-          session[:access_rights] = :all
-        end
-      end
+      session[:access_rights] = Lockdown::System.access_rights_for_user(user)
     end
 
     def access_in_perm?(perm)

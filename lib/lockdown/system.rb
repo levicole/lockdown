@@ -60,13 +60,6 @@ module Lockdown
 				Lockdown::System.public_access + Lockdown::System.protected_access 
       end
 
-			def user_access_rights(usr)
-				return :all if usr.administrator?
-				@user_groups.collect do |grp| 
-					grp.access_rights
-        end + Lockdown::System.standard_authorized_user_rights 
-			end
-
 			#
 			# Create a user group record in the database
 			#
@@ -88,6 +81,28 @@ module Lockdown
 				ug.destroy unless ug.nil?
 			end
 
+			def access_rights_for_user(usr)
+				return unless usr
+				return :all if administrator?(usr)
+
+			  rights = standard_authorized_user_rights
+
+				if @options[:use_db_models]
+					usr.user_groups.each do |grp|
+						if @user_groups.has_key? symbol_name(grp.name)
+							@user_groups[symbol_name(grp.name)].each do |perm|
+								rights += @permissions[perm]
+							end
+						else
+							grp.permissions.each do |perm|
+								rights += @permissions[symbol_name(perm.name)]
+							end
+						end
+					end
+				end
+				rights
+			end
+
 			#
 			# Use this for the management screen to restrict user group list to the
 			# user.  This will prevent a user from creating a user with more power than
@@ -97,10 +112,10 @@ module Lockdown
 			def user_groups_assignable_for_user(usr)
 				return [] if usr.nil?
 
-				if usr.administrator?
-					find(:all, :order => :name)
+				if administrator?(usr)
+					UserGroup.find(:all, :order => :name)
 				else
-					find_by_sql <<-SQL
+					UserGroup.find_by_sql <<-SQL
 						select user_groups.* from user_groups, user_groups_users
 						where user_groups.id = user_groups_users.user_group_id
 							and user_groups_users.user_id = #{usr.id}	 
@@ -116,6 +131,10 @@ module Lockdown
 			def administrator?(usr)
 				user_has_user_group?(usr, administrator_group_symbol)
 			end
+
+			def administrator_rights
+				all_controllers
+      end
 
       protected 
 
