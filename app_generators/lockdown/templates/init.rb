@@ -1,7 +1,7 @@
 require "lockdown"
 require File.join(File.dirname(__FILE__), "session")
 
-Lockdown::System.configure do |c|
+Lockdown::System.configure do
 
 	#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	# Configuration Options

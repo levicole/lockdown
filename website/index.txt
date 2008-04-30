@@ -52,117 +52,88 @@ The above list will be stored in the session as an array and each request is tes
 
 To define access rights you need to modify lib/lockdown/init.rb.  This is the default init.rb included with Lockdown:
 <pre syntax="ruby">
-  require "lockdown"
+require "lockdown"
+require File.join(File.dirname(__FILE__), "session")
 
-  module Lockdown
+Lockdown::System.configure do 
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Configuration Options
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Options with defaults:
   #
+  # Set timeout to 1 hour:
+  #       options[:session_timeout] = (60 * 60)
   #
-  # Permissions are used to group access rights into logical components.
-  # Each method defined in the Permissions module represents an array
-  # of methods from a controller (or multiple controllers.)
+  # Set system to logout if unauthorized access is attempted:
+  #       options[:logout_on_access_violation] = false
+  #
+  # Set redirect to path on unauthorized access attempt:
+  #       options[:access_denied_path] = "/"
+  #
+  # Set redirect to path on successful login:
+  #       options[:successful_login_path] = "/"
+  #
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Define permissions
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  #
+  # set_permission(:product_management, all_methods(:products))
+  #
+  # :product_management is the name of the permission which is later
+  # referenced by the set_user_group method
+  #
+  # :all_methods(:products) will return an array of all controller actions
+  # for the products controller
+  #
+  # if products is your standard RESTful resource you'll get:
+  #   ["products/index , "products/show",
+  #    "products/new", "products/edit",
+  #    "products/create", "products/update",
+  #    "products/destroy"]
+  #
+  # You can pass multiple parameters to concat permissions such as:
+  #      
+  #	  set_permission(:security_management,all_methods(:users),
+  #                                       all_methods(:user_groups),
+  #                                       all_methods(:permissions) )
+  #
+  # In addition to all_methods(:controller) there are:
+  #
+  #       only_methods(:controller, :only_method_1, :only_method_2)
+  #
+  #       all_except_methods(:controller, :except_method_1, :except_method_2)
+  #
+  # Some other sample permissions:
   # 
-  # Controller methods available are: 
-  #
-  #   # Returns all methods from all controllers
-  #   all_controllers
-  #  
-  #   # Returns all methods from all controllers listed
-  #   all_methods :controller1, controller2, ...
-  #  
-  #   # For a single controller, returns only methods listed
-  #   only_methods :controller1, :method1, :method2, ...
-  #  
-  #   # For a single controller, returns all methods except the methods listed
-  #   all_except_methods :controller1, :method1, :method2, ...
-  #
-  #   They all return an array of controller/action.  For example, if you had a
-  #   standard REST controller called products this would be the result:
-  #
-  #
-  #     all_methods :products  => [ "products/index , "products/show",
-  #                                 "products/new", "products/edit",
-  #                                 "products/create", "products/update",
-  #                                 "products/destroy"]
-  #
-    module Permissions
-      class << self
- 
-        def sessions_management
-          # all_methods :sessions
-        end
-
-      end # end class block
-    end # end Permissions module
- 
-  #
-  # UserGroups are used to group Permissions together to define role type
-  # functionality. Users may belong to multiple groups.
+  #  set_permission(:sessions, all_methods(:sessions))
+  #  set_permission(:my_account, only_methods(:users, :edit, :update, :show))
   # 
-    module UserGroups
-      class << self
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Built-in user groups
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  #  You can assign the above permission to one of the built-in user groups
+  #  by using the following:
+  # 
+  #  To allow public access on the permissions :sessions and :home:
+  #    set_public_access :sessions, :home
+  #     
+  #  Restrict :my_account access to only authenticated users:
+  #    set_protected_access :my_account
+  #
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Define user groups
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  #
+  #  set_user_group(:catalog_management, :category_management, 
+  #                                      :product_management) 
+  #
+  #  :catalog_management is the name of the user group
+  #  :category_management and :product_management refer to permission names
+  #
 
-        #
-        # This method defines which UserGroups cannot be managed
-        # via the management screens. 
-        # 
-        # Users can still be assigned to these groups.
-        #
-        def private_records
-          [:administrators]
-        end
-        #
-        # This method defines which UserGroups have limited access
-        # via the management screens. Deletion is not allowed.
-        # 
-        # Users can still be assigned to these groups.
-        #
-        def protected_records
-          [:public_access, :registered_users]
-        end
-         
-        # ** The administrator method is "special", please don't rename.
-        #			If you remove/rename, etc... YOU WILL BREAK STUFF
-        #
-        # Standard administrator user group.
-        # Please don't alter without careful consideration.
-        #
-        def administrators
-          [:all]
-        end
-         
-        # ** The public_access method is "special", please don't rename.
-        #			If you remove/rename, etc... YOU WILL BREAK STUFF
-        #
-        # Standard public_access user group.  
-        #
-        # Feel free to add Permissions to the array without issue.
-        #
-        # **Notice:  All permissions added to this public_access group will not be
-        #             restricted to logged in users.
-        #             So be careful what you add here!
-        #
-        def public_access
-          [:sessions_management] 
-        end
- 
-        # ** The registered_users method is "special", please don't rename.
-        #			Not as special as the others, but still...
-        #
-        # All newly created users are assigned to this User Group by default
-        #
-        #  Sample registered_users permission:
-        # [:my_account]
-        #
-        def registered_users
-          []
-        end
-
-        #
-        # Define your own user groups below
-        #
-      end # end class block
-    end # end UserGroups module
-  end # end Lockdown module
+  # Add your configuration below:
+end 
 </pre>
 
 

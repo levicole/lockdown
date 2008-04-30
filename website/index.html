@@ -101,117 +101,88 @@ Lockdown stores an array of access rights in the session.  For example, if you h
 
 	<p>To define access rights you need to modify lib/lockdown/init.rb.  This is the default init.rb included with Lockdown:
 <pre class='syntax'>
-  <span class="ident">require</span> <span class="punct">&quot;</span><span class="string">lockdown</span><span class="punct">&quot;</span>
+<span class="ident">require</span> <span class="punct">&quot;</span><span class="string">lockdown</span><span class="punct">&quot;</span>
+<span class="ident">require</span> <span class="constant">File</span><span class="punct">.</span><span class="ident">join</span><span class="punct">(</span><span class="constant">File</span><span class="punct">.</span><span class="ident">dirname</span><span class="punct">(</span><span class="constant">__FILE__</span><span class="punct">),</span> <span class="punct">&quot;</span><span class="string">session</span><span class="punct">&quot;)</span>
 
-  <span class="keyword">module </span><span class="module">Lockdown</span>
+<span class="constant">Lockdown</span><span class="punct">::</span><span class="constant">System</span><span class="punct">.</span><span class="ident">configure</span> <span class="keyword">do</span> <span class="punct">|</span><span class="ident">c</span><span class="punct">|</span>
+
+  <span class="comment">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+  <span class="comment"># Configuration Options</span>
+  <span class="comment">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+  <span class="comment"># Options with defaults:</span>
   <span class="comment">#</span>
+  <span class="comment"># Set timeout to 1 hour:</span>
+  <span class="comment">#       options[:session_timeout] = (60 * 60)</span>
   <span class="comment">#</span>
-  <span class="comment"># Permissions are used to group access rights into logical components.</span>
-  <span class="comment"># Each method defined in the Permissions module represents an array</span>
-  <span class="comment"># of methods from a controller (or multiple controllers.)</span>
+  <span class="comment"># Set system to logout if unauthorized access is attempted:</span>
+  <span class="comment">#       options[:logout_on_access_violation] = false</span>
+  <span class="comment">#</span>
+  <span class="comment"># Set redirect to path on unauthorized access attempt:</span>
+  <span class="comment">#       options[:access_denied_path] = &quot;/&quot;</span>
+  <span class="comment">#</span>
+  <span class="comment"># Set redirect to path on successful login:</span>
+  <span class="comment">#       options[:successful_login_path] = &quot;/&quot;</span>
+  <span class="comment">#</span>
+  <span class="comment">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+  <span class="comment"># Define permissions</span>
+  <span class="comment">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+  <span class="comment">#</span>
+  <span class="comment"># set_permission(:product_management, all_methods(:products))</span>
+  <span class="comment">#</span>
+  <span class="comment"># :product_management is the name of the permission which is later</span>
+  <span class="comment"># referenced by the set_user_group method</span>
+  <span class="comment">#</span>
+  <span class="comment"># :all_methods(:products) will return an array of all controller actions</span>
+  <span class="comment"># for the products controller</span>
+  <span class="comment">#</span>
+  <span class="comment"># if products is your standard RESTful resource you'll get:</span>
+  <span class="comment">#   [&quot;products/index , &quot;products/show&quot;,</span>
+  <span class="comment">#    &quot;products/new&quot;, &quot;products/edit&quot;,</span>
+  <span class="comment">#    &quot;products/create&quot;, &quot;products/update&quot;,</span>
+  <span class="comment">#    &quot;products/destroy&quot;]</span>
+  <span class="comment">#</span>
+  <span class="comment"># You can pass multiple parameters to concat permissions such as:</span>
+  <span class="comment">#      </span>
+  <span class="comment">#	  set_permission(:security_management,all_methods(:users),</span>
+  <span class="comment">#                                       all_methods(:user_groups),</span>
+  <span class="comment">#                                       all_methods(:permissions) )</span>
+  <span class="comment">#</span>
+  <span class="comment"># In addition to all_methods(:controller) there are:</span>
+  <span class="comment">#</span>
+  <span class="comment">#       only_methods(:controller, :only_method_1, :only_method_2)</span>
+  <span class="comment">#</span>
+  <span class="comment">#       all_except_methods(:controller, :except_method_1, :except_method_2)</span>
+  <span class="comment">#</span>
+  <span class="comment"># Some other sample permissions:</span>
   <span class="comment"># </span>
-  <span class="comment"># Controller methods available are: </span>
-  <span class="comment">#</span>
-  <span class="comment">#   # Returns all methods from all controllers</span>
-  <span class="comment">#   all_controllers</span>
-  <span class="comment">#  </span>
-  <span class="comment">#   # Returns all methods from all controllers listed</span>
-  <span class="comment">#   all_methods :controller1, controller2, ...</span>
-  <span class="comment">#  </span>
-  <span class="comment">#   # For a single controller, returns only methods listed</span>
-  <span class="comment">#   only_methods :controller1, :method1, :method2, ...</span>
-  <span class="comment">#  </span>
-  <span class="comment">#   # For a single controller, returns all methods except the methods listed</span>
-  <span class="comment">#   all_except_methods :controller1, :method1, :method2, ...</span>
-  <span class="comment">#</span>
-  <span class="comment">#   They all return an array of controller/action.  For example, if you had a</span>
-  <span class="comment">#   standard REST controller called products this would be the result:</span>
-  <span class="comment">#</span>
-  <span class="comment">#</span>
-  <span class="comment">#     all_methods :products  =&gt; [ &quot;products/index , &quot;products/show&quot;,</span>
-  <span class="comment">#                                 &quot;products/new&quot;, &quot;products/edit&quot;,</span>
-  <span class="comment">#                                 &quot;products/create&quot;, &quot;products/update&quot;,</span>
-  <span class="comment">#                                 &quot;products/destroy&quot;]</span>
-  <span class="comment">#</span>
-    <span class="keyword">module </span><span class="module">Permissions</span>
-      <span class="keyword">class </span><span class="punct">&lt;&lt;</span> <span class="constant">self</span>
- 
-        <span class="keyword">def </span><span class="method">sessions_management</span>
-          <span class="comment"># all_methods :sessions</span>
-        <span class="keyword">end</span>
-
-      <span class="keyword">end</span> <span class="comment"># end class block</span>
-    <span class="keyword">end</span> <span class="comment"># end Permissions module</span>
- 
-  <span class="comment">#</span>
-  <span class="comment"># UserGroups are used to group Permissions together to define role type</span>
-  <span class="comment"># functionality. Users may belong to multiple groups.</span>
+  <span class="comment">#  set_permission(:sessions, all_methods(:sessions))</span>
+  <span class="comment">#  set_permission(:my_account, only_methods(:users, :edit, :update, :show))</span>
   <span class="comment"># </span>
-    <span class="keyword">module </span><span class="module">UserGroups</span>
-      <span class="keyword">class </span><span class="punct">&lt;&lt;</span> <span class="constant">self</span>
+  <span class="comment">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+  <span class="comment"># Built-in user groups</span>
+  <span class="comment">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+  <span class="comment">#  You can assign the above permission to one of the built-in user groups</span>
+  <span class="comment">#  by using the following:</span>
+  <span class="comment"># </span>
+  <span class="comment">#  To allow public access on the permissions :sessions and :home:</span>
+  <span class="comment">#    set_public_access :sessions, :home</span>
+  <span class="comment">#     </span>
+  <span class="comment">#  Restrict :my_account access to only authenticated users:</span>
+  <span class="comment">#    set_protected_access :my_account</span>
+  <span class="comment">#</span>
+  <span class="comment">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+  <span class="comment"># Define user groups</span>
+  <span class="comment">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+  <span class="comment">#</span>
+  <span class="comment">#  set_user_group(:catalog_management, :category_management, </span>
+  <span class="comment">#                                      :product_management) </span>
+  <span class="comment">#</span>
+  <span class="comment">#  :catalog_management is the name of the user group</span>
+  <span class="comment">#  :category_management and :product_management refer to permission names</span>
+  <span class="comment">#</span>
 
-        <span class="comment">#</span>
-        <span class="comment"># This method defines which UserGroups cannot be managed</span>
-        <span class="comment"># via the management screens. </span>
-        <span class="comment"># </span>
-        <span class="comment"># Users can still be assigned to these groups.</span>
-        <span class="comment">#</span>
-        <span class="keyword">def </span><span class="method">private_records</span>
-          <span class="punct">[</span><span class="symbol">:administrators</span><span class="punct">]</span>
-        <span class="keyword">end</span>
-        <span class="comment">#</span>
-        <span class="comment"># This method defines which UserGroups have limited access</span>
-        <span class="comment"># via the management screens. Deletion is not allowed.</span>
-        <span class="comment"># </span>
-        <span class="comment"># Users can still be assigned to these groups.</span>
-        <span class="comment">#</span>
-        <span class="keyword">def </span><span class="method">protected_records</span>
-          <span class="punct">[</span><span class="symbol">:public_access</span><span class="punct">,</span> <span class="symbol">:registered_users</span><span class="punct">]</span>
-        <span class="keyword">end</span>
-         
-        <span class="comment"># ** The administrator method is &quot;special&quot;, please don't rename.</span>
-        <span class="comment">#			If you remove/rename, etc... YOU WILL BREAK STUFF</span>
-        <span class="comment">#</span>
-        <span class="comment"># Standard administrator user group.</span>
-        <span class="comment"># Please don't alter without careful consideration.</span>
-        <span class="comment">#</span>
-        <span class="keyword">def </span><span class="method">administrators</span>
-          <span class="punct">[</span><span class="symbol">:all</span><span class="punct">]</span>
-        <span class="keyword">end</span>
-         
-        <span class="comment"># ** The public_access method is &quot;special&quot;, please don't rename.</span>
-        <span class="comment">#			If you remove/rename, etc... YOU WILL BREAK STUFF</span>
-        <span class="comment">#</span>
-        <span class="comment"># Standard public_access user group.  </span>
-        <span class="comment">#</span>
-        <span class="comment"># Feel free to add Permissions to the array without issue.</span>
-        <span class="comment">#</span>
-        <span class="comment"># **Notice:  All permissions added to this public_access group will not be</span>
-        <span class="comment">#             restricted to logged in users.</span>
-        <span class="comment">#             So be careful what you add here!</span>
-        <span class="comment">#</span>
-        <span class="keyword">def </span><span class="method">public_access</span>
-          <span class="punct">[</span><span class="symbol">:sessions_management</span><span class="punct">]</span> 
-        <span class="keyword">end</span>
- 
-        <span class="comment"># ** The registered_users method is &quot;special&quot;, please don't rename.</span>
-        <span class="comment">#			Not as special as the others, but still...</span>
-        <span class="comment">#</span>
-        <span class="comment"># All newly created users are assigned to this User Group by default</span>
-        <span class="comment">#</span>
-        <span class="comment">#  Sample registered_users permission:</span>
-        <span class="comment"># [:my_account]</span>
-        <span class="comment">#</span>
-        <span class="keyword">def </span><span class="method">registered_users</span>
-          <span class="punct">[]</span>
-        <span class="keyword">end</span>
-
-        <span class="comment">#</span>
-        <span class="comment"># Define your own user groups below</span>
-        <span class="comment">#</span>
-      <span class="keyword">end</span> <span class="comment"># end class block</span>
-    <span class="keyword">end</span> <span class="comment"># end UserGroups module</span>
-  <span class="keyword">end</span> <span class="comment"># end Lockdown module</span>
+  <span class="comment"># Add your configuration below:</span>
+<span class="keyword">end</span> 
 </pre></p>
 
 
@@ -268,7 +239,7 @@ Lockdown stores an array of access rights in the session.  For example, if you h
 
 	<p>Comments and suggestions are welcome via the <a href="http://groups.google.com/group/stonean_lockdown?hl=en">forum</a></p>
     <p class="coda">
-      28th April 2008<br/>
+      30th April 2008<br/>
       Theme extended from <a href="http://rb2js.rubyforge.org/">Paul Battley</a>
     </p>
 </div>
