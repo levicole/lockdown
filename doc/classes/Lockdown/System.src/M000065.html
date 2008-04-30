@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>create_user_group (Lockdown::System)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/lockdown/system.rb, line 66</span>
+                        <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create_user_group</span>(<span class="ruby-identifier">str_sym</span>)
+                                <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@options</span>[<span class="ruby-identifier">:use_db_models</span>]
+                                <span class="ruby-identifier">ug</span> = <span class="ruby-constant">UserGroup</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">:name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">string_name</span>(<span class="ruby-identifier">str_sym</span>))
+                                <span class="ruby-comment cmt">#</span>
+                                <span class="ruby-comment cmt"># No need to create permissions records for administrators</span>
+                                <span class="ruby-comment cmt">#</span>
+                                <span class="ruby-identifier">ug_sym</span> = <span class="ruby-identifier">symbol_name</span>(<span class="ruby-identifier">ug</span>.<span class="ruby-identifier">name</span>)
+                                <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">ug_sym</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">administrator_group_symbol</span>
+
+                                <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">has_user_group?</span>(<span class="ruby-identifier">ug</span>)
+                                        <span class="ruby-ivar">@user_groups</span>[<span class="ruby-identifier">ug_sym</span>].<span class="ruby-identifier">collect</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">perm</span><span class="ruby-operator">|</span>
+                                                <span class="ruby-constant">Permission</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">:name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">string_name</span>(<span class="ruby-identifier">perm</span>))
+                                        <span class="ruby-keyword kw">end</span>
+                                <span class="ruby-keyword kw">end</span>
+                        <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

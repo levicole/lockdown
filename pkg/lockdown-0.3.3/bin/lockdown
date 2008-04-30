@@ -1,0 +1,141 @@
+#!/usr/bin/env ruby
+
+require "rubygems"
+require "rubigen"
+require "rubigen/scripts/generate"
+require 'optparse'
+
+if %w(-v --version).include? ARGV.first
+  require 'lockdown/version'
+  puts "#{File.basename($0)} #{Lockdown::VERSION::STRING}"
+  exit(0)
+end
+
+
+#
+#  Created on 2008-4-21.
+#  Copyright (c) 2008. All rights reserved.
+
+  MERB_CONFIG = 'config/init.rb'
+  RAILS_CONFIG = 'config/environment.rb'
+
+  if File.exists?(MERB_CONFIG)
+    @framework = "merb"
+  elsif File.exists?(RAILS_CONFIG)
+    @framework = "rails"
+  else
+    raise NotImplementedError, "Configuration file not found.  Looking for init.rb (Merb) or environment.rb (Rails)"
+  end
+
+  def merb_app?
+    @framework == "merb"
+  end
+
+  def rails_app?
+    @framework == "rails"
+  end
+
+  #
+  # Right now we only have the two and we raise an exception
+  # if we don't know prior to getting here..
+  #
+  def config_file
+    if merb_app?
+      MERB_CONFIG
+    else
+      RAILS_CONFIG
+    end
+  end
+
+  begin
+    require 'rubygems'
+  rescue LoadError
+    # no rubygems to load, so we fail silently
+  end
+
+
+  OPTIONS = {
+    :path     => File.expand_path('.')
+  }
+
+  parser = OptionParser.new do |opts|
+    opts.banner = <<-BANNER
+    Lockdown will add init.rb and session.rb to the lib/lockdown directory and require them in #{config_file}.
+
+    Usage: #{File.basename($0)} [options]
+
+    Options are:
+    BANNER
+
+    opts.separator ""
+    opts.on("-p", "--path=PATH", String,
+              "The root path for selecting files",
+              "Default: [current directory]") { |OPTIONS[:path]| }
+    opts.on("-h", "--help",
+              "Show this help message.") { puts opts; exit }
+    opts.parse!(ARGV)
+  end 
+
+  #
+  # Load up the config file contents
+  #
+  @configuration = File.open config_file do |f|
+    f.map {|line| line.chomp}
+  end
+
+  def configuration_file_has?(req)
+    @configuration.include?(req)
+  end
+
+puts <<-MSG
+\n------------------------------------------------------------
+Installing Lockdown
+MSG
+
+begin
+  source = RubiGen::PathSource.new(:application,
+                                   File.join(File.dirname(__FILE__), "../app_generators"))
+  RubiGen::Base.reset_sources
+  RubiGen::Base.append_sources source
+  RubiGen::Scripts::Generate.new.run(ARGV, :generator => 'lockdown', :framework => @framework)
+
+  File.open(config_file, "a") do |f|
+    require_lockdown =  %Q(require "lockdown/init")
+
+    f << %Q(#{require_lockdown}\n\n) unless configuration_file_has?(require_lockdown)
+  end
+rescue Exception => e
+  puts e.backtrace.join("\n")
+  raise e
+end
+
+puts <<-MSG
+------------------------------------------------------------\n
+MSG
+
+puts <<-MSG
+\n------------------------------------------------------------
+Modified #{config_file} by adding:
+    require "lockdown/init"
+------------------------------------------------------------\n
+MSG
+
+puts <<-MSG
+\n------------------------------------------------------------
+You are now locked down.  To open up access to your application 
+please modify lib/lockdown/init.rb.  This is where you'll 
+add permissions and create user groups.
+
+To modify the contents of your session and to add access 
+methods, modify lib/lockdown/session.rb.
+
+If you want to know more, please visit:
+
+http://lockdown.rubyforge.org
+
+If you have any suggestions, comments or issues 
+please visit the Lockdown Google group:
+
+http://groups.google.com/group/stonean_lockdown?hl=en
+------------------------------------------------------------\n
+MSG

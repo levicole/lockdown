@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>included (Lockdown::Controller::Merb)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/lockdown/controller.rb, line 83</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">included</span>(<span class="ruby-identifier">base</span>)
+        <span class="ruby-identifier">base</span>.<span class="ruby-identifier">send</span> <span class="ruby-identifier">:include</span>, <span class="ruby-constant">Lockdown</span><span class="ruby-operator">::</span><span class="ruby-constant">Controller</span><span class="ruby-operator">::</span><span class="ruby-constant">Merb</span><span class="ruby-operator">::</span><span class="ruby-constant">InstanceMethods</span>
+
+        <span class="ruby-identifier">base</span>.<span class="ruby-identifier">before</span> <span class="ruby-identifier">:set_current_user</span>
+        <span class="ruby-identifier">base</span>.<span class="ruby-identifier">before</span> <span class="ruby-identifier">:configure_lock_down</span>
+        <span class="ruby-identifier">base</span>.<span class="ruby-identifier">before</span> <span class="ruby-identifier">:check_request_authorization</span>
+      <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>
