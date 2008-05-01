@@ -1,3 +1,6 @@
+== 0.3.10 2008-05-01
+* Fixed: users_controller management of user_groups was using outdated methods.  this applies only to the stubs produced with the generator
+
 == 0.3.9 2008-05-01
 * Modify: changed controller_classes from array to hash to speed up access
 

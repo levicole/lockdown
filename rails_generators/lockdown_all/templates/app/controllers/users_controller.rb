@@ -109,7 +109,7 @@ class UsersController < ApplicationController
 		#
 		@user.user_groups.dup.each do |g|
 			#Don't remove the automatically assigned user groups
-			next if g.system_assigned?
+			next if Lockdown::System.has_user_group?(g)
 			@user.user_groups.delete(g) unless new_ug_ids.include?(g.id)
     end
 		# 
