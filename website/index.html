@@ -33,7 +33,7 @@
     <h1>lockdown</h1>
     <div id="version" class="clickable" onclick='document.location = "http://rubyforge.org/projects/lockdown"; return false'>
       <p>Get Version</p>
-      <a href="http://rubyforge.org/projects/lockdown" class="numbers">0.3.5</a>
+      <a href="http://rubyforge.org/projects/lockdown" class="numbers">0.3.6</a>
     </div>
     <h1>&#x2192; &#8216;lockdown&#8217;</h1>
 
@@ -104,7 +104,7 @@ Lockdown stores an array of access rights in the session.  For example, if you h
 <span class="ident">require</span> <span class="punct">&quot;</span><span class="string">lockdown</span><span class="punct">&quot;</span>
 <span class="ident">require</span> <span class="constant">File</span><span class="punct">.</span><span class="ident">join</span><span class="punct">(</span><span class="constant">File</span><span class="punct">.</span><span class="ident">dirname</span><span class="punct">(</span><span class="constant">__FILE__</span><span class="punct">),</span> <span class="punct">&quot;</span><span class="string">session</span><span class="punct">&quot;)</span>
 
-<span class="constant">Lockdown</span><span class="punct">::</span><span class="constant">System</span><span class="punct">.</span><span class="ident">configure</span> <span class="keyword">do</span> <span class="punct">|</span><span class="ident">c</span><span class="punct">|</span>
+<span class="constant">Lockdown</span><span class="punct">::</span><span class="constant">System</span><span class="punct">.</span><span class="ident">configure</span> <span class="keyword">do</span> 
 
   <span class="comment">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
   <span class="comment"># Configuration Options</span>
@@ -184,27 +184,6 @@ Lockdown stores an array of access rights in the session.  For example, if you h
   <span class="comment"># Add your configuration below:</span>
 <span class="keyword">end</span> 
 </pre></p>
-
-
-	<h2>Some History</h2>
-
-
-	<p>Lockdown was initially designed as a authentication/authorization system to be configured by system administrators. This means it was database driven and had an interface to manage the access rights.  I didn&#8217;t like the static methodology of using code scattered amongst the controllers to define my access rights for the system.  I also didn&#8217;t like the fact that everything was accessible unless you restricted access.  So, I designed Lockdown to restrict access to all resources unless rights have been granted.</p>
-
-
-	<p>The system was nice and worked well until I had a project that required RSpec tests.  I don&#8217;t have anything against testing frameworks (now that I&#8217;ve see the light) but what bothered me most what the fact that I would have to duplicate the information I already defined in my migrations as mock data.  I simply refused to do that extra work.  So, a serious refactoring of Lockdown was required.</p>
-
-
-	<p>After the RSpec project was completed, the refactoring continued.  This time the focus was on releasing the code to the masses.  I like this system a lot and think both the system itself and the community could benefit from releasing this as an open source project.</p>
-
-
-	<p>In the middle of my refactoring for a public release, I made the decision to use Merb (when the choice was mine). This meant I needed to modify Lockdown for use with Merb.  So this is what I have done.</p>
-
-
-	<p>There is code in place for using Lockdown with Rails, after all, that&#8217;s where Lockdown was born.  However, I have not yet tested the Rails functionality after this last refactor.  In addition, the deployment mechanism for Rails has to be tested.</p>
-
-
-	<p>Writing code for public release is difficult and much different from architecting/coding for a closed source project.  A lot of things you could get by with in a proprietary application won&#8217;t be well received by the general public.  In addition, if you don&#8217;t make things easy, the adoption rate will probably be non-existent.</p>
 
 
 	<h2>Forum</h2>

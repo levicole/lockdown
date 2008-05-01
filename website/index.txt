@@ -136,24 +136,6 @@ Lockdown::System.configure do
 end 
 </pre>
 
-
-
-h2. Some History
-
-Lockdown was initially designed as a authentication/authorization system to be configured by system administrators. This means it was database driven and had an interface to manage the access rights.  I didn't like the static methodology of using code scattered amongst the controllers to define my access rights for the system.  I also didn't like the fact that everything was accessible unless you restricted access.  So, I designed Lockdown to restrict access to all resources unless rights have been granted. 
-
-The system was nice and worked well until I had a project that required RSpec tests.  I don't have anything against testing frameworks (now that I've see the light) but what bothered me most what the fact that I would have to duplicate the information I already defined in my migrations as mock data.  I simply refused to do that extra work.  So, a serious refactoring of Lockdown was required.
-
-
-After the RSpec project was completed, the refactoring continued.  This time the focus was on releasing the code to the masses.  I like this system a lot and think both the system itself and the community could benefit from releasing this as an open source project.  
-
-In the middle of my refactoring for a public release, I made the decision to use Merb (when the choice was mine). This meant I needed to modify Lockdown for use with Merb.  So this is what I have done.
-
-There is code in place for using Lockdown with Rails, after all, that's where Lockdown was born.  However, I have not yet tested the Rails functionality after this last refactor.  In addition, the deployment mechanism for Rails has to be tested.
-
-Writing code for public release is difficult and much different from architecting/coding for a closed source project.  A lot of things you could get by with in a proprietary application won't be well received by the general public.  In addition, if you don't make things easy, the adoption rate will probably be non-existent.
-
-
 h2. Forum
 
 If you are having a problem understanding how to use Lockdown, please post your question on the lockdown group.  If it's documentation related, I will keep this page updated to help everyone. 

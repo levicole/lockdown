@@ -125,6 +125,10 @@ module Lockdown
 				rights
 			end
 
+			def access_rights_for_perm(perm)
+        (perms = @permissions[symbol_name(perm.name)]) == nil ? [] : perms 
+      end
+
 			#
 			# Use this for the management screen to restrict user group list to the
 			# user.  This will prevent a user from creating a user with more power than
