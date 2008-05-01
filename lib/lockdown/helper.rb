@@ -1,11 +1,5 @@
 module Lockdown
   module Helper
-    def syms_from_names(ary)
-      rvalue = []
-      ary.each{|ar| rvalue << symbolize(ar.name)}
-      rvalue
-    end
-
     #
     # If str_sym is a Symbol (:users), give me back "Users"
     # If str_sym is a String ("Users"), give me back :users
@@ -27,10 +21,6 @@ module Lockdown
 		def symbol_name(str_sym)
 			str_sym.is_a?(String) ? convert_reference_name(str_sym) : str_sym
 		end
-
-    def symbolize(str)
-      str.downcase.gsub("admin ","admin__").gsub(" ","_").to_sym
-    end
 
     def camelize(str)
       str.to_s.gsub(/\/(.?)/) { "::" + $1.upcase }.gsub(/(^|_)(.)/) { $2.upcase }
@@ -65,5 +55,16 @@ module Lockdown
         gsub(/([a-z\d])([A-Z])/,'\1_\2').
         tr("-", "_").downcase
     end
+
+    if Lockdown.rails_app?
+      def kontroller_class_name(str)
+        "#{str}Controller"
+      end
+    else
+      def kontroller_class_name(str)
+        str
+      end
+    end
   end
+
 end

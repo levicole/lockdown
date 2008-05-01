@@ -17,6 +17,8 @@ module Lockdown
       # :private_access will restrict access to model data to their creators.
       # attr_accessor :private_access #:nodoc:
 
+      attr_accessor :controller_classes #:nodoc:
+
       def configure(&block)
 				self.set_defaults
         self.instance_eval(&block)
@@ -177,9 +179,18 @@ module Lockdown
 				all_controllers
       end
 
+      def fetch_controller_class(str)
+        @controller_classes.each do |klass|
+          return klass if klass.name == controller_class_name(str)
+        end
+      end
+
       protected 
 
       def set_defaults
+        @controller_classes = []
+        load_controller_classes
+
         @permissions = {}
         @user_groups = {}
 
@@ -205,6 +216,50 @@ module Lockdown
 				false
 			end
 
+      def load_controller_classes
+        unless const_defined?("Application")
+          require(Lockdown.project_root + "/app/controllers/application.rb")
+        end
+
+        Dir.chdir("#{Lockdown.project_root}/app/controllers") do
+          Dir["**/*.rb"].sort.each do |c|
+            next if c == "application.rb"
+            klass = controller_class_name_from_file(c)
+            require(c) unless qualified_const_defined?(klass)
+            @controller_classes.push( qualified_const_get(klass) )
+          end
+        end
+      end
+
+      def controller_class_name_from_file(str)
+        str.split(".")[0].split("/").collect{|str| camelize(str) }.join("::")
+      end
+
+      def controller_class_name(str)
+        if str.include?("__")
+          kontroller_class_name(str.split("__").collect{|p| camelize(p)}.join("::"))
+        else
+          kontroller_class_name(camelize(str))
+        end
+      end
+
+      def qualified_const_defined?(klass)
+        if klass =~ /::/
+          namespace, klass = klass.split("::")
+          eval("#{namespace}.const_defined?(#{klass})") if const_defined?(namespace)
+        else
+          const_defined?(klass)
+        end
+      end
+
+      def qualified_const_get(klass)
+        if klass =~ /::/
+          namespace, klass = klass.split("::")
+          eval(namespace).const_get(klass)
+        else
+          const_get(klass)
+        end
+      end
     end # class block
   end # System class
 end # Lockdown

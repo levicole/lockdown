@@ -1,3 +1,9 @@
+== 0.3.8 2008-05-01
+* Fixed: corrected class loader to ensure ObjectSpace is used only once
+
+== 0.3.7 2008-05-01
+* Fixed: access rights list for permissions. maded modifications to permissions helper as well.
+
 == 0.3.6 2008-04-30
 * Fixed: The block in init.rb does not take a parameter.  This has been removed from the template.
 
