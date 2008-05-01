@@ -217,14 +217,14 @@ module Lockdown
         @controller_classes = {}
 
         unless const_defined?("Application")
-          require(Lockdown.project_root + "/app/controllers/application.rb")
+          load(Lockdown.project_root + "/app/controllers/application.rb")
         end
 
         Dir.chdir("#{Lockdown.project_root}/app/controllers") do
           Dir["**/*.rb"].sort.each do |c|
             next if c == "application.rb"
             klass = controller_class_name_from_file(c)
-            require(c) unless qualified_const_defined?(klass)
+            load(c) unless qualified_const_defined?(klass)
             @controller_classes[klass] = qualified_const_get(klass) 
           end
         end

@@ -1,3 +1,6 @@
+== 0.3.11 2008-05-01
+* Modified: Lockdown::System controller inspect to use "load" instead of "require".
+
 == 0.3.10 2008-05-01
 * Fixed: users_controller management of user_groups was using outdated methods.  this applies only to the stubs produced with the generator
 
