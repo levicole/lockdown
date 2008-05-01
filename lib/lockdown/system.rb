@@ -180,15 +180,12 @@ module Lockdown
       end
 
       def fetch_controller_class(str)
-        @controller_classes.each do |klass|
-          return klass if klass.name == controller_class_name(str)
-        end
+        @controller_classes[controller_class_name(str)]
       end
 
       protected 
 
       def set_defaults
-        @controller_classes = []
         load_controller_classes
 
         @permissions = {}
@@ -217,6 +214,8 @@ module Lockdown
 			end
 
       def load_controller_classes
+        @controller_classes = {}
+
         unless const_defined?("Application")
           require(Lockdown.project_root + "/app/controllers/application.rb")
         end
@@ -226,7 +225,7 @@ module Lockdown
             next if c == "application.rb"
             klass = controller_class_name_from_file(c)
             require(c) unless qualified_const_defined?(klass)
-            @controller_classes.push( qualified_const_get(klass) )
+            @controller_classes[klass] = qualified_const_get(klass) 
           end
         end
       end
