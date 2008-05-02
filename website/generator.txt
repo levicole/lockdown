@@ -1,0 +1,156 @@
+h1. <a href="http://lockdown.rubyforge.org">Lockdown</a>
+
+h2. What
+
+This page will describe how to get started with a new application.  There is only one generator available right now: generator_all.  This will put everything in place and is useful when creating a new application.
+
+I intend on breaking this out into separate generators to make the inclusion of Lockdown to existing applications much easier.
+
+h2. Creating a new application
+
+
+<pre>
+$ rails demo_app
+<snip output>
+$ cd demo_app
+$ lockdown .
+------------------------------------------------------------
+Installing Lockdown
+      create  lib/lockdown
+      create  lib/lockdown/session.rb
+      create  lib/lockdown/init.rb
+------------------------------------------------------------
+
+
+------------------------------------------------------------
+Modified config/environment.rb by adding:
+    require "lockdown/init"
+------------------------------------------------------------
+
+
+------------------------------------------------------------
+You are now locked down.  To open up access to your application 
+please modify lib/lockdown/init.rb.  This is where you'll 
+add permissions and create user groups.
+
+To modify the contents of your session and to add access 
+methods, modify lib/lockdown/session.rb.
+
+If you want to know more, please visit:
+
+http://lockdown.rubyforge.org
+
+If you have any suggestions, comments or issues 
+please visit the Lockdown Google group:
+
+http://groups.google.com/group/stonean_lockdown?hl=en
+------------------------------------------------------------
+</pre>
+
+Now it's time to get the template...
+
+<pre>
+$ ./script/generate lockdown_all
+      exists  app/helpers
+      exists  app/models
+      exists  app/views
+      create  app/views/users
+      create  app/views/user_groups
+      create  app/views/permissions
+      create  app/views/sessions
+      exists  app/controllers
+      create  app/controllers/permissions_controller.rb
+      create  app/controllers/users_controller.rb
+      create  app/controllers/user_groups_controller.rb
+      create  app/controllers/sessions_controller.rb
+      create  app/models/permission.rb
+      create  app/models/user.rb
+      create  app/models/user_group.rb
+      create  app/models/profile.rb
+       route  map.resources :permissions
+       route  map.resources :user_groups
+       route  map.resources :users
+       route  map.resources :sessions
+      create  app/helpers/permissions_helper.rb
+      create  app/helpers/users_helper.rb
+      create  app/helpers/user_groups_helper.rb
+      create  app/views/users/_data.html.erb
+      create  app/views/users/_form.html.erb
+      create  app/views/users/index.html.erb
+      create  app/views/users/show.html.erb
+      create  app/views/users/edit.html.erb
+      create  app/views/users/new.html.erb
+      create  app/views/users/_password.html.erb
+      create  app/views/user_groups/_data.html.erb
+      create  app/views/user_groups/_form.html.erb
+      create  app/views/user_groups/index.html.erb
+      create  app/views/user_groups/show.html.erb
+      create  app/views/user_groups/edit.html.erb
+      create  app/views/user_groups/new.html.erb
+      create  app/views/permissions/_data.html.erb
+      create  app/views/permissions/index.html.erb
+      create  app/views/permissions/show.html.erb
+      create  app/views/sessions/new.html.erb
+      create  db/migrate
+      create  db/migrate/001_create_profiles.rb
+      exists  db/migrate
+      create  db/migrate/002_create_users.rb
+      exists  db/migrate
+      create  db/migrate/003_create_user_groups.rb
+      exists  db/migrate
+      create  db/migrate/004_create_permissions.rb
+      exists  db/migrate
+      create  db/migrate/005_create_admin_user_and_user_group.rb
+</pre>
+
+Run your migrations: 
+
+<pre>
+$ rake db:migrate --trace
+</pre>
+
+Remove index.html
+
+<pre>
+$ rm public/index.html
+</pre>
+
+Start the app and then open up your browser to http://localhost:3000
+
+<pre>
+$ ./script/server
+</pre>
+
+You'll see that the lockdown_all generator has added a default route to the login page.
+
+Login using the basic admin account with credentials: admin/password 
+
+After you login (you'll still be on the login page), go one of the following pages:
+
+http://localhost:3000/users
+
+http://localhost:3000/user_groups
+
+There is a permissiosn page also available, but you don't have any with the basic install.  And since permissions cannot be created via the admin screens, this doesn't have much value for you now.
+
+http://localhost:3000/permissions 
+
+
+h2. Permissions
+
+Alright, so there's not a lot to see on these basic screens but that's only because there's isn't a lot to the system at the moment.
+
+Now it's time to look at lib/lockdown/init.rb.  Open it in your favorite editor.
+
+There's some documentation with examples that will hopefully server for more than a reminder.  Please read that documentation before continuing here.  
+
+...
+
+I guess that wasn't sufficient? If you don't understand how to use init.rb, please post a question on the forum and I'll address the issue there and then update init.rb.
+
+For simplicity sake, I would like the documentation for init.rb contained within that file. 
+
+h2. Contact
+
+Comments and suggestions are welcome via the "forum":http://groups.google.com/group/stonean_lockdown?hl=en
+

@@ -5,7 +5,7 @@
   <link rel="stylesheet" href="stylesheets/screen.css" type="text/css" media="screen" />
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>
-      lockdown
+      Lockdown
   </title>
   <script src="javascripts/rounded_corners_lite.inc.js" type="text/javascript"></script>
 <style>
@@ -30,30 +30,18 @@
 <body>
 <div id="main">
 
-    <h1>lockdown</h1>
+    <h1>Lockdown</h1>
     <div id="version" class="clickable" onclick='document.location = "http://rubyforge.org/projects/lockdown"; return false'>
       <p>Get Version</p>
-      <a href="http://rubyforge.org/projects/lockdown" class="numbers">0.3.11</a>
+      <a href="http://rubyforge.org/projects/lockdown" class="numbers">0.3.12</a>
     </div>
-    <h1>&#x2192; &#8216;lockdown&#8217;</h1>
-
-
-	<h3>Lockdown has not been officially released!  This page is a Work-In-Progress.</h3>
+    <h3>Lockdown has not been officially released!  This page is a Work-In-Progress.</h3>
 
 
 	<h2>What</h2>
 
 
-	<p>Lockdown is a authentication/authorization system for RubyOnRails and Merb designed for simplicity and extensibility.  All access rules are defined in lib/lockdown/init.rb.  With the included <span class="caps">ORM</span> support (ActiveRecord or DataMapper) and management screens you can add user defined rules to the system.</p>
-
-
-	<p>If there is a &#8220;spec&#8221; directory, a test helper file will be included to provied some basic functionality for use with RSpec. This will show you how to create mock user objects and sign in as an adminstrator.</p>
-
-
-	<p>Also included is functionality to auto-populate created_by and updated_by fields.</p>
-
-
-	<p>Some model level access right functionality will also be added in the near future.</p>
+	<p>Lockdown is a authentication/authorization system for RubyOnRails (ver 2.x). While Merb functionality is in place, it is not complete.  There will be a release solely focused on getting the Merb functionality up to par with Rails.</p>
 
 
 	<h2>Installing</h2>
@@ -71,13 +59,26 @@ $ lockdown .
 	<p>This will create a &#8220;lockdown&#8221; directory in the lib dir add two files: init.rb and session.rb.  Modify init.rb to set defaults and define the rules that apply to your system.</p>
 
 
-	<p>If you want the full &#8216;subsystem&#8217; (models, views, controllers, helpers):</p>
+	<p>To help you with your new application, Lockdown comes with a generator called lockdown_all.</p>
 
 
 <pre>
 $ cd &lt;your_project_directory&gt;
 $ ./script/generate lockdown_all
 </pre>
+
+This will install resources such as:
+<ul>
+  <li>Models</li>
+  <li>Controllers</li>
+  <li>Views</li>
+  <li>Helpers</li>
+  <li>Migrations</li>
+  <li>Routes</li>
+</ul>
+
+	<p>Please refer to the <a href="generator.html">generator page</a> for more detail.</p>
+
 
 	<p>I recommend reading this page to get a feel for Lockdown&#8217;s functionality.</p>
 
@@ -186,6 +187,52 @@ Lockdown stores an array of access rights in the session.  For example, if you h
 </pre></p>
 
 
+	<h2>The internals</h2>
+
+
+	<p>All configuration of Lockdown (Permissions and User Groups) are done in lib/lockdown/init.rb.  The database functionality is merely an extension of the definitions to allow for the dynamic creation of User Groups.  Permissions can not be created via the administration screens.</p>
+
+
+	<p>Lockdown doesn&#8217;t have a concept of Roles. Instead, Lockdown users can be associated to one or many User Groups to allow for flexibility.  In addition, you can use the admin screens to add new User Groups to the database.</p>
+
+
+Here are the parts to Lockdown:
+<ul>
+ <li><strong>Profiles</strong><br/>
+    <p>The profile model contains all non-user information related to person.  Lockdown uses the profile record as the reference for updated_by and created_by.  This allows you to remove the user record completely when you want to revoke access, but you still retain the foreign key for history.<br/>Here are the fields you have to start with:</p>
+    <ul>
+      <li>first_name : string</li>
+      <li>last_name : string</li>
+      <li>email : string</li>
+    </ul>
+<br/>
+  </li>
+ <li><strong>Users</strong><br/>
+    <p>The user model contains all user information related to person.<br/>Here are the fields you have to start with:</p>
+    <ul>
+      <li>login : string</li>
+      <li>crypted_password : string</li>
+      <li>salt : string</li>
+      <li>profile_id : integer</li>
+    </ul>
+<br/>
+  </li>
+ <li><strong>User Groups</strong><br/>
+    <p>User Groups exist only to group Permissions.  All functionality for your site should be covered by the user groups you define in init.rb.  You can use the admin screen to create new user groups if the need arises. The database model only has one field:  </p>
+    <ul>
+      <li>name : string</li>
+    </ul>
+<br/>
+  </li>
+ <li><strong>Permissions</strong><br/>
+    <p>Permissions are the security building blocks of your system and are defined in init.rb.  A permission maps to controller(s)/action(s) in your system. Please refer back to the documenation in init.rb on how to create permissions.
+ As permissions relate to system functionality, they cannot be created via the admin screen.  The database model only has one field:  </p>
+    <ul>
+      <li>name : string</li>
+    </ul>
+  </li>
+</ul>
+
 	<h2>Forum</h2>
 
 
@@ -218,7 +265,7 @@ Lockdown stores an array of access rights in the session.  For example, if you h
 
 	<p>Comments and suggestions are welcome via the <a href="http://groups.google.com/group/stonean_lockdown?hl=en">forum</a></p>
     <p class="coda">
-      1st May 2008<br/>
+      2nd May 2008<br/>
       Theme extended from <a href="http://rb2js.rubyforge.org/">Paul Battley</a>
     </p>
 </div>

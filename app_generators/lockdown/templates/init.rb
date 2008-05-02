@@ -55,6 +55,8 @@ Lockdown::System.configure do
   #  set_permission(:sessions, all_methods(:sessions))
   #  set_permission(:my_account, only_methods(:users, :edit, :update, :show))
   # 
+  # Define your permissions here:
+
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Built-in user groups
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -67,6 +69,8 @@ Lockdown::System.configure do
   #  Restrict :my_account access to only authenticated users:
   #    set_protected_access :my_account
   #
+  # Define the built-in user groups here:
+
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Define user groups
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -77,7 +81,7 @@ Lockdown::System.configure do
   #  :catalog_management is the name of the user group
   #  :category_management and :product_management refer to permission names
   #
-
-  # Add your configuration below:
+  # 
+  # Define your user groups here:
 
 end 

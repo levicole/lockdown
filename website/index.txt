@@ -1,18 +1,10 @@
-h1. lockdown
-
-h1. &#x2192; 'lockdown'
+h1. <a href="http://lockdown.rubyforge.org">Lockdown</a>
 
 h3. Lockdown has not been officially released!  This page is a Work-In-Progress. 
 
 h2. What
 
-Lockdown is a authentication/authorization system for RubyOnRails and Merb designed for simplicity and extensibility.  All access rules are defined in lib/lockdown/init.rb.  With the included ORM support (ActiveRecord or DataMapper) and management screens you can add user defined rules to the system.
-
-If there is a "spec" directory, a test helper file will be included to provied some basic functionality for use with RSpec. This will show you how to create mock user objects and sign in as an adminstrator.
-
-Also included is functionality to auto-populate created_by and updated_by fields.
-
-Some model level access right functionality will also be added in the near future.
+Lockdown is a authentication/authorization system for RubyOnRails (ver 2.x). While Merb functionality is in place, it is not complete.  There will be a release solely focused on getting the Merb functionality up to par with Rails. 
 
 h2. Installing
 
@@ -26,12 +18,24 @@ $ lockdown .
 
 This will create a "lockdown" directory in the lib dir add two files: init.rb and session.rb.  Modify init.rb to set defaults and define the rules that apply to your system.
 
-If you want the full 'subsystem' (models, views, controllers, helpers):
+To help you with your new application, Lockdown comes with a generator called lockdown_all.
 
 <pre>
 $ cd <your_project_directory>
 $ ./script/generate lockdown_all
 </pre>
+
+This will install resources such as:
+<ul>
+  <li>Models</li>
+  <li>Controllers</li>
+  <li>Views</li>
+  <li>Helpers</li>
+  <li>Migrations</li>
+  <li>Routes</li>
+</ul>
+
+Please refer to the <a href="generator.html">generator page</a> for more detail.
 
 I recommend reading this page to get a feel for Lockdown's functionality.  
 
@@ -135,6 +139,50 @@ Lockdown::System.configure do
   # Add your configuration below:
 end 
 </pre>
+
+h2. The internals
+
+All configuration of Lockdown (Permissions and User Groups) are done in lib/lockdown/init.rb.  The database functionality is merely an extension of the definitions to allow for the dynamic creation of User Groups.  Permissions can not be created via the administration screens.
+
+Lockdown doesn't have a concept of Roles. Instead, Lockdown users can be associated to one or many User Groups to allow for flexibility.  In addition, you can use the admin screens to add new User Groups to the database. 
+
+Here are the parts to Lockdown:
+<ul>
+ <li><strong>Profiles</strong><br/>
+    <p>The profile model contains all non-user information related to person.  Lockdown uses the profile record as the reference for updated_by and created_by.  This allows you to remove the user record completely when you want to revoke access, but you still retain the foreign key for history.<br/>Here are the fields you have to start with:</p>
+    <ul>
+      <li>first_name : string</li>
+      <li>last_name : string</li>
+      <li>email : string</li>
+    </ul>
+<br/>
+  </li>
+ <li><strong>Users</strong><br/>
+    <p>The user model contains all user information related to person.<br/>Here are the fields you have to start with:</p>
+    <ul>
+      <li>login : string</li>
+      <li>crypted_password : string</li>
+      <li>salt : string</li>
+      <li>profile_id : integer</li>
+    </ul>
+<br/>
+  </li>
+ <li><strong>User Groups</strong><br/>
+    <p>User Groups exist only to group Permissions.  All functionality for your site should be covered by the user groups you define in init.rb.  You can use the admin screen to create new user groups if the need arises. The database model only has one field:  </p>
+    <ul>
+      <li>name : string</li>
+    </ul>
+<br/>
+  </li>
+ <li><strong>Permissions</strong><br/>
+    <p>Permissions are the security building blocks of your system and are defined in init.rb.  A permission maps to controller(s)/action(s) in your system. Please refer back to the documenation in init.rb on how to create permissions.
+ As permissions relate to system functionality, they cannot be created via the admin screen.  The database model only has one field:  </p>
+    <ul>
+      <li>name : string</li>
+    </ul>
+  </li>
+</ul>
+  
 
 h2. Forum
 

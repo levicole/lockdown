@@ -72,7 +72,7 @@ module Lockdown
     include Lockdown::Helper
 
     def nil_lockdown_values
-      %w(user_id user_name user_profile_id access_rights).each do |val|
+      %w(expiry_time user_id user_name user_profile_id access_rights).each do |val|
         session[val] = nil if session[val]
       end
     end 

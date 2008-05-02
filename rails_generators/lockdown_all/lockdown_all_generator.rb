@@ -157,7 +157,7 @@ EOS
   end
 
 	def add_permissions(m)
-		perms = <<-PERMS
+perms = <<-PERMS
 
   set_permission :sessions_management, all_methods(:sessions)
 
@@ -169,16 +169,24 @@ EOS
 
   set_permission :my_account, only_methods(:users, :edit, :update, :show)
 
+PERMS
 
-  set_public_access :sessions_management
-
-  set_protected_access :my_account
-		PERMS
-
-		sentinel = '# Add your configuration below:'
-
+		sentinel = '# Define your permissions here:'
 		m.gsub_file 'lib/lockdown/init.rb', /(#{Regexp.escape(sentinel)})/mi do |match|
 				"#{match}\n#{perms}"
 		end
+
+predefined_user_groups = <<-PUG
+  set_public_access :sessions_management
+
+  set_protected_access :my_account
+PUG
+
+		sentinel = '# Define the built-in user groups here:'
+		m.gsub_file 'lib/lockdown/init.rb', /(#{Regexp.escape(sentinel)})/mi do |match|
+				"#{match}\n#{predefined_user_groups}"
+		end
+
+
 	end
 end
