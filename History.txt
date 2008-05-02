@@ -1,3 +1,6 @@
+== 0.3.13 2008-05-02
+* Fixed: The users and user_groups controller templates needed user_groups_for_users and all_permissions (respectively) instance variables set if validation failed on update.
+
 == 0.3.12 2008-05-02
 * Fixed: The timestamps were being set on created_by and updated_by.
 * Changed: The init.rb and lockdown_all interaction to better define where configurations should be placed.

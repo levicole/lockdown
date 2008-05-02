@@ -66,6 +66,7 @@ class UserGroupsController < ApplicationController
         format.html { redirect_to(@user_group) }
         format.xml  { head :ok }
       else
+				@all_permissions = Lockdown::System.permissions_assignable_for_user(current_user)
         format.html { render :action => "edit" }
         format.xml  { render :xml => @user_group.errors, :status => :unprocessable_entity }
       end
