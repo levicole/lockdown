@@ -1,3 +1,6 @@
+== 0.3.15 2008-05-03
+* Fixed: The controller inspection code was short-circuiting the Dependencies reload mechanism while in development mode.
+
 == 0.3.14 2008-05-02
 * Fixed:  Session keys to use symbols.  Wasn't correctly expiring the session.  
 

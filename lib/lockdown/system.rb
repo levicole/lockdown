@@ -216,16 +216,12 @@ module Lockdown
       def load_controller_classes
         @controller_classes = {}
 
-        unless const_defined?("Application")
-          load(Lockdown.project_root + "/app/controllers/application.rb")
-        end
+        maybe_load_framework_controller_parent
 
         Dir.chdir("#{Lockdown.project_root}/app/controllers") do
           Dir["**/*.rb"].sort.each do |c|
             next if c == "application.rb"
-            klass = controller_class_name_from_file(c)
-            load(c) unless qualified_const_defined?(klass)
-            @controller_classes[klass] = qualified_const_get(klass) 
+            lockdown_load(c) 
           end
         end
       end
@@ -240,6 +236,25 @@ module Lockdown
         else
           kontroller_class_name(camelize(str))
         end
+      end
+
+      def maybe_load_framework_controller_parent
+        if Lockdown.rails_app?
+          Dependencies.require_or_load("application.rb")
+        else
+          #just default to Merb for now as the only alternative
+          load("application.rb") unless const_defined?("Application")
+        end
+      end
+
+      def lockdown_load(file)
+        klass = controller_class_name_from_file(file)
+        if Lockdown.rails_app?
+          Dependencies.require_or_load(file)
+        else
+          load(file) unless qualified_const_defined?(klass)
+        end
+        @controller_classes[klass] = qualified_const_get(klass) 
       end
 
       def qualified_const_defined?(klass)
