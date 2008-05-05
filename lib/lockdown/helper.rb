@@ -22,6 +22,16 @@ module Lockdown
 			str_sym.is_a?(String) ? convert_reference_name(str_sym) : str_sym
 		end
 
+    def lockdown_symbol(value)
+      if value.respond_to?(:name)
+        symbol_name(value.name)
+      elsif value.is_a?(String)
+        symbol_name(value)
+      else
+        value
+      end
+    end
+
     def camelize(str)
       str.to_s.gsub(/\/(.?)/) { "::" + $1.upcase }.gsub(/(^|_)(.)/) { $2.upcase }
     end

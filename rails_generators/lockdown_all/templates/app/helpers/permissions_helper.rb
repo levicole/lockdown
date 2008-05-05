@@ -4,7 +4,7 @@ module PermissionsHelper
   end
 
   def permission_access_rights_value
-    Lockdown::System.access_rights_for_perm(@permission).collect{|r| r}.join("<br/>") 
+    Lockdown::System.access_rights_for_permission(@permission).collect{|r| r}.join("<br/>") 
   end
 
 	def permission_users_value

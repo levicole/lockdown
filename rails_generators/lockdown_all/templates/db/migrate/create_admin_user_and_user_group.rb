@@ -1,11 +1,5 @@
 class CreateAdminUserAndUserGroup < ActiveRecord::Migration
   def self.up
-		#
-		# Creating an administrators user group database record
-    # to allow for the creation of other administrators
-		#
-		Lockdown::System.create_administrator_user_group
-
 		# TODO: Change the password
     u = User.new(	:password => "password", 
 									:password_confirmation => "password", 

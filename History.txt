@@ -1,3 +1,9 @@
+== 0.4.0 2008-05-04
+* Added: Automatically sync definitions in init.rb with database to remove migrations requirement 
+* Added: Improved notification if invalid user group or permission is referenced in init.rb
+* Added: Check in user_groups controller to prevent url hack and modify/destroy user group defined in init.rb
+* Modified: Renamed access_rights_for_perm to access_rights_for_permission for consistency sake.  Change then method call in permissions_helper if you have this installed
+
 == 0.3.15 2008-05-03
 * Fixed: The controller inspection code was short-circuiting the Dependencies reload mechanism while in development mode.
 

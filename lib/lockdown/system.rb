@@ -20,8 +20,11 @@ module Lockdown
       attr_accessor :controller_classes #:nodoc:
 
       def configure(&block)
-				self.set_defaults
-        self.instance_eval(&block)
+				set_defaults
+        instance_eval(&block)
+        if options[:use_db_models] && options[:sync_init_rb_with_db]
+          sync_with_db
+        end
       end
 
       def [](key)
@@ -41,67 +44,99 @@ module Lockdown
 				@permissions.keys
       end
 
+      def permission_exists?(perm)
+        get_permissions.include?(perm)
+      end
+
       def set_user_group(name, *perms)
         @user_groups[name] ||= []
-        perms.each{|perm| @user_groups[name].push(perm)}
+        perms.each do |perm| 
+          unless permission_exists?(perm)
+            raise SecurityError, "For UserGroup (#{name}), permission is invalid: #{perm}"
+          end
+          @user_groups[name].push(perm)
+        end
       end
 
 			def get_user_groups
 				@user_groups.keys
       end
 
+      def permissions_for_user_group(ug)
+        sym = lockdown_symbol(ug)
+
+        if has_user_group?(sym)
+          @user_groups[sym].each do |perm|
+            unless permission_exists?(perm)
+              raise SecurityError, "Permission associated to User Group is invalid: #{perm}"
+            end
+            yield perm
+          end
+        elsif ug.responds_to?(:name)
+          # This user group was defined in the database
+          ug.permissions.each do |perm|
+            perm_sym = symbol_name(perm.name)
+            unless permission_exists?(perm_sym)
+              raise SecurityError, "Permission associated to User Group is invalid: #{perm_sym}"
+            end
+            yield perm_sym
+          end
+        else
+          raise SecurityError, "UserGroup is not known: #{ug.inspect}"
+        end
+      end
+
+      def access_rights_for_permission(perm)
+        sym = lockdown_symbol(perm)
+
+        unless permission_exists?(sym)
+          raise SecurityError, "Permission requested is not defined: #{sym}"
+        end
+        @permissions[sym]
+      end
+
+      def public_access?(perm)
+        @public_access.include?(perm)
+      end
+
 			def set_public_access(*perms)
 				perms.each{|perm| @public_access += @permissions[perm]}
 			end
+
+      def protected_access?(perm)
+        @protected_access.include?(perm)
+      end
 
 			def set_protected_access(*perms)
 				perms.each{|perm| @protected_access += @permissions[perm]}
 			end
 			
+      def permission_assigned_automatically?(perm)
+        public_access?(perm) || protected_access?(perm)
+      end
+
 			def standard_authorized_user_rights
 				Lockdown::System.public_access + Lockdown::System.protected_access 
       end
 
 			#
-			# Create a user group record in the database
-			#
-			def create_user_group(str_sym)
-				return unless @options[:use_db_models]
-				ug = UserGroup.create(:name => string_name(str_sym))
-				#
-				# No need to create permissions records for administrators
-				#
-				ug_sym = symbol_name(ug.name)
-				return if ug_sym == administrator_group_symbol
-
-				if self.has_user_group?(ug)
-					@user_groups[ug_sym].collect do |perm|
-						Permission.create(:name => string_name(perm))
-					end
-				end
-			end
-
-			def create_administrator_user_group
-				return unless @options[:use_db_models]
-				Lockdown::System.create_user_group administrator_group_symbol
-  		end
-
-			#
 			# Determine if the user group is defined in init.rb
 			#
 			def has_user_group?(ug)
-				return true if symbol_name(ug.name) == administrator_group_symbol
-				@user_groups.each do |key,value|
-					return true if key == symbol_name(ug.name)
+        sym = lockdown_symbol(ug)
+
+				return true if sym == administrator_group_symbol
+				get_user_groups.each do |key|
+					return true if key == sym
 				end
-				return false
+				false
 			end
 
 			#
 			# Delete a user group record from the database
 			#
 			def delete_user_group(str_sym)
-				ug = UserGroup.find_by_name(string_name(str_sym))
+				ug = UserGroup.find(:first, :conditions => ["name = ?",string_name(str_sym)])
 				ug.destroy unless ug.nil?
 			end
 
@@ -113,23 +148,13 @@ module Lockdown
 
 				if @options[:use_db_models]
 					usr.user_groups.each do |grp|
-						if @user_groups.has_key? symbol_name(grp.name)
-							@user_groups[symbol_name(grp.name)].each do |perm|
-								rights += @permissions[perm]
-							end
-						else
-							grp.permissions.each do |perm|
-								rights += @permissions[symbol_name(perm.name)]
-							end
-						end
+            permissions_for_user_group(grp) do |perm|
+              rights += access_rights_for_permission(perm) 
+            end
 					end
 				end
 				rights
 			end
-
-			def access_rights_for_perm(perm)
-        (perms = @permissions[symbol_name(perm.name)]) == nil ? [] : perms 
-      end
 
 			#
 			# Use this for the management screen to restrict user group list to the
@@ -168,9 +193,13 @@ module Lockdown
 			end
 
 			def make_user_administrator(usr)
+        unless Lockdown.database_table_exists?(UserGroup)
+          create_administrator_user_group 
+        end
+
 				usr.user_groups << UserGroup.find_or_create_by_name(administrator_group_string)
 			end
-
+      
 			def administrator?(usr)
 				user_has_user_group?(usr, administrator_group_symbol)
 			end
@@ -196,15 +225,21 @@ module Lockdown
         @private_access = []
 
 				@options = {
-					:use_db_models => true,
-					:session_timeout => (60 * 60),
-					:logout_on_access_violation => false,
-					:access_denied_path => "/",
-					:successful_login_path => "/"
-				}
+          :use_db_models => true,
+          :sync_init_rb_with_db => true,
+          :session_timeout => (60 * 60),
+          :logout_on_access_violation => false,
+          :access_denied_path => "/",
+          :successful_login_path => "/"
+        }
       end
 
 			private
+
+			def create_administrator_user_group
+				return unless @options[:use_db_models]
+				UserGroup.create :name => administrator_group_name
+  		end
 
 			def user_has_user_group?(usr, sym)
 				usr.user_groups.each do |ug|
@@ -227,7 +262,7 @@ module Lockdown
       end
 
       def controller_class_name_from_file(str)
-        str.split(".")[0].split("/").collect{|str| camelize(str) }.join("::")
+        str.split(".")[0].split("/").collect{|s| camelize(s) }.join("::")
       end
 
       def controller_class_name(str)
@@ -274,6 +309,64 @@ module Lockdown
           const_get(klass)
         end
       end
-    end # class block
+
+      #
+      # This is very basic and could be handled better using orm specific
+      # functionality, but I wanted to keep it generic to avoid creating 
+      # an interface for each the different orm implementations. 
+      # We'll see how it works...
+      #
+      def sync_with_db
+        return unless database_configured?
+        # Create permissions not found in the database
+        get_permissions.each do |key|
+          next if permission_assigned_automatically?(key)
+          str = string_name(key)
+          p = Permission.find(:first, :conditions => ["name = ?", str])
+          unless p
+            puts ">> Lockdown: Permission not found in db: #{str}, creating."
+            Permission.create(:name => str)
+          end
+        end
+
+        #
+        # Delete the permissions not found in init.rb
+        #
+        db_perms = Permission.find(:all).dup
+        perm_keys = get_permissions
+        db_perms.each do |dbp|
+          unless perm_keys.include?(symbol_name(dbp.name))
+            puts ">> Lockdown: Permission no longer in init.rb: #{dbp.name}, deleting."
+            Lockdown.database_execute("delete from permissions_user_groups where permission_id = #{dbp.id}")
+            dbp.destroy
+          end
+        end
+
+        # Create user groups not found in the database
+        get_user_groups.each do |key|
+          str = string_name(key)
+          ug = UserGroup.find(:first, :conditions => ["name = ?", str])
+          unless ug
+            puts ">> Lockdown: UserGroup not in the db: #{str}, creating."
+            ug = UserGroup.create(:name => str)
+            #Inefficient, definitely, but shouldn't have any issues across orms.
+            permissions_for_user_group(key) do |perm|
+              p = Permission.find(:first, :conditions => ["name = ?", string_name(perm)])
+              Lockdown.database_execute <<-SQL 
+                insert into permissions_user_groups(permission_id, user_group_id)
+                values(#{p.id}, #{ug.id})
+              SQL
+            end
+          end
+        end
+      end
+
+      def database_configured?
+        return unless const_defined?("Permission") && const_defined?("UserGroup")
+
+        Lockdown.database_table_exists?(Permission) &&
+                      Lockdown.database_table_exists?(UserGroup)
+      end
+     end # class block
   end # System class
 end # Lockdown

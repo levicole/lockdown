@@ -20,6 +20,10 @@ Lockdown::System.configure do
   # Set redirect to path on successful login:
   #       options[:successful_login_path] = "/"
   #
+  # Set the system to sync the Permissions and UserGroups defined here
+  # with the database. 
+  #       options[:sync_init_rb_with_db] = true
+  #
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Define permissions
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

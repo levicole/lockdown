@@ -47,6 +47,35 @@ module Lockdown
       end
     end
 
+    def database_execute(query)
+      if active_record_orm?
+        ActiveRecord::Base.connection.execute(query)
+      elsif datamapper_orm?
+        DataMapper.database.execute(query)
+      else
+        raise NotImplementedError, "ORM unknown to Lockdown!  Lockdown recognizes DataMapper and ActiveRecord"
+      end
+    end
+
+    def database_query(query)
+      if active_record_orm?
+        ActiveRecord::Base.connection.execute(query)
+      elsif datamapper_orm?
+        DataMapper.database.query(query)
+      else
+        raise NotImplementedError, "ORM unknown to Lockdown!  Lockdown recognizes DataMapper and ActiveRecord"
+      end
+    end
+
+    def database_table_exists?(klass)
+      if active_record_orm?
+        klass.table_exists?
+      elsif datamapper_orm?
+        DataMapper.database.table_exists?(klass)
+      else
+        raise NotImplementedError, "ORM unknown to Lockdown!  Lockdown recognizes DataMapper and ActiveRecord"
+      end
+    end
     private
 
     def project_related_value(merb_val, rails_val)
