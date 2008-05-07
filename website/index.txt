@@ -1,7 +1,5 @@
 h1. <a href="http://lockdown.rubyforge.org">Lockdown</a>
 
-h3. Lockdown has not been officially released!  This page is a Work-In-Progress. 
-
 h2. What
 
 Lockdown is a authentication/authorization system for RubyOnRails (ver 2.x). While Merb functionality is in place, it is not complete.  There will be a release solely focused on getting the Merb functionality up to par with Rails. 
@@ -17,6 +15,14 @@ $ lockdown .
 </pre>
 
 This will create a "lockdown" directory in the lib dir add two files: init.rb and session.rb.  Modify init.rb to set defaults and define the rules that apply to your system.
+
+<strong> Some noteworthy points:</strong>
+<ul>
+<li><strong>All Permissions are defined in init.rb, they cannot be defined via the administration screens.</strong></li>
+<li><strong>All User Groups should be defined in init.rb. The administration screens can be used to create user groups, but doing so should be reserved for the unexpected.</strong></li>
+<li><strong>Lockdown will sync up the rules (Permissions and User Groups) defined in init.rb with your database.</strong></li>
+</ul>
+
 
 To help you with your new application, Lockdown comes with a generator called lockdown_all.
 

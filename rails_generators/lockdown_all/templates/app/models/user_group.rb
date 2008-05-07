@@ -10,6 +10,6 @@ class UserGroup < ActiveRecord::Base
 			from users, user_groups_users
 			where users.id = user_groups_users.user_id 
 			and user_groups_users.user_group_id = #{self.id}
-			SQL
+    SQL
 	end
 end

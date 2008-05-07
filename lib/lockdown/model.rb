@@ -18,7 +18,6 @@ module Lockdown
         Thread.current[:profile_id]
       end
 
-
       def create_with_stamps
         profile_id = current_profile_id || Profile::SYSTEM
         self[:created_by] = profile_id if self.respond_to?(:created_by) 

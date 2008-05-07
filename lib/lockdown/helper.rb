@@ -48,7 +48,7 @@ module Lockdown
 		def administrator_group_symbol
 			:administrators
     end
-
+    
     private
 
     def titleize(str)

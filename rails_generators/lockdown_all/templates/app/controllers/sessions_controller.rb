@@ -16,22 +16,23 @@ class SessionsController < ApplicationController
   end
   
   protected
-		def password_authentication(login, password)
-			set_session_user(User.authenticate(login, password))
-			if logged_in?
-	      successful_login
-	   else
-	     failed_login
-	   end
-	 end
+
+  def password_authentication(login, password)
+    set_session_user(User.authenticate(login, password))
+    if logged_in?
+      successful_login
+    else
+      failed_login
+    end
+  end
   
-	 def failed_login(message = 'Authentication failed.')
-	   flash[:error] = message
-		 redirect_back_or_default login_url
-	 end
+  def failed_login(message = 'Authentication failed.')
+    flash[:error] = message
+    redirect_back_or_default login_url
+  end
 	 
-		def successful_login
-		 flash[:notice] = "Logged in successfully"
-		 redirect_back_or_default "/"
-	 end
+  def successful_login
+    flash[:notice] = "Logged in successfully"
+    redirect_back_or_default "/"
+  end
 end

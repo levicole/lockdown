@@ -64,7 +64,7 @@ module Lockdown
         end
         methods.collect{|meth| ctr_path(str) + "/" + meth.to_s }
       end
-    
+      
       def ctr_path(str)
         str.gsub("__","\/")
       end

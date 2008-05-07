@@ -1,6 +1,5 @@
 require 'digest/sha1'
 class User < ActiveRecord::Base
-  include Lockdown::Helper
   has_and_belongs_to_many :user_groups
   belongs_to :profile
   
@@ -43,7 +42,7 @@ class User < ActiveRecord::Base
     crypted_password == encrypt(password)
   end
   
-   def email
+  def email
     self.profile.email
   end
   
@@ -53,21 +52,21 @@ class User < ActiveRecord::Base
   
   protected
 
-	def prepare_for_save
-		encrypt_password
-		self.profile.save
-	end
+  def prepare_for_save
+    encrypt_password
+    self.profile.save
+  end
       
-	def encrypt_password
-		return if password.blank?
-		if new_record?
-			self.salt = Digest::SHA1.hexdigest("--#{Time.now.to_s}--#{login}--") 
-		end
-		self.crypted_password = encrypt(password)
-	end
+  def encrypt_password
+    return if password.blank?
+    if new_record?
+      self.salt = Digest::SHA1.hexdigest("--#{Time.now.to_s}--#{login}--") 
+    end
+    self.crypted_password = encrypt(password)
+  end
     
-	def password_required?
-		(crypted_password.blank? || !password.blank?)
-	end
+  def password_required?
+    (crypted_password.blank? || !password.blank?)
+  end
     
 end

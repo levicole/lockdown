@@ -33,12 +33,9 @@
     <h1>Lockdown</h1>
     <div id="version" class="clickable" onclick='document.location = "http://rubyforge.org/projects/lockdown"; return false'>
       <p>Get Version</p>
-      <a href="http://rubyforge.org/projects/lockdown" class="numbers">0.4.0</a>
+      <a href="http://rubyforge.org/projects/lockdown" class="numbers">0.4.1</a>
     </div>
-    <h3>Lockdown has not been officially released!  This page is a Work-In-Progress.</h3>
-
-
-	<h2>What</h2>
+    <h2>What</h2>
 
 
 	<p>Lockdown is a authentication/authorization system for RubyOnRails (ver 2.x). While Merb functionality is in place, it is not complete.  There will be a release solely focused on getting the Merb functionality up to par with Rails.</p>
@@ -57,6 +54,14 @@ $ lockdown .
 </pre>
 
 	<p>This will create a &#8220;lockdown&#8221; directory in the lib dir add two files: init.rb and session.rb.  Modify init.rb to set defaults and define the rules that apply to your system.</p>
+
+
+	<p><strong> Some noteworthy points:</strong>
+<ul>
+<li><strong>All Permissions are defined in init.rb, they cannot be defined via the administration screens.</strong></li>
+<li><strong>All User Groups should be defined in init.rb. The administration screens can be used to create user groups, but doing so should be reserved for the unexpected.</strong></li>
+<li><strong>Lockdown will sync up the rules (Permissions and User Groups) defined in init.rb with your database.</strong></li>
+</ul></p>
 
 
 	<p>To help you with your new application, Lockdown comes with a generator called lockdown_all.</p>
@@ -271,7 +276,7 @@ Here are the parts to Lockdown:
 
 	<p>Comments and suggestions are welcome via the <a href="http://groups.google.com/group/stonean_lockdown?hl=en">forum</a></p>
     <p class="coda">
-      2nd May 2008<br/>
+      6th May 2008<br/>
       Theme extended from <a href="http://rb2js.rubyforge.org/">Paul Battley</a>
     </p>
 </div>

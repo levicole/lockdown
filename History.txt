@@ -1,3 +1,6 @@
+== 0.4.1 2008-05-06
+* Just some minor tabs-to-spaces formatting and removed unnecessary helper included into the user model.
+
 == 0.4.0 2008-05-04
 * Added: Automatically sync definitions in init.rb with database to remove migrations requirement 
 * Added: Improved notification if invalid user group or permission is referenced in init.rb

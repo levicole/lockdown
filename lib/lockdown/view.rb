@@ -21,17 +21,17 @@ module Lockdown
         return ""
       end
 
-			def link_to_or_show(name, url = '', options = {})
-				lnk = link_to(name, options, html_options)
-				lnk.length == 0  ? name : lnk
+      def link_to_or_show(name, url = '', options = {})
+        lnk = link_to(name, options, html_options)
+        lnk.length == 0  ? name : lnk
       end
     end # Merb
 
     module Rails
       include Lockdown::View::Core
       def self.included(base)
-         base.send :alias_method, :rails_link_to,  :link_to
-         base.send :alias_method, :rails_button_to,  :button_to
+        base.send :alias_method, :rails_link_to,  :link_to
+        base.send :alias_method, :rails_button_to,  :button_to
       end
     
       def ld_link_to(name, options = {}, html_options = nil)
@@ -42,11 +42,10 @@ module Lockdown
         return ""
       end
 
-			def link_to_or_show(name, options = {}, html_options = nil)
-				lnk = link_to(name, options, html_options)
-				lnk.length == 0 ? name : lnk
+      def link_to_or_show(name, options = {}, html_options = nil)
+        lnk = link_to(name, options, html_options)
+        lnk.length == 0 ? name : lnk
       end
-
     
       def button_to(name, options = {}, html_options = nil)
         url = lock_down_url(options, html_options)
@@ -55,19 +54,19 @@ module Lockdown
         end
         return ""
       end
-      
     
       private
-        def lock_down_url(options, html_options = {})
-          return options unless options.respond_to?(:new_record?)
-          p = polymorphic_path(options)
-          if html_options.is_a?(Hash) && html_options[:method] == :delete
-            p += "/destroy"
-          elsif p.split("/").last.to_i > 0
-            p += "/show"
-          end
-          return p
+
+      def lock_down_url(options, html_options = {})
+        return options unless options.respond_to?(:new_record?)
+        p = polymorphic_path(options)
+        if html_options.is_a?(Hash) && html_options[:method] == :delete
+          p += "/destroy"
+        elsif p.split("/").last.to_i > 0
+          p += "/show"
         end
+        return p
+      end
     end # Rails
   end # View
 end # Lockdown

@@ -7,7 +7,7 @@ module Lockdown
       def self.included(base)
         base.send :include, Lockdown::Controller::Core::InstanceMethods
       end
-
+      
       module InstanceMethods
         def configure_lock_down
           check_session_expiry
@@ -209,8 +209,6 @@ module Lockdown
         
       end # InstanceMethods
     end # Rails
-
-    
   end # Controller
 end # Lockdown
 
