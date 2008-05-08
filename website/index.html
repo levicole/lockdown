@@ -33,7 +33,7 @@
     <h1>Lockdown</h1>
     <div id="version" class="clickable" onclick='document.location = "http://rubyforge.org/projects/lockdown"; return false'>
       <p>Get Version</p>
-      <a href="http://rubyforge.org/projects/lockdown" class="numbers">0.4.1</a>
+      <a href="http://rubyforge.org/projects/lockdown" class="numbers">0.4.2</a>
     </div>
     <h2>What</h2>
 
@@ -207,7 +207,13 @@ Lockdown stores an array of access rights in the session.  For example, if you h
 	<p>Lockdown doesn&#8217;t have a concept of Roles. Instead, Lockdown users can be associated to one or many User Groups to allow for flexibility.  In addition, you can use the admin screens to add new User Groups to the database.</p>
 
 
-Here are the parts to Lockdown:
+	<p>Here are the parts to Lockdown:</p>
+
+
+<div style="text-align:center">
+<img src="model.jpg" alt="" />
+</div>
+
 <ul>
  <li><strong>Profiles</strong><br/>
     <p>The profile model contains all non-user information related to person.  Lockdown uses the profile record as the reference for updated_by and created_by.  This allows you to remove the user record completely when you want to revoke access, but you still retain the foreign key for history.<br/>Here are the fields you have to start with:</p>

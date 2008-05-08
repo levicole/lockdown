@@ -11,12 +11,13 @@ module Lockdown
     module Merb
       include Lockdown::View::Core
       def self.included(base)
-        base.send :alias_method, :merb_link_to,  :link_to
+        base.send :alias_method, :link_to_open,  :link_to
+        base.send :alias_method, :link_to,  :link_to_secured
       end
 
-      def link_to(name, url = '', options = {})
+      def link_to_secured(name, url = '', options = {})
         if authorized? url
-          return merb_link_to(name, url, options)
+          return link_to_open(name, url, options)
         end
         return ""
       end
@@ -30,14 +31,17 @@ module Lockdown
     module Rails
       include Lockdown::View::Core
       def self.included(base)
-        base.send :alias_method, :rails_link_to,  :link_to
-        base.send :alias_method, :rails_button_to,  :button_to
+        base.send :alias_method, :link_to_open,  :link_to
+        base.send :alias_method, :link_to,  :link_to_secured
+
+        base.send :alias_method, :button_to_open,  :button_to
+        base.send :alias_method, :button_to,  :button_to_secured
       end
     
-      def ld_link_to(name, options = {}, html_options = nil)
+      def link_to_secured(name, options = {}, html_options = nil)
         url = lock_down_url(options, html_options)
         if authorized? url
-          return rails_link_to(name,options,html_options)
+          return link_to_open(name,options,html_options)
         end
         return ""
       end
@@ -47,10 +51,10 @@ module Lockdown
         lnk.length == 0 ? name : lnk
       end
     
-      def button_to(name, options = {}, html_options = nil)
+      def button_to_secured(name, options = {}, html_options = nil)
         url = lock_down_url(options, html_options)
         if authorized? url
-          return rails_button_to(name,options,html_options)
+          return button_to_open(name,options,html_options)
         end
         return ""
       end

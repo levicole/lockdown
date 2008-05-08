@@ -1,3 +1,6 @@
+== 0.4.2 2008-05-08
+* Fixed: broken link_to functionality. 
+
 == 0.4.1 2008-05-06
 * Just some minor tabs-to-spaces formatting and removed unnecessary helper included into the user model.
 

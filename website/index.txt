@@ -159,6 +159,11 @@ All configuration of Lockdown (Permissions and User Groups) are done in lib/lock
 Lockdown doesn't have a concept of Roles. Instead, Lockdown users can be associated to one or many User Groups to allow for flexibility.  In addition, you can use the admin screens to add new User Groups to the database. 
 
 Here are the parts to Lockdown:
+
+<div style="text-align:center">
+!model.jpg!
+</div>
+
 <ul>
  <li><strong>Profiles</strong><br/>
     <p>The profile model contains all non-user information related to person.  Lockdown uses the profile record as the reference for updated_by and created_by.  This allows you to remove the user record completely when you want to revoke access, but you still retain the foreign key for history.<br/>Here are the fields you have to start with:</p>
@@ -195,7 +200,6 @@ Here are the parts to Lockdown:
   </li>
 </ul>
   
-
 h2. Forum
 
 If you are having a problem understanding how to use Lockdown, please post your question on the lockdown group.  If it's documentation related, I will keep this page updated to help everyone. 
