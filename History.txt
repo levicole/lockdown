@@ -1,3 +1,9 @@
+== 0.4.4 2008-05-08
+* Modified: refactored the link_to_secured and authorized? code to be more efficient
+
+== 0.4.3 2008-05-08
+* Fixed: broken show (and destroy) permission test.  also reduced calls to polymorphic path by generating the url once
+
 == 0.4.2 2008-05-08
 * Fixed: broken link_to functionality. 
 

@@ -104,9 +104,11 @@ module Lockdown
           return true if current_user_is_admin?
 
           # See if path is known
-          return true if path_allowed?(path)
-
-          return false
+          if path_allowed?(path)
+            true 
+          else
+            false
+          end
         end
       
         # Can log Error => e if desired, I don't desire to now.
@@ -157,32 +159,33 @@ module Lockdown
           request.request_uri
         end
 
-        def authorized?(options)
+        def authorized?(url)
           return true if current_user_is_admin?
 
-          url_parts = URI::split url_for(options)
+          url_parts = URI::split(url)
         
           path = url_parts[5]
 
           # See if path is known
           return true if path_allowed?(path)
 
-          if options.is_a?(String)
-            # Test for a named routed
-            begin
-              hsh = ActionController::Routing::Routes.recognize_path(options)
-              return true if path_allowed?(path_from_hash(hsh)) unless hsh.nil?
-            rescue Exception => e
-              # continue on
+          # Test to see if url contains id 
+          parts = path.split("/").collect{|p| p unless p =~ /\A\d+\z/}.compact
+          new_path = parts.join("/")
+
+          return true if path_allowed?(new_path)
+
+          # Test for a named routed
+          begin
+            hsh = ActionController::Routing::Routes.recognize_path(url)
+            unless hsh.nil?
+              return true if path_allowed?(path_from_hash(hsh)) 
             end
+          rescue Exception => e
+            # continue on
           end
-          
-          # Test to see if using a get method (show)
-          path += "/show" if path.split("/").last.to_i > 0
 
-          return true if path_allowed?(path)
-
-          return false
+          false
         end
       
         def access_denied(e)

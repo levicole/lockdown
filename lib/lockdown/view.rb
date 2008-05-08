@@ -23,7 +23,7 @@ module Lockdown
       end
 
       def link_to_or_show(name, url = '', options = {})
-        lnk = link_to(name, options, html_options)
+        lnk = link_to(name, url , options)
         lnk.length == 0  ? name : lnk
       end
     end # Merb
@@ -39,9 +39,10 @@ module Lockdown
       end
     
       def link_to_secured(name, options = {}, html_options = nil)
-        url = lock_down_url(options, html_options)
-        if authorized? url
-          return link_to_open(name,options,html_options)
+        # Don't want to go through the url_for twice
+        url = url_for(options)
+        if authorized? test_path(url, html_options)
+          return link_to_open(name, url, html_options)
         end
         return ""
       end
@@ -52,24 +53,22 @@ module Lockdown
       end
     
       def button_to_secured(name, options = {}, html_options = nil)
-        url = lock_down_url(options, html_options)
-        if authorized? url
-          return button_to_open(name,options,html_options)
+        url = url_for(options)
+        if authorized? test_path(url, html_options)
+          return button_to_open(name, url, html_options)
         end
         return ""
       end
     
       private
 
-      def lock_down_url(options, html_options = {})
-        return options unless options.respond_to?(:new_record?)
-        p = polymorphic_path(options)
-        if html_options.is_a?(Hash) && html_options[:method] == :delete
-          p += "/destroy"
-        elsif p.split("/").last.to_i > 0
-          p += "/show"
+      def test_path(url, html_options)
+        if url.split("/").last =~ /\A\d+\z/
+          url += "/show"
+        elsif html_options.is_a?(Hash) && html_options[:method] == :delete
+          url += "/destroy"
         end
-        return p
+        url 
       end
     end # Rails
   end # View
