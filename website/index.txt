@@ -43,8 +43,6 @@ This will install resources such as:
 
 Please refer to the <a href="generator.html">generator page</a> for more detail.
 
-I recommend reading this page to get a feel for Lockdown's functionality.  
-
 h2. How it works
 
 Lockdown stores an array of access rights in the session.  For example, if you have a standard REST users controller, the access rights would be:
@@ -58,7 +56,7 @@ Lockdown stores an array of access rights in the session.  For example, if you h
   users/destroy (delete for Merb)
 </pre>
 
-The above list will be stored in the session as an array and each request is tested against this list.  So this means, you <strong>should not use client side session storage</strong>.  If you can, I recommend using memcache, but a database session store will suffice.
+The above list will be stored in the session as an array and each request is tested against this list.  
 
 To define access rights you need to modify lib/lockdown/init.rb.  This is the default init.rb included with Lockdown:
 <pre syntax="ruby">

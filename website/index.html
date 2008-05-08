@@ -33,7 +33,7 @@
     <h1>Lockdown</h1>
     <div id="version" class="clickable" onclick='document.location = "http://rubyforge.org/projects/lockdown"; return false'>
       <p>Get Version</p>
-      <a href="http://rubyforge.org/projects/lockdown" class="numbers">0.4.4</a>
+      <a href="http://rubyforge.org/projects/lockdown" class="numbers">0.4.5</a>
     </div>
     <h2>What</h2>
 
@@ -85,9 +85,6 @@ This will install resources such as:
 	<p>Please refer to the <a href="generator.html">generator page</a> for more detail.</p>
 
 
-	<p>I recommend reading this page to get a feel for Lockdown&#8217;s functionality.</p>
-
-
 	<h2>How it works</h2>
 
 
@@ -102,7 +99,7 @@ Lockdown stores an array of access rights in the session.  For example, if you h
   users/destroy (delete for Merb)
 </pre>
 
-	<p>The above list will be stored in the session as an array and each request is tested against this list.  So this means, you <strong>should not use client side session storage</strong>.  If you can, I recommend using memcache, but a database session store will suffice.</p>
+	<p>The above list will be stored in the session as an array and each request is tested against this list.</p>
 
 
 	<p>To define access rights you need to modify lib/lockdown/init.rb.  This is the default init.rb included with Lockdown:
@@ -282,7 +279,7 @@ Lockdown stores an array of access rights in the session.  For example, if you h
 
 	<p>Comments and suggestions are welcome via the <a href="http://groups.google.com/group/stonean_lockdown?hl=en">forum</a></p>
     <p class="coda">
-      6th May 2008<br/>
+      8th May 2008<br/>
       Theme extended from <a href="http://rb2js.rubyforge.org/">Paul Battley</a>
     </p>
 </div>

@@ -1,3 +1,6 @@
+== 0.4.5 2008-05-08
+* Rubyforge having an issue with the gem, I'm getting 404 errors trying to install 0.4.4 so I'm deploying a new version. no code changes.
+
 == 0.4.4 2008-05-08
 * Modified: refactored the link_to_secured and authorized? code to be more efficient
 
