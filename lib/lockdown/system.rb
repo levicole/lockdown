@@ -317,7 +317,6 @@ module Lockdown
       # We'll see how it works...
       #
       def sync_with_db
-        return unless database_configured?
         # Create permissions not found in the database
         get_permissions.each do |key|
           next if permission_assigned_automatically?(key)
@@ -359,13 +358,8 @@ module Lockdown
             end
           end
         end
-      end
-
-      def database_configured?
-        return unless const_defined?("Permission") && const_defined?("UserGroup")
-
-        Lockdown.database_table_exists?(Permission) &&
-          Lockdown.database_table_exists?(UserGroup)
+      rescue Exception => e
+        puts ">> Lockdown sync failed: #{e}" 
       end
     end # class block
   end # System class

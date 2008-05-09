@@ -1,3 +1,6 @@
+== 0.4.6 2008-05-08
+* Fixed: link_to destroy/show conditionals were in wrong order and therefore not working. 
+
 == 0.4.5 2008-05-08
 * Rubyforge having an issue with the gem, I'm getting 404 errors trying to install 0.4.4 so I'm deploying a new version. no code changes.
 

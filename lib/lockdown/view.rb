@@ -63,10 +63,10 @@ module Lockdown
       private
 
       def test_path(url, html_options)
-        if url.split("/").last =~ /\A\d+\z/
-          url += "/show"
-        elsif html_options.is_a?(Hash) && html_options[:method] == :delete
+        if html_options.is_a?(Hash) && html_options[:method] == :delete
           url += "/destroy"
+        elsif url.split("/").last =~ /\A\d+\z/
+          url += "/show"
         end
         url 
       end
