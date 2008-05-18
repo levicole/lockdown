@@ -44,23 +44,21 @@
 	<h2>Installing</h2>
 
 
-	<p>For the people who don&#8217;t care to know the details and just want to get the system installed:</p>
-
-
 <pre>
 $ sudo gem install lockdown
 $ cd &lt;your_project_directory&gt;
 $ lockdown .
 </pre>
 
-	<p>This will create a &#8220;lockdown&#8221; directory in the lib dir add two files: init.rb and session.rb.  Modify init.rb to set defaults and define the rules that apply to your system.</p>
+	<p>This will create a &#8220;lockdown&#8221; directory in the lib dir add two files: init.rb and session.rb.  
+Modify init.rb to set configuration options and define the permissions and user groups that apply to your system.</p>
 
 
-	<p><strong> Some noteworthy points:</strong>
+	<p><strong> Please keep the following in mind:</strong>
 <ul>
 <li><strong>All Permissions are defined in init.rb, they cannot be defined via the administration screens.</strong></li>
-<li><strong>All User Groups should be defined in init.rb. The administration screens can be used to create user groups, but doing so should be reserved for the unexpected.</strong></li>
-<li><strong>Lockdown will sync up the rules (Permissions and User Groups) defined in init.rb with your database.</strong></li>
+<li><strong>All User Groups should be defined in init.rb. The administration screens can be used to create user groups, but doing so should be reserved for the unexpected. Creating User Groups via the administration screens will only add more work for you if you want to run tests using those groups.</strong></li>
+<li><strong>Lockdown will sync up the rules (Permissions and User Groups) defined in init.rb with your database.  You can turn off this feature.</strong></li>
 </ul></p>
 
 
@@ -88,21 +86,11 @@ This will install resources such as:
 	<h2>How it works</h2>
 
 
-Lockdown stores an array of access rights in the session.  For example, if you have a standard <span class="caps">REST</span> users controller, the access rights would be:
+When Lockdown is installed, it adds the following line to your environment.rb (init.rb for Merb):
 <pre>
-  users/index
-  users/show
-  users/edit
-  users/update
-  users/new
-  users/create
-  users/destroy (delete for Merb)
+  require "lockdown/init" 
 </pre>
-
-	<p>The above list will be stored in the session as an array and each request is tested against this list.</p>
-
-
-	<p>To define access rights you need to modify lib/lockdown/init.rb.  This is the default init.rb included with Lockdown:
+This is the default init.rb included with Lockdown:
 <pre class='syntax'>
 <span class="ident">require</span> <span class="punct">&quot;</span><span class="string">lockdown</span><span class="punct">&quot;</span>
 <span class="ident">require</span> <span class="constant">File</span><span class="punct">.</span><span class="ident">join</span><span class="punct">(</span><span class="constant">File</span><span class="punct">.</span><span class="ident">dirname</span><span class="punct">(</span><span class="constant">__FILE__</span><span class="punct">),</span> <span class="punct">&quot;</span><span class="string">session</span><span class="punct">&quot;)</span>
@@ -125,6 +113,10 @@ Lockdown stores an array of access rights in the session.  For example, if you h
   <span class="comment">#</span>
   <span class="comment"># Set redirect to path on successful login:</span>
   <span class="comment">#       options[:successful_login_path] = &quot;/&quot;</span>
+  <span class="comment">#</span>
+  <span class="comment"># Set the system to sync the Permissions and UserGroups defined here</span>
+  <span class="comment"># with the database. </span>
+  <span class="comment">#       options[:sync_init_rb_with_db] = true</span>
   <span class="comment">#</span>
   <span class="comment">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
   <span class="comment"># Define permissions</span>
@@ -191,9 +183,34 @@ Lockdown stores an array of access rights in the session.  For example, if you h
   <span class="comment"># Define your user groups here:</span>
 
 <span class="keyword">end</span> 
- 
-</pre></p>
+</pre>
 
+As you can see, the first line requires lockdown.  This will load the Lockdown system which consists of various parts:
+<ul>
+  <li>
+    Controller<br/>
+    <p>The controller functionality will add before filters to test each request agains the defined access_rights for the current user.  If the current request is not in the access_rights list, access right is denied.</p>
+  </li>  
+  <li>
+    Model<br/>
+    <p>The model functionality will automatically set the updated_by/created_by fields of your model to the current_profile_id.</p>
+  </li>  
+  <li>
+    View<br/>
+    <p>The view functionality intercepts the link_to method (aliases it).  If the current user does not have rights to the link, the link will not show.<br/>There is also a link_to_or_show method (same params as link_to) that will print out just the name of the link (no anchor tag) if the current user does not have access. </p>
+  </li>
+</ul>
+
+When referring to access rights: if you have a standard <span class="caps">REST</span> users controller, the access rights would be:
+<pre>
+  users/index
+  users/show
+  users/edit
+  users/update
+  users/new
+  users/create
+  users/destroy (delete for Merb)
+</pre>
 
 	<h2>The internals</h2>
 
@@ -201,7 +218,7 @@ Lockdown stores an array of access rights in the session.  For example, if you h
 	<p>All configuration of Lockdown (Permissions and User Groups) are done in lib/lockdown/init.rb.  The database functionality is merely an extension of the definitions to allow for the dynamic creation of User Groups.  Permissions can not be created via the administration screens.</p>
 
 
-	<p>Lockdown doesn&#8217;t have a concept of Roles. Instead, Lockdown users can be associated to one or many User Groups to allow for flexibility.  In addition, you can use the admin screens to add new User Groups to the database.</p>
+	<p>Lockdown doesn&#8217;t have a concept of Roles. Instead, Lockdown users can be associated to one or many User Groups to allow for flexibility.  In addition, you can use the admin screens to add new User Groups to the database. User groups are nothing more than a grouping mechanism for Permissions to ease management.</p>
 
 
 	<p>Here are the parts to Lockdown:</p>
@@ -247,7 +264,7 @@ Lockdown stores an array of access rights in the session.  For example, if you h
   </li>
 </ul>
 
-	<h2>Forum</h2>
+	<h2>Google Group</h2>
 
 
 	<p>If you are having a problem understanding how to use Lockdown, please post your question on the lockdown group.  If it&#8217;s documentation related, I will keep this page updated to help everyone.</p>
@@ -277,9 +294,9 @@ Lockdown stores an array of access rights in the session.  For example, if you h
 	<h2>Contact</h2>
 
 
-	<p>Comments and suggestions are welcome via the <a href="http://groups.google.com/group/stonean_lockdown?hl=en">forum</a></p>
+	<p>Comments and suggestions are welcome via the <a href="http://groups.google.com/group/stonean_lockdown?hl=en">google group</a></p>
     <p class="coda">
-      8th May 2008<br/>
+      17th May 2008<br/>
       Theme extended from <a href="http://rb2js.rubyforge.org/">Paul Battley</a>
     </p>
 </div>

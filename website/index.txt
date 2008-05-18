@@ -2,11 +2,9 @@ h1. <a href="http://lockdown.rubyforge.org">Lockdown</a>
 
 h2. What
 
-Lockdown is a authentication/authorization system for RubyOnRails (ver 2.x). While Merb functionality is in place, it is not complete.  There will be a release solely focused on getting the Merb functionality up to par with Rails. 
+Lockdown is a authentication/authorization system for RubyOnRails (ver 2.x). While Merb functionality is in place, it is not complete.  There will be a release solely focused on getting the Merb functionality up to par with Rails.
 
 h2. Installing
-
-For the people who don't care to know the details and just want to get the system installed:
 
 <pre>
 $ sudo gem install lockdown
@@ -14,15 +12,15 @@ $ cd <your_project_directory>
 $ lockdown .
 </pre>
 
-This will create a "lockdown" directory in the lib dir add two files: init.rb and session.rb.  Modify init.rb to set defaults and define the rules that apply to your system.
+This will create a "lockdown" directory in the lib dir add two files: init.rb and session.rb.  
+Modify init.rb to set configuration options and define the permissions and user groups that apply to your system.
 
-<strong> Some noteworthy points:</strong>
+<strong> Please keep the following in mind:</strong>
 <ul>
 <li><strong>All Permissions are defined in init.rb, they cannot be defined via the administration screens.</strong></li>
-<li><strong>All User Groups should be defined in init.rb. The administration screens can be used to create user groups, but doing so should be reserved for the unexpected.</strong></li>
-<li><strong>Lockdown will sync up the rules (Permissions and User Groups) defined in init.rb with your database.</strong></li>
+<li><strong>All User Groups should be defined in init.rb. The administration screens can be used to create user groups, but doing so should be reserved for the unexpected. Creating User Groups via the administration screens will only add more work for you if you want to run tests using those groups.</strong></li>
+<li><strong>Lockdown will sync up the rules (Permissions and User Groups) defined in init.rb with your database.  You can turn off this feature.</strong></li>
 </ul>
-
 
 To help you with your new application, Lockdown comes with a generator called lockdown_all.
 
@@ -45,20 +43,11 @@ Please refer to the <a href="generator.html">generator page</a> for more detail.
 
 h2. How it works
 
-Lockdown stores an array of access rights in the session.  For example, if you have a standard REST users controller, the access rights would be:
+When Lockdown is installed, it adds the following line to your environment.rb (init.rb for Merb):
 <pre>
-  users/index
-  users/show
-  users/edit
-  users/update
-  users/new
-  users/create
-  users/destroy (delete for Merb)
+  require "lockdown/init"
 </pre>
-
-The above list will be stored in the session as an array and each request is tested against this list.  
-
-To define access rights you need to modify lib/lockdown/init.rb.  This is the default init.rb included with Lockdown:
+This is the default init.rb included with Lockdown:
 <pre syntax="ruby">
 require "lockdown"
 require File.join(File.dirname(__FILE__), "session")
@@ -81,6 +70,10 @@ Lockdown::System.configure do
   #
   # Set redirect to path on successful login:
   #       options[:successful_login_path] = "/"
+  #
+  # Set the system to sync the Permissions and UserGroups defined here
+  # with the database. 
+  #       options[:sync_init_rb_with_db] = true
   #
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Define permissions
@@ -147,14 +140,41 @@ Lockdown::System.configure do
   # Define your user groups here:
 
 end 
- 
 </pre>
+
+As you can see, the first line requires lockdown.  This will load the Lockdown system which consists of various parts:
+<ul>
+  <li>
+    Controller<br/>
+    <p>The controller functionality will add before filters to test each request agains the defined access_rights for the current user.  If the current request is not in the access_rights list, access right is denied.</p>
+  </li>  
+  <li>
+    Model<br/>
+    <p>The model functionality will automatically set the updated_by/created_by fields of your model to the current_profile_id.</p>
+  </li>  
+  <li>
+    View<br/>
+    <p>The view functionality intercepts the link_to method (aliases it).  If the current user does not have rights to the link, the link will not show.<br/>There is also a link_to_or_show method (same params as link_to) that will print out just the name of the link (no anchor tag) if the current user does not have access. </p>
+  </li>
+</ul>
+
+When referring to access rights: if you have a standard REST users controller, the access rights would be:
+<pre>
+  users/index
+  users/show
+  users/edit
+  users/update
+  users/new
+  users/create
+  users/destroy (delete for Merb)
+</pre>
+
 
 h2. The internals
 
 All configuration of Lockdown (Permissions and User Groups) are done in lib/lockdown/init.rb.  The database functionality is merely an extension of the definitions to allow for the dynamic creation of User Groups.  Permissions can not be created via the administration screens.
 
-Lockdown doesn't have a concept of Roles. Instead, Lockdown users can be associated to one or many User Groups to allow for flexibility.  In addition, you can use the admin screens to add new User Groups to the database. 
+Lockdown doesn't have a concept of Roles. Instead, Lockdown users can be associated to one or many User Groups to allow for flexibility.  In addition, you can use the admin screens to add new User Groups to the database. User groups are nothing more than a grouping mechanism for Permissions to ease management.
 
 Here are the parts to Lockdown:
 
@@ -198,7 +218,7 @@ Here are the parts to Lockdown:
   </li>
 </ul>
   
-h2. Forum
+h2. Google Group
 
 If you are having a problem understanding how to use Lockdown, please post your question on the lockdown group.  If it's documentation related, I will keep this page updated to help everyone. 
 
@@ -219,5 +239,5 @@ This code is free to use under the terms of the MIT license.
 
 h2. Contact
 
-Comments and suggestions are welcome via the "forum":http://groups.google.com/group/stonean_lockdown?hl=en
+Comments and suggestions are welcome via the "google group":http://groups.google.com/group/stonean_lockdown?hl=en
 
