@@ -33,6 +33,6 @@ class SessionsController < ApplicationController
 	 
   def successful_login
     flash[:notice] = "Logged in successfully"
-    redirect_back_or_default "/"
+    redirect_back_or_default Lockdown::System.fetch(:successful_login_path)
   end
 end

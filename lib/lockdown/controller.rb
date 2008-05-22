@@ -47,7 +47,7 @@ module Lockdown
           if session[:expiry_time] && session[:expiry_time] < Time.now
             nil_lockdown_values
           end
-          session[:expiry_time] = Time.now + Lockdown::System[:session_timeout]
+          session[:expiry_time] = Time.now + Lockdown::System.fetch(:session_timeout)
         end
               
         def store_location
@@ -189,13 +189,13 @@ module Lockdown
         end
       
         def access_denied(e)
-					if Lockdown::System[:logout_on_access_violation]
+					if Lockdown::System.fetch(:logout_on_access_violation)
 						reset_session
 					end
           respond_to do |accepts|
             accepts.html do
               store_location
-              send_to Lockdown::System[:access_denied_path]
+              send_to Lockdown::System.fetch(:access_denied_path)
             end
             accepts.xml do
               headers["Status"] = "Unauthorized"

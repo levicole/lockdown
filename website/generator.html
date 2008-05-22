@@ -33,16 +33,34 @@
     <h1>Lockdown</h1>
     <div id="version" class="clickable" onclick='document.location = "http://rubyforge.org/projects/lockdown"; return false'>
       <p>Get Version</p>
-      <a href="http://rubyforge.org/projects/lockdown" class="numbers">0.4.6</a>
+      <a href="http://rubyforge.org/projects/lockdown" class="numbers">0.5.0</a>
     </div>
     <h2>What</h2>
 
 
-	<p>This page will describe how to get started with a new application.  There is only one generator available right now: generator_all.  This will put everything in place and is useful when creating a new application.</p>
+	<p>This page will describe how to get started with a new application.</p>
 
 
-	<p>I intend on breaking this out into separate generators to make the inclusion of Lockdown to existing applications much easier.</p>
+	<p>There are now generator options to give you more control over which templates you want to mix-in to your application:</p>
 
+
+<ul>
+<li>&#8212;all
+<p> Install all Lockdown templates </p>
+</li> 
+<li>&#8212;models
+<p> Install only models and migrations (skip migrations by&#8212;no_migrations) </p>
+</li> 
+<li>&#8212;management
+<p> Install  management functionality.  Which is&#8212;all minus&#8212;login. All models (migrations) included.</p>
+</li> 
+<li>&#8212;login
+<p>Install login functionality.  Which is&#8212;all minus&#8212;management. All models (migrations) included.</p>
+</li> 
+<li>&#8212;no_migrations
+<p>Skip migrations installation</p>
+</li> 
+</ul>
 
 	<h2>Creating a new application</h2>
 
@@ -87,7 +105,7 @@ http://groups.google.com/group/stonean_lockdown?hl=en
 
 
 <pre>
-$ ./script/generate lockdown_all
+$ ./script/generate lockdown --all
       exists  app/helpers
       exists  app/models
       exists  app/views
@@ -161,7 +179,7 @@ $ rm public/index.html
 $ ./script/server
 </pre>
 
-	<p>You&#8217;ll see that the lockdown_all generator has added a default route to the login page.</p>
+	<p>You&#8217;ll see that the &#8220;lockdown&#8212;all&#8221; generator has added a default route to the login page.</p>
 
 
 	<p>Login using the basic admin account with credentials: admin/password</p>
@@ -208,7 +226,7 @@ $ ./script/server
 
 	<p>Comments and suggestions are welcome via the <a href="http://groups.google.com/group/stonean_lockdown?hl=en">forum</a></p>
     <p class="coda">
-      2nd May 2008<br/>
+      22nd May 2008<br/>
       Theme extended from <a href="http://rb2js.rubyforge.org/">Paul Battley</a>
     </p>
 </div>

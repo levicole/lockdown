@@ -1,3 +1,8 @@
+== 0.5.0 2008-05-22
+* Added: new generator options for more control over templates
+* Fixed: sessions_controller successful_login didn't honor Lockdown::System options setting for :successful_login_path
+* Modified: System had [] method which could cause issues in future releases.  Use Lockdown::System.fetch(:option) to retrieve options
+
 == 0.4.6 2008-05-08
 * Fixed: link_to destroy/show conditionals were in wrong order and therefore not working. 
 

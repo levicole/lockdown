@@ -27,14 +27,10 @@ module Lockdown
         end
       end
 
-      def [](key)
+      def fetch(key)
         (@options||={})[key]
       end
       
-			def []=(key,val)
-        @options[key] = val
-      end
-
       def set_permission(name, *method_arrays)
         @permissions[name] ||= []
         method_arrays.each{|ary| @permissions[name] += ary}

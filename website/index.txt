@@ -22,11 +22,11 @@ Modify init.rb to set configuration options and define the permissions and user 
 <li><strong>Lockdown will sync up the rules (Permissions and User Groups) defined in init.rb with your database.  You can turn off this feature.</strong></li>
 </ul>
 
-To help you with your new application, Lockdown comes with a generator called lockdown_all.
+To help you with your new application, Lockdown comes with a generator called lockdown that has various options for you to pick which templates you desire.
 
 <pre>
 $ cd <your_project_directory>
-$ ./script/generate lockdown_all
+$ ./script/generate lockdown --all
 </pre>
 
 This will install resources such as:
@@ -218,6 +218,19 @@ Here are the parts to Lockdown:
   </li>
 </ul>
   
+h2. Roadmap to 1.0
+
+<strong>**this is tentative and the feature order may change</strong>
+
+<ul>
+  <li><strong>0.5.0: </strong>More generators to ease installation into existing projects</li>
+  <li><strong>0.6.0: </strong>Password reset/reminder, Registration page template generators</li>
+  <li><strong>0.7.0: </strong>OpenId support</li>
+  <li><strong>0.8.0: </strong>RSpec tests and helper methods for your application</li>
+  <li><strong>0.9.0: </strong>Merb Support</li>
+  <li><strong>1.0.0: </strong>Model level security</li>
+</ul>
+
 h2. Google Group
 
 If you are having a problem understanding how to use Lockdown, please post your question on the lockdown group.  If it's documentation related, I will keep this page updated to help everyone. 
@@ -237,7 +250,10 @@ h2. License
 
 This code is free to use under the terms of the MIT license.
 
+
 h2. Contact
 
 Comments and suggestions are welcome via the "google group":http://groups.google.com/group/stonean_lockdown?hl=en
+
+<a href="http://blog.stonean.com">Andrew Stone</a>
 

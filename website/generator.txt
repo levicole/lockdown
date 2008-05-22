@@ -2,9 +2,27 @@ h1. <a href="http://lockdown.rubyforge.org">Lockdown</a>
 
 h2. What
 
-This page will describe how to get started with a new application.  There is only one generator available right now: generator_all.  This will put everything in place and is useful when creating a new application.
+This page will describe how to get started with a new application.  
 
-I intend on breaking this out into separate generators to make the inclusion of Lockdown to existing applications much easier.
+There are now generator options to give you more control over which templates you want to mix-in to your application:
+
+<ul>
+<li> --all
+<p> Install all Lockdown templates </p>
+</li> 
+<li> --models
+<p> Install only models and migrations (skip migrations by --no_migrations) </p>
+</li> 
+<li> --management
+<p> Install  management functionality.  Which is --all minus --login. All models (migrations) included.</p>
+</li> 
+<li> --login
+<p>Install login functionality.  Which is --all minus --management. All models (migrations) included.</p>
+</li> 
+<li> --no_migrations
+<p>Skip migrations installation</p>
+</li> 
+</ul>
 
 h2. Creating a new application
 
@@ -50,7 +68,7 @@ http://groups.google.com/group/stonean_lockdown?hl=en
 Now it's time to get the template...
 
 <pre>
-$ ./script/generate lockdown_all
+$ ./script/generate lockdown --all
       exists  app/helpers
       exists  app/models
       exists  app/views
@@ -121,7 +139,7 @@ Start the app and then open up your browser to http://localhost:3000
 $ ./script/server
 </pre>
 
-You'll see that the lockdown_all generator has added a default route to the login page.
+You'll see that the "lockdown --all" generator has added a default route to the login page.
 
 Login using the basic admin account with credentials: admin/password 
 

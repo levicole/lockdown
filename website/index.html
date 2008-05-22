@@ -33,7 +33,7 @@
     <h1>Lockdown</h1>
     <div id="version" class="clickable" onclick='document.location = "http://rubyforge.org/projects/lockdown"; return false'>
       <p>Get Version</p>
-      <a href="http://rubyforge.org/projects/lockdown" class="numbers">0.4.6</a>
+      <a href="http://rubyforge.org/projects/lockdown" class="numbers">0.5.0</a>
     </div>
     <h2>What</h2>
 
@@ -62,12 +62,12 @@ Modify init.rb to set configuration options and define the permissions and user 
 </ul></p>
 
 
-	<p>To help you with your new application, Lockdown comes with a generator called lockdown_all.</p>
+	<p>To help you with your new application, Lockdown comes with a generator called lockdown that has various options for you to pick which templates you desire.</p>
 
 
 <pre>
 $ cd &lt;your_project_directory&gt;
-$ ./script/generate lockdown_all
+$ ./script/generate lockdown --all
 </pre>
 
 This will install resources such as:
@@ -264,6 +264,21 @@ When referring to access rights: if you have a standard <span class="caps">REST<
   </li>
 </ul>
 
+	<h2>Roadmap to 1.0</h2>
+
+
+	<p><strong>**this is tentative and the feature order may change</strong></p>
+
+
+<ul>
+  <li><strong>0.5.0: </strong>More generators to ease installation into existing projects</li>
+  <li><strong>0.6.0: </strong>Password reset/reminder, Registration page template generators</li>
+  <li><strong>0.7.0: </strong>OpenId support</li>
+  <li><strong>0.8.0: </strong>RSpec tests and helper methods for your application</li>
+  <li><strong>0.9.0: </strong>Merb Support</li>
+  <li><strong>1.0.0: </strong>Model level security</li>
+</ul>
+
 	<h2>Google Group</h2>
 
 
@@ -295,8 +310,11 @@ When referring to access rights: if you have a standard <span class="caps">REST<
 
 
 	<p>Comments and suggestions are welcome via the <a href="http://groups.google.com/group/stonean_lockdown?hl=en">google group</a></p>
+
+
+	<p><a href="http://blog.stonean.com">Andrew Stone</a></p>
     <p class="coda">
-      17th May 2008<br/>
+      22nd May 2008<br/>
       Theme extended from <a href="http://rb2js.rubyforge.org/">Paul Battley</a>
     </p>
 </div>
