@@ -15,13 +15,15 @@ module Lockdown
 
       # Future functionality:
       # :private_access will restrict access to model data to their creators.
-      # attr_accessor :private_access #:nodoc:
+      # attr_accessor :private_access 
 
       attr_accessor :controller_classes #:nodoc:
 
       def configure(&block)
         set_defaults
+
         instance_eval(&block)
+
         if options[:use_db_models] && options[:sync_init_rb_with_db]
           sync_with_db
         end
@@ -71,7 +73,7 @@ module Lockdown
         elsif ug.responds_to?(:name)
           # This user group was defined in the database
           ug.permissions.each do |perm|
-            perm_sym = symbol_name(perm.name)
+            perm_sym = lockdown_symbol(perm.name)
             unless permission_exists?(perm_sym)
               raise SecurityError, "Permission associated to User Group is invalid: #{perm_sym}"
             end
@@ -132,7 +134,7 @@ module Lockdown
       # Delete a user group record from the database
       #
       def delete_user_group(str_sym)
-        ug = UserGroup.find(:first, :conditions => ["name = ?",string_name(str_sym)])
+        ug = UserGroup.find(:first, :conditions => ["name = ?",lockdown_string(str_sym)])
         ug.destroy unless ug.nil?
       end
 
@@ -181,7 +183,7 @@ module Lockdown
       def permissions_assignable_for_user(usr)
         return [] if usr.nil?
         if administrator?(usr)
-          @permissions.keys.collect{|k| Permission.find_by_name(string_name(k)) }.compact
+          @permissions.keys.collect{|k| Permission.find_by_name(lockdown_string(k)) }.compact
         else
           groups = user_groups_assignable_for_user(usr)
           groups.collect{|g| g.permissions}.flatten.compact
@@ -316,7 +318,7 @@ module Lockdown
         # Create permissions not found in the database
         get_permissions.each do |key|
           next if permission_assigned_automatically?(key)
-          str = string_name(key)
+          str = lockdown_string(key)
           p = Permission.find(:first, :conditions => ["name = ?", str])
           unless p
             puts ">> Lockdown: Permission not found in db: #{str}, creating."
@@ -330,7 +332,7 @@ module Lockdown
         db_perms = Permission.find(:all).dup
         perm_keys = get_permissions
         db_perms.each do |dbp|
-          unless perm_keys.include?(symbol_name(dbp.name))
+          unless perm_keys.include?(lockdown_symbol(dbp.name))
             puts ">> Lockdown: Permission no longer in init.rb: #{dbp.name}, deleting."
             Lockdown.database_execute("delete from permissions_user_groups where permission_id = #{dbp.id}")
             dbp.destroy
@@ -339,14 +341,14 @@ module Lockdown
 
         # Create user groups not found in the database
         get_user_groups.each do |key|
-          str = string_name(key)
+          str = lockdown_string(key)
           ug = UserGroup.find(:first, :conditions => ["name = ?", str])
           unless ug
             puts ">> Lockdown: UserGroup not in the db: #{str}, creating."
             ug = UserGroup.create(:name => str)
             #Inefficient, definitely, but shouldn't have any issues across orms.
             permissions_for_user_group(key) do |perm|
-              p = Permission.find(:first, :conditions => ["name = ?", string_name(perm)])
+              p = Permission.find(:first, :conditions => ["name = ?", lockdown_string(perm)])
               Lockdown.database_execute <<-SQL 
                 insert into permissions_user_groups(permission_id, user_group_id)
                 values(#{p.id}, #{ug.id})

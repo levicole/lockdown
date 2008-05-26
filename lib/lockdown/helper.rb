@@ -14,13 +14,13 @@ module Lockdown
       end
     end
 
-		def string_name(str_sym)
-			str_sym.is_a?(Symbol) ? convert_reference_name(str_sym) : str_sym
-		end
-
-		def symbol_name(str_sym)
-			str_sym.is_a?(String) ? convert_reference_name(str_sym) : str_sym
-		end
+    def lockdown_string(value)
+      if value.respond_to?(:name)
+        string_name(value.name)
+      else
+        string_name(value)
+      end
+    end
 
     def lockdown_symbol(value)
       if value.respond_to?(:name)
@@ -41,15 +41,23 @@ module Lockdown
       Array.new(len){||chars[rand(chars.size)]}.join
     end
 
-		def administrator_group_string
-			string_name(:administrators)
+    def administrator_group_string
+      string_name(:administrators)
     end
 
-		def administrator_group_symbol
-			:administrators
+    def administrator_group_symbol
+      :administrators
     end
     
     private
+
+    def string_name(str_sym)
+      str_sym.is_a?(Symbol) ? convert_reference_name(str_sym) : str_sym
+    end
+
+    def symbol_name(str_sym)
+      str_sym.is_a?(String) ? convert_reference_name(str_sym) : str_sym
+    end
 
     def titleize(str)
       humanize(underscore(str)).gsub(/\b([a-z])/) { $1.capitalize }
