@@ -75,11 +75,11 @@ module Lockdown
     end
 
     if Lockdown.rails_app?
-      def kontroller_class_name(str)
+      def controller_class_name(str)
         "#{str}Controller"
       end
     else
-      def kontroller_class_name(str)
+      def controller_class_name(str)
         str
       end
     end

@@ -1,3 +1,6 @@
+== 0.5.2 2008-05-26
+* Fixed: make call to Dependencies.clear after inspecting controllers.  Using Dependencies.require_or_load is not sufficient it seems.
+
 == 0.5.1 2008-05-25
 * Fixed: bug with namespaced access having identical standard access.  e.g. /users and /admin/users 
 

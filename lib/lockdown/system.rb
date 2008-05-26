@@ -207,14 +207,14 @@ module Lockdown
       end
       
       def fetch_controller_class(str)
-        @controller_classes[controller_class_name(str)]
+        @controller_classes[lockdown_class_name(str)]
       end
       
       protected 
 
       def set_defaults
         load_controller_classes
-        
+
         @permissions = {}
         @user_groups = {}
         
@@ -248,7 +248,7 @@ module Lockdown
 
       def load_controller_classes
         @controller_classes = {}
-
+         
         maybe_load_framework_controller_parent
 
         Dir.chdir("#{Lockdown.project_root}/app/controllers") do
@@ -257,17 +257,21 @@ module Lockdown
             lockdown_load(c) 
           end
         end
+
+        if Lockdown.rails_app?
+          Dependencies.clear
+        end
       end
 
-      def controller_class_name_from_file(str)
+      def lockdown_class_name_from_file(str)
         str.split(".")[0].split("/").collect{|s| camelize(s) }.join("::")
       end
 
-      def controller_class_name(str)
+      def lockdown_class_name(str)
         if str.include?("__")
-          kontroller_class_name(str.split("__").collect{|p| camelize(p)}.join("::"))
+          controller_class_name(str.split("__").collect{|p| camelize(p)}.join("::"))
         else
-          kontroller_class_name(camelize(str))
+          controller_class_name(camelize(str))
         end
       end
 
@@ -275,13 +279,12 @@ module Lockdown
         if Lockdown.rails_app?
           Dependencies.require_or_load("application.rb")
         else
-          #just default to Merb for now as the only alternative
           load("application.rb") unless const_defined?("Application")
         end
       end
       
       def lockdown_load(file)
-        klass = controller_class_name_from_file(file)
+        klass = lockdown_class_name_from_file(file)
         if Lockdown.rails_app?
           Dependencies.require_or_load(file)
         else
