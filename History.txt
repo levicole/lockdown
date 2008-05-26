@@ -1,3 +1,6 @@
+== 0.5.1 2008-05-25
+* Fixed: bug with namespaced access having identical standard access.  e.g. /users and /admin/users 
+
 == 0.5.0 2008-05-22
 * Added: new generator options for more control over templates
 * Fixed: sessions_controller successful_login didn't honor Lockdown::System options setting for :successful_login_path

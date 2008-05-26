@@ -38,7 +38,7 @@ module Lockdown
           req = Lockdown.format_controller_action(url)
           session[:access_rights] ||= Lockdown::System.public_access
           session[:access_rights].each do |ar|
-            return true if req =~ /#{ar}$/
+            return true if req == ar
           end
           false
         end
@@ -51,7 +51,7 @@ module Lockdown
         end
               
         def store_location
-          if request.method == :get && !(session[:thispage] == sent_from_uri)
+          if (request.method == :get) && (session[:thispage] != sent_from_uri)
             session[:prevpage] = session[:thispage] || ''
             session[:thispage] = sent_from_uri
           end

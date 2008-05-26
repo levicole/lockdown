@@ -24,48 +24,47 @@ class LockdownGenerator < Rails::Generator::Base
   protected
 
   def add_management(m)
-      m.directory 'app/views/users'
-      m.directory 'app/views/user_groups'
-      m.directory 'app/views/permissions'
+    m.directory 'app/views/users'
+    m.directory 'app/views/user_groups'
+    m.directory 'app/views/permissions'
 
-      m.file "app/controllers/permissions_controller.rb",
-							"app/controllers/permissions_controller.rb"
+    m.file "app/controllers/permissions_controller.rb",
+      "app/controllers/permissions_controller.rb"
 
-      m.file "app/controllers/users_controller.rb",
-							"app/controllers/users_controller.rb"
+    m.file "app/controllers/users_controller.rb",
+      "app/controllers/users_controller.rb"
 
-      m.file "app/controllers/user_groups_controller.rb",
-							"app/controllers/user_groups_controller.rb"
+    m.file "app/controllers/user_groups_controller.rb",
+      "app/controllers/user_groups_controller.rb"
 
-      m.file "app/helpers/permissions_helper.rb",
-							"app/helpers/permissions_helper.rb"
+    m.file "app/helpers/permissions_helper.rb",
+      "app/helpers/permissions_helper.rb"
 
-      m.file "app/helpers/users_helper.rb",
-							"app/helpers/users_helper.rb"
+    m.file "app/helpers/users_helper.rb",
+      "app/helpers/users_helper.rb"
 
-      m.file "app/helpers/user_groups_helper.rb",
-							"app/helpers/user_groups_helper.rb"
+    m.file "app/helpers/user_groups_helper.rb",
+      "app/helpers/user_groups_helper.rb"
 
-      copy_views(m, "users")
+    copy_views(m, "users")
 
-      m.file "app/views/users/_password.html.erb",
-							"app/views/users/_password.html.erb"
+    m.file "app/views/users/_password.html.erb",
+      "app/views/users/_password.html.erb"
 
-      copy_views(m, "user_groups")
+    copy_views(m, "user_groups")
 
-      m.file "app/views/permissions/_data.html.erb",
-							"app/views/permissions/_data.html.erb"
+    m.file "app/views/permissions/_data.html.erb",
+      "app/views/permissions/_data.html.erb"
 
-      m.file "app/views/permissions/index.html.erb",
-							"app/views/permissions/index.html.erb"
+    m.file "app/views/permissions/index.html.erb",
+      "app/views/permissions/index.html.erb"
 
-      m.file "app/views/permissions/show.html.erb",
-							"app/views/permissions/show.html.erb"
+    m.file "app/views/permissions/show.html.erb",
+      "app/views/permissions/show.html.erb"
 
-
-      m.route_resources "permissions"
-      m.route_resources "user_groups"
-      m.route_resources "users"
+    m.route_resources "permissions"
+    m.route_resources "user_groups"
+    m.route_resources "users"
 
     add_management_permissions(m)
   end
@@ -78,7 +77,7 @@ class LockdownGenerator < Rails::Generator::Base
 
     m.file "app/views/sessions/new.html.erb",
       "app/views/sessions/new.html.erb"
-
+    
     m.route_resources "sessions"
 
     add_login_permissions(m)
@@ -141,22 +140,22 @@ class LockdownGenerator < Rails::Generator::Base
     end
   end # add_migrations
 
-	def copy_views(m, vw)
-		m.file "app/views/#{vw}/_data.html.erb", "app/views/#{vw}/_data.html.erb"
-		m.file "app/views/#{vw}/_form.html.erb", "app/views/#{vw}/_form.html.erb"
-		m.file "app/views/#{vw}/index.html.erb", "app/views/#{vw}/index.html.erb"
-		m.file "app/views/#{vw}/show.html.erb", "app/views/#{vw}/show.html.erb"
-		m.file "app/views/#{vw}/edit.html.erb", "app/views/#{vw}/edit.html.erb"
-		m.file "app/views/#{vw}/new.html.erb", "app/views/#{vw}/new.html.erb"
-	end
+  def copy_views(m, vw)
+    m.file "app/views/#{vw}/_data.html.erb", "app/views/#{vw}/_data.html.erb"
+    m.file "app/views/#{vw}/_form.html.erb", "app/views/#{vw}/_form.html.erb"
+    m.file "app/views/#{vw}/index.html.erb", "app/views/#{vw}/index.html.erb"
+    m.file "app/views/#{vw}/show.html.erb", "app/views/#{vw}/show.html.erb"
+    m.file "app/views/#{vw}/edit.html.erb", "app/views/#{vw}/edit.html.erb"
+    m.file "app/views/#{vw}/new.html.erb", "app/views/#{vw}/new.html.erb"
+  end
 
-	def add_login_permissions(m)
+  def add_login_permissions(m)
     add_permissions m, "set_permission :sessions_management, all_methods(:sessions)"
     
     add_predefined_user_group m, "set_public_access :sessions_management"
   end
 
-	def add_management_permissions(m)
+  def add_management_permissions(m)
     perms = []
     perms << "set_permission :users_management, all_methods(:users)"
     perms << "set_permission :user_groups_management, all_methods(:user_groups)"
@@ -166,32 +165,32 @@ class LockdownGenerator < Rails::Generator::Base
     add_permissions m, perms.join("\n  ")
     
     add_predefined_user_group m, "set_protected_access :my_account"
-	end
-
-  def add_permissions(m, str)
-		sentinel = '# Define your permissions here:'
-		m.gsub_file 'lib/lockdown/init.rb', /(#{Regexp.escape(sentinel)})/mi do |match|
-				"#{match}\n  #{str}"
-		end
   end
 
-  def add_predefined_user_group(m, str)
-		sentinel = '# Define the built-in user groups here:'
-		m.gsub_file 'lib/lockdown/init.rb', /(#{Regexp.escape(sentinel)})/mi do |match|
-				"#{match}\n  #{str}"
+  def add_permissions(m, str)
+    sentinel = '# Define your permissions here:'
+    m.gsub_file 'lib/lockdown/init.rb', /(#{Regexp.escape(sentinel)})/mi do |match|
+      "#{match}\n  #{str}"
     end
   end
 
-	def add_login_routes(m)
-		home = %Q(map.home '', :controller => 'sessions', :action => 'new')
-		login = %Q(map.login '/login', :controller => 'sessions', :action => 'new')
-		logout =%Q(map.logout '/logout', :controller => 'sessions', :action => 'destroy')
-			
-		sentinel = 'ActionController::Routing::Routes.draw do |map|'
+  def add_predefined_user_group(m, str)
+    sentinel = '# Define the built-in user groups here:'
+    m.gsub_file 'lib/lockdown/init.rb', /(#{Regexp.escape(sentinel)})/mi do |match|
+      "#{match}\n  #{str}"
+    end
+  end
 
-		m.gsub_file 'config/routes.rb', /(#{Regexp.escape(sentinel)})/mi do |match|
-				"#{match}\n  #{home}\n\n  #{login}\n\n  #{logout}\n"
-		end
+  def add_login_routes(m)
+    home = %Q(map.home '', :controller => 'sessions', :action => 'new')
+    login = %Q(map.login '/login', :controller => 'sessions', :action => 'new')
+    logout =%Q(map.logout '/logout', :controller => 'sessions', :action => 'destroy')
+			
+    sentinel = 'ActionController::Routing::Routes.draw do |map|'
+                
+    m.gsub_file 'config/routes.rb', /(#{Regexp.escape(sentinel)})/mi do |match|
+      "#{match}\n  #{home}\n\n  #{login}\n\n  #{logout}\n"
+    end
   end
 
   def banner
