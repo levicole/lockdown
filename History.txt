@@ -1,3 +1,8 @@
+== 0.5.3 2008-06-01
+* Fixed: Issue with new timestamped based migrations in rails 2.1.  Migration templates created were all done within the same second, therefore having the same timestamp, added a sleep call to the next_migration_string to get around the issue.
+
+* Fixed: User Groups management template had a bug on the show screen.  Was not getting @all_permissions instance variable set.
+
 == 0.5.2 2008-05-26
 * Fixed: make call to Dependencies.clear after inspecting controllers.  Using Dependencies.require_or_load is not sufficient it seems.
 

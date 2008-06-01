@@ -16,6 +16,7 @@ class UserGroupsController < ApplicationController
   # GET /user_groups/1
   # GET /user_groups/1.xml
   def show
+		@all_permissions = Lockdown::System.permissions_assignable_for_user(current_user)
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @user_group }

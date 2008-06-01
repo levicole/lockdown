@@ -1,3 +1,13 @@
+if Rails::VERSION::MAJOR >= 2 && Rails::VERSION::MINOR >= 1
+  class Rails::Generator::Commands::Base
+    protected
+    def next_migration_string(padding = 3)
+      sleep(1)
+      Time.now.utc.strftime("%Y%m%d%H%M%S") 
+    end
+  end
+end
+
 class LockdownGenerator < Rails::Generator::Base
   attr_accessor :file_name
 
