@@ -124,11 +124,9 @@ add permissions and create user groups.
 To modify the contents of your session and to add access 
 methods, modify lib/lockdown/session.rb.
 
-If you want to know more, please visit:
+For the wiki, news, forum and issue tracker please visit:
 
-http://stonean.com/wiki/lockdown
+http://stonean.com/projects/show/lockdown
 
-You can post questions to the forum or use the issue tracker
-to add a bug or submit a pull request.
 ------------------------------------------------------------\n
 MSG
