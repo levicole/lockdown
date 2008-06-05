@@ -14,6 +14,7 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.xml
   def show
+    @user_groups_for_user = Lockdown::System.user_groups_assignable_for_user(current_user)
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @user }

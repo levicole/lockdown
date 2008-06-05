@@ -1,6 +1,6 @@
 module UsersHelper
   def profile_first_name_value
-    if @action_name == "show"
+    if <%= action_name %> == "show"
       h @profile.first_name 
     else
       text_field_tag "profile[first_name]", @profile.first_name
@@ -8,7 +8,7 @@ module UsersHelper
   end
 
   def profile_last_name_value
-    if @action_name == "show"
+    if <%= action_name %> == "show"
       h @profile.last_name 
     else
       text_field_tag "profile[last_name]", @profile.last_name
@@ -16,7 +16,7 @@ module UsersHelper
   end
 
   def profile_email_value
-    if @action_name == "show"
+    if <%= action_name %> == "show"
       h @profile.email 
     else
       text_field_tag "profile[email]", @profile.email 
@@ -24,7 +24,7 @@ module UsersHelper
   end
 
   def user_login_value
-    if @action_name == "show"
+    if <%= action_name %> == "show"
       h @user.login 
     else
       text_field_tag "user[login]", @user.login
@@ -32,7 +32,7 @@ module UsersHelper
   end
 
   def user_password_value
-    if @action_name == "show"
+    if <%= action_name %> == "show"
       h "Hidden for security..."
     else
       %{<input autocomplete="off" type="password" name="user[password]" id="user_password"/>}
@@ -40,7 +40,7 @@ module UsersHelper
   end
 
   def user_password_confirmation_value
-    if @action_name == "show"
+    if <%= action_name %> == "show"
       h "Hidden for security..."
     else
       %{<input autocomplete="off" type="password" name="user[password_confirmation]" id="user_password_confirmation"/>}
@@ -48,7 +48,7 @@ module UsersHelper
   end
 
   def user_user_groups_value
-    if @action_name == "show"
+    if <%= action_name %> == "show"
       @user.user_groups.collect{|ug| ug.name + "<br/>"}
     else
       rvalue = %{<ul id="all_user_groups" class="checklist">}

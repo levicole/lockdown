@@ -10,6 +10,16 @@ end
 
 class LockdownGenerator < Rails::Generator::Base
   attr_accessor :file_name
+  attr_accessor :action_name
+
+  def initialize(runtime_args, runtime_options = {})
+    super
+    if Rails::VERSION::MAJOR >= 2 && Rails::VERSION::MINOR >= 1
+      @action_name = "action_name"
+    else
+      @action_name = "@action_name"
+    end
+  end
 
   def manifest
     record do |m|
@@ -47,13 +57,13 @@ class LockdownGenerator < Rails::Generator::Base
     m.file "app/controllers/user_groups_controller.rb",
       "app/controllers/user_groups_controller.rb"
 
-    m.file "app/helpers/permissions_helper.rb",
+    m.template "app/helpers/permissions_helper.rb",
       "app/helpers/permissions_helper.rb"
 
-    m.file "app/helpers/users_helper.rb",
+    m.template "app/helpers/users_helper.rb",
       "app/helpers/users_helper.rb"
 
-    m.file "app/helpers/user_groups_helper.rb",
+    m.template "app/helpers/user_groups_helper.rb",
       "app/helpers/user_groups_helper.rb"
 
     copy_views(m, "users")

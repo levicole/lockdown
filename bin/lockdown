@@ -117,9 +117,9 @@ MSG
 
 puts <<-MSG
 \n------------------------------------------------------------
-You are now locked down.  To open up access to your application 
-please modify lib/lockdown/init.rb.  This is where you'll 
-add permissions and create user groups.
+You are now locked down.  To open up access to your 
+application please modify lib/lockdown/init.rb.  This is 
+where you'll add permissions and create user groups.
 
 To modify the contents of your session and to add access 
 methods, modify lib/lockdown/session.rb.

@@ -1,3 +1,8 @@
+== 0.5.4 2008-06-05
+* Fixed: Issue with helpers in Rails 2.1, @action_name is no longer accessible, must call action_name method.
+* Fixed: Issue with users controller, show method not having user_groups_for_user instance variable
+* Modified: The end of the lockdown executable now references stonean.com instead of rubyforge site.
+
 == 0.5.3 2008-06-01
 * Fixed: Issue with new timestamped based migrations in rails 2.1.  Migration templates created were all done within the same second, therefore having the same timestamp, added a sleep call to the next_migration_string to get around the issue.
 
