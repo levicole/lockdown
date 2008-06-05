@@ -126,11 +126,9 @@ methods, modify lib/lockdown/session.rb.
 
 If you want to know more, please visit:
 
-http://lockdown.rubyforge.org
+http://stonean.com/wiki/lockdown
 
-If you have any suggestions, comments or issues 
-please visit the Lockdown Google group:
-
-http://groups.google.com/group/stonean_lockdown?hl=en
+You can post questions to the forum or use the issue tracker
+to add a bug or submit a pull request.
 ------------------------------------------------------------\n
 MSG

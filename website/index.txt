@@ -4,6 +4,13 @@ h2. What
 
 Lockdown is a authentication/authorization system for RubyOnRails (ver 2.x). While Merb functionality is in place, it is not complete.  There will be a release solely focused on getting the Merb functionality up to par with Rails.
 
+h2. Consolidation of information
+
+Maintaining this page, the wiki at GitHub, the Google Group and no issue tracker is not an ideal setup.  So, everything is moving to "stonean.com":http://stonean.com where I'm giving "Redmine":http://redmine.org a shot a running everything for me. I'll be posting release announcements to the news feed for each project and keeping the docs up-to-date.  Hopefully this will be better for everyone.
+
+Thanks for your interest in Lockdown,<br/>
+-andy
+
 h2. Installing
 
 <pre>
