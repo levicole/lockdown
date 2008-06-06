@@ -1,3 +1,6 @@
+== 0.5.6 2008-06-05
+* Fixed: Misspelling of respond_to?, for some reason I keep thinking responds_to?
+
 == 0.5.5 2008-06-05
 * Fixed: Changed request comparison code. Requests that were supposed to be passing were failing.
 

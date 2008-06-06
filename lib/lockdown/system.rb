@@ -70,7 +70,7 @@ module Lockdown
             end
             yield perm
           end
-        elsif ug.responds_to?(:name)
+        elsif ug.respond_to?(:name)
           # This user group was defined in the database
           ug.permissions.each do |perm|
             perm_sym = lockdown_symbol(perm.name)
