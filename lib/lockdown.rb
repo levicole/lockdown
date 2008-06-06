@@ -4,9 +4,9 @@ $:.unshift(File.dirname(__FILE__)) unless
 module Lockdown
   class << self
     def format_controller_action(url)
-      url.split("/").delete_if{|p| p.to_i > 0 || p.length == 0}.join("/")
-      url += "/index" unless url =~ /\//
-      url
+      new_url = url.split("/").delete_if{|p| p.to_i > 0 || p.length == 0}.join("/")
+      new_url += "/index" unless new_url =~ /\//
+      new_url
     end
 
     def format_controller(ctr)
