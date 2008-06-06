@@ -1,3 +1,6 @@
+== 0.5.5 2008-06-05
+* Fixed: Changed request comparison code. Requests that were supposed to be passing were failing.
+
 == 0.5.4 2008-06-05
 * Fixed: Issue with helpers in Rails 2.1, @action_name is no longer accessible, must call action_name method.
 * Fixed: Issue with users controller, show method not having user_groups_for_user instance variable
