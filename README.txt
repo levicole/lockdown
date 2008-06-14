@@ -1,20 +1,20 @@
 = lockdown
 
-http://lockdown.rubyforge.org
+http://stonean.com/wiki/lockdown
 
 == DESCRIPTION:
 
-Lockdown is a authentication/authorization system for RubyOnRails and Merb. 
+Lockdown is a authentication/authorization system for RubyOnRails. (Merb compatibility coming soon).
 
-For more information please visit the rubyforge site.
+For more information please visit stonean.com
 
 == REQUIREMENTS:
 
 Lockdown currently supports:
 
-Frameworks: RubyOnRails or Merb
+Frameworks: RubyOnRails 
 
-ORMs: ActiveRecord or DataMapper
+ORMs: ActiveRecord 
 
 == INSTALL:
 
