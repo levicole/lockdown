@@ -45,14 +45,15 @@ li.odd_checked{
   <%= user_login_value %>
 </p>
 
-<% unless @action_name == "show" -%>
-	<p id="password">
-		<% if @user.new_record? %>
-			<%= render :partial => "password" %>
-		<% else %>
-			<a href="#" onclick="change_password()">Change Password</a><br/>
-		<% end %>
-	</p>
+<% unless action_name == "show" -%>
+  <p>
+    <b><span>P</span>assword</b><br />
+    <%= user_password_value  %>
+  </p>
+  <p>
+    <b><span>P</span>assword confirmation</b><br />
+    <%= user_password_confirmation_value %>
+  </p>
 <% end -%>
 
 <p>

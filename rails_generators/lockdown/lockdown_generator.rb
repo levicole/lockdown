@@ -68,9 +68,6 @@ class LockdownGenerator < Rails::Generator::Base
 
     copy_views(m, "users")
 
-    m.file "app/views/users/_password.html.erb",
-      "app/views/users/_password.html.erb"
-
     copy_views(m, "user_groups")
 
     m.file "app/views/permissions/_data.html.erb",

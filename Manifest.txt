@@ -45,7 +45,6 @@ rails_generators/lockdown/templates/app/views/user_groups/new.html.erb
 rails_generators/lockdown/templates/app/views/user_groups/show.html.erb
 rails_generators/lockdown/templates/app/views/users/_data.html.erb
 rails_generators/lockdown/templates/app/views/users/_form.html.erb
-rails_generators/lockdown/templates/app/views/users/_password.html.erb
 rails_generators/lockdown/templates/app/views/users/edit.html.erb
 rails_generators/lockdown/templates/app/views/users/index.html.erb
 rails_generators/lockdown/templates/app/views/users/new.html.erb

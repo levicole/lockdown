@@ -1,3 +1,6 @@
+== 0.5.7 2008-06-
+* Fixed: Change password template, removed ajax usage. Issue: http://stonean.com/issues/show/5
+
 == 0.5.6 2008-06-05
 * Fixed: Misspelling of respond_to?, for some reason I keep thinking responds_to?
 

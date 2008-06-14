@@ -168,7 +168,21 @@ I guess that wasn't sufficient? If you don't understand how to use init.rb, plea
 
 For simplicity sake, I would like the documentation for init.rb contained within that file. 
 
+h2. Github
+
+The Clone URL: git://github.com/stonean/lockdown.git
+
+Read the "8 steps for fixing other people's code":http://drnicwilliams.com/2007/06/01/8-steps-for-fixing-other-peoples-code/.
+
+I'm new to git and this whole opensource project admin gig, so please be patient with my stumbling around.
+
 h2. Contact
 
-Comments and suggestions are welcome via the "forum":http://groups.google.com/group/stonean_lockdown?hl=en
+Please use the "forum":http://stonean.com/projects/lockdown/boards to ask questions and the "issue tracker":http://stonean.com/projects/lockdown/issues to report problems or submit a pull request.
+
+h2. License
+
+This code is free to use under the terms of the MIT license.
+
+Copyright (c) 2008 Andrew Stone
 

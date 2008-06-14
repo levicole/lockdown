@@ -3,12 +3,6 @@
   submit_label = "Create" if @user.new_record?
 -%>
 
-<script type="text/javascript">
-	function change_password()
-	{
-		new Ajax.Request("/users/change_password", {asynchronous: true, postBody: 'authenticity_token=<%= form_authenticity_token %>'});
-	}
-</script>
 <%= error_messages_for :profile %>
 <%= error_messages_for :user %>
 

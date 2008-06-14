@@ -238,29 +238,21 @@ h2. Roadmap to 1.0
   <li><strong>1.0.0: </strong>Model level security</li>
 </ul>
 
-h2. Google Group
-
-If you are having a problem understanding how to use Lockdown, please post your question on the lockdown group.  If it's documentation related, I will keep this page updated to help everyone. 
-
-"http://groups.google.com/group/stonean_lockdown?hl=en":http://groups.google.com/group/stonean_lockdown?hl=en
-
-
-h2. How to submit patches
+h2. Github
 
 The Clone URL: git://github.com/stonean/lockdown.git
 
-Read the "8 steps for fixing other people's code":http://drnicwilliams.com/2007/06/01/8-steps-for-fixing-other-peoples-code/ and for section "8b: Submit patch to Google Groups":http://drnicwilliams.com/2007/06/01/8-steps-for-fixing-other-peoples-code/#8b-google-groups, use the Google Group above.
+Read the "8 steps for fixing other people's code":http://drnicwilliams.com/2007/06/01/8-steps-for-fixing-other-peoples-code/.
 
 I'm new to git and this whole opensource project admin gig, so please be patient with my stumbling around.
+
+h2. Contact
+
+Please use the "forum":http://stonean.com/projects/lockdown/boards to ask questions and the "issue tracker":http://stonean.com/projects/lockdown/issues to report problems or submit a pull request.
 
 h2. License
 
 This code is free to use under the terms of the MIT license.
 
-
-h2. Contact
-
-Comments and suggestions are welcome via the "google group":http://groups.google.com/group/stonean_lockdown?hl=en
-
-<a href="http://blog.stonean.com">Andrew Stone</a>
+Copyright (c) 2008 Andrew Stone
 
