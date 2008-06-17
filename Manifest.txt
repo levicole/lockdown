@@ -49,7 +49,7 @@ rails_generators/lockdown/templates/app/views/users/edit.html.erb
 rails_generators/lockdown/templates/app/views/users/index.html.erb
 rails_generators/lockdown/templates/app/views/users/new.html.erb
 rails_generators/lockdown/templates/app/views/users/show.html.erb
-rails_generators/lockdown/templates/db/migrate/create_admin_user_and_user_group.rb
+rails_generators/lockdown/templates/db/migrate/create_admin_user.rb
 rails_generators/lockdown/templates/db/migrate/create_permissions.rb
 rails_generators/lockdown/templates/db/migrate/create_profiles.rb
 rails_generators/lockdown/templates/db/migrate/create_user_groups.rb

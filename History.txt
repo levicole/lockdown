@@ -1,3 +1,7 @@
+== 0.5.8 2008-06-17
+* Fixed: External links are no longer restricted by link_to security.
+* Modified: Name of migration that adds admin user.
+
 == 0.5.7 2008-06-13
 * Fixed: Change password template, removed ajax usage. Issue: http://stonean.com/issues/show/5
 

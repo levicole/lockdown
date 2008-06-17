@@ -1,4 +1,4 @@
-class CreateAdminUserAndUserGroup < ActiveRecord::Migration
+class CreateAdminUser < ActiveRecord::Migration
   def self.up
 		# TODO: Change the password
     u = User.new(	:password => "password", 

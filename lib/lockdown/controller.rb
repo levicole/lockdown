@@ -185,13 +185,17 @@ module Lockdown
             # continue on
           end
 
+          # Passing in different domain
+          return true if remote_url?(url_parts[2])
+
           false
         end
       
         def access_denied(e)
-					if Lockdown::System.fetch(:logout_on_access_violation)
-						reset_session
-					end
+          if Lockdown::System.fetch(:logout_on_access_violation)
+            reset_session
+          end
+
           respond_to do |accepts|
             accepts.html do
               store_location
@@ -209,7 +213,11 @@ module Lockdown
         def path_from_hash(hsh)
           hsh[:controller].to_s + "/" + hsh[:action].to_s
         end
-        
+
+        def remote_url?(domain = nil)
+          return false if domain.nil? || domain.strip.length == 0
+          request.host.downcase != domain.downcase
+        end
       end # InstanceMethods
     end # Rails
   end # Controller

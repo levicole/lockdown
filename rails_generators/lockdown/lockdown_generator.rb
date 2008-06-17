@@ -149,9 +149,9 @@ class LockdownGenerator < Rails::Generator::Base
     end
     
     begin
-      m.migration_template "db/migrate/create_admin_user_and_user_group.rb", 
+      m.migration_template "db/migrate/create_admin_user.rb", 
         "db/migrate", 
-        :migration_file_name => "create_admin_user_and_user_group"
+        :migration_file_name => "create_admin_user"
     rescue
       puts "Admin User Group... migration exists"
     end
