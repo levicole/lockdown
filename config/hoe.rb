@@ -2,7 +2,7 @@ require 'lockdown/version'
 
 AUTHOR = 'Andrew Stone'  # can also be an array of Authors
 EMAIL = "andrew.n.stone@gmail.com"
-DESCRIPTION = "Authorization/Authentication system for RubyOnRails and Merb"
+DESCRIPTION = "Authorization/Authentication system for RubyOnRails"
 GEM_NAME = 'lockdown' # what ppl will type to install your gem
 RUBYFORGE_PROJECT = 'lockdown' # The unix name for your project
 HOMEPATH = "http://#{RUBYFORGE_PROJECT}.rubyforge.org"
