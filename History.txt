@@ -1,3 +1,6 @@
+== 0.5.9 2008-06-19
+* Fixed: Added url.strip! to account for spaces.  URI::split(url) was bombing if url contained spaces.
+
 == 0.5.8 2008-06-17
 * Fixed: External links are no longer restricted by link_to security.
 * Modified: Name of migration that adds admin user.

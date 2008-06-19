@@ -160,7 +160,11 @@ module Lockdown
         end
 
         def authorized?(url)
+          return false unless url
+
           return true if current_user_is_admin?
+
+          url.strip!
 
           url_parts = URI::split(url)
         
