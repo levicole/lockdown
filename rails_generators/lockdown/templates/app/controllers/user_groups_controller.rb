@@ -89,7 +89,7 @@ class UserGroupsController < ApplicationController
 
 	def find_user_group
     @user_group = UserGroup.find(params[:id])
-    if @action_name != "show" && Lockdown::System.has_user_group?(@user_group)
+    if <%= action_name %> != "show" && Lockdown::System.has_user_group?(@user_group)
       raise SecurityError,"Invalid attempt to modify user group."
     end
   end

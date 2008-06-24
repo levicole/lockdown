@@ -1,5 +1,5 @@
 <!-- 
-take the style block out.  this is duplicated in users/_data.html.erb
+take the style block out.  this is duplicated in user_groups/_data.html.erb
 without this, the user group selection is just no good
 -->
 <style>
@@ -8,6 +8,7 @@ without this, the user group selection is just no good
   border: 1px solid #ccc;
   list-style: none;
   height: 300px;
+  width: 600px;
   text-align: left;
   list-style: none;
   margin-left: 12px;
@@ -30,34 +31,57 @@ li.odd_checked{
 
 <p>
   <b>First name</b><br />
-  <%= profile_first_name_value %>
+  <%%= user_first_name_value %>
 </p>
 <p>
   <b>Last name</b><br />
-  <%= profile_last_name_value %>
+  <%%= user_last_name_value %>
 </p>
 <p>
   <b>Email</b><br />
-  <%= profile_email_value %>
+  <%%= user_email_value %>
 </p>
 <p>
 	<b><span>L</span>ogin</b><br />
-  <%= user_login_value %>
+  <%%= user_login_value %>
 </p>
 
-<% unless action_name == "show" -%>
+<%% unless <%= action_name %> == "show" -%>
   <p>
     <b><span>P</span>assword</b><br />
-    <%= user_password_value  %>
+    <%%= user_password_value  %>
   </p>
   <p>
     <b><span>P</span>assword confirmation</b><br />
-    <%= user_password_confirmation_value %>
+    <%%= user_password_confirmation_value %>
   </p>
-<% end -%>
+<%% end -%>
 
 <p>
   <b>User Groups</b><br />
-  <%= user_user_groups_value %>
+  <%%= user_user_groups_value %>
 </p>
+
+<!--
+Take this out and place in your application.js.  
+This is duplicated in user_groups/_data.html.erb
+-->
+<script type="text/javascript">
+
+  function do_highlight(id){
+    li = document.getElementById("li_"+id);
+    i = document.getElementById(id);
+    if (i.checked){
+      li.style.backgroundColor = "#ddd";
+      li.style.color = "#fff";
+    }else{
+      if (li.className == "odd"){
+        li.style.backgroundColor = "#fff";
+      }else{
+        li.style.backgroundColor = "#ccc";
+      } 
+      li.style.color = "#000";
+    }
+  }
+</script>
 

@@ -13,6 +13,7 @@ bin/lockdown
 config/hoe.rb
 config/requirements.rb
 lib/lockdown.rb
+lib/lockdown/classy-inheritance.rb
 lib/lockdown/controller.rb
 lib/lockdown/controller_inspector.rb
 lib/lockdown/helper.rb
@@ -68,8 +69,6 @@ test/test_lockdown.rb
 test/test_lockdown_all_generator.rb
 test/test_lockdown_generator.rb
 test/test_lockdown_models_generator.rb
-website/generator.html
-website/generator.txt
 website/index.html
 website/index.txt
 website/javascripts/rounded_corners_lite.inc.js

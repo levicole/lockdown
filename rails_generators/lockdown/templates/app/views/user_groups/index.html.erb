@@ -5,16 +5,16 @@
     <th>Name</th>
   </tr>
 
-<% for user_group in @user_groups %>
+<%% for user_group in @user_groups %>
   <tr>
-    <td><%=h user_group.name %></td>
-    <td><%= link_to 'Show', user_group %></td>
-    <td><%= link_to('Edit', edit_user_group_path(user_group)) unless Lockdown::System.has_user_group?(user_group) %></td>
-    <td><%= link_to('Destroy', user_group, :confirm => 'Are you sure?', :method => :delete) unless Lockdown::System.has_user_group?(user_group) %></td>
+    <td><%%=h user_group.name %></td>
+    <td><%%= link_to 'Show', user_group %></td>
+    <td><%%= link_to('Edit', edit_user_group_path(user_group)) unless Lockdown::System.has_user_group?(user_group) %></td>
+    <td><%%= link_to('Destroy', user_group, :confirm => 'Are you sure?', :method => :delete) unless Lockdown::System.has_user_group?(user_group) %></td>
   </tr>
-<% end %>
+<%% end %>
 </table>
 
 <br />
 
-<%= link_to 'New User Group', new_user_group_path %>
+<%%= link_to 'New User Group', new_user_group_path %>

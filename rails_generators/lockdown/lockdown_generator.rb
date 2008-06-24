@@ -48,13 +48,13 @@ class LockdownGenerator < Rails::Generator::Base
     m.directory 'app/views/user_groups'
     m.directory 'app/views/permissions'
 
-    m.file "app/controllers/permissions_controller.rb",
+    m.template "app/controllers/permissions_controller.rb",
       "app/controllers/permissions_controller.rb"
 
-    m.file "app/controllers/users_controller.rb",
+    m.template "app/controllers/users_controller.rb",
       "app/controllers/users_controller.rb"
 
-    m.file "app/controllers/user_groups_controller.rb",
+    m.template "app/controllers/user_groups_controller.rb",
       "app/controllers/user_groups_controller.rb"
 
     m.template "app/helpers/permissions_helper.rb",
@@ -70,13 +70,13 @@ class LockdownGenerator < Rails::Generator::Base
 
     copy_views(m, "user_groups")
 
-    m.file "app/views/permissions/_data.html.erb",
+    m.template "app/views/permissions/_data.html.erb",
       "app/views/permissions/_data.html.erb"
 
-    m.file "app/views/permissions/index.html.erb",
+    m.template "app/views/permissions/index.html.erb",
       "app/views/permissions/index.html.erb"
 
-    m.file "app/views/permissions/show.html.erb",
+    m.template "app/views/permissions/show.html.erb",
       "app/views/permissions/show.html.erb"
 
     m.route_resources "permissions"
@@ -158,12 +158,12 @@ class LockdownGenerator < Rails::Generator::Base
   end # add_migrations
 
   def copy_views(m, vw)
-    m.file "app/views/#{vw}/_data.html.erb", "app/views/#{vw}/_data.html.erb"
-    m.file "app/views/#{vw}/_form.html.erb", "app/views/#{vw}/_form.html.erb"
-    m.file "app/views/#{vw}/index.html.erb", "app/views/#{vw}/index.html.erb"
-    m.file "app/views/#{vw}/show.html.erb", "app/views/#{vw}/show.html.erb"
-    m.file "app/views/#{vw}/edit.html.erb", "app/views/#{vw}/edit.html.erb"
-    m.file "app/views/#{vw}/new.html.erb", "app/views/#{vw}/new.html.erb"
+    m.template "app/views/#{vw}/_data.html.erb", "app/views/#{vw}/_data.html.erb"
+    m.template "app/views/#{vw}/_form.html.erb", "app/views/#{vw}/_form.html.erb"
+    m.template "app/views/#{vw}/index.html.erb", "app/views/#{vw}/index.html.erb"
+    m.template "app/views/#{vw}/show.html.erb", "app/views/#{vw}/show.html.erb"
+    m.template "app/views/#{vw}/edit.html.erb", "app/views/#{vw}/edit.html.erb"
+    m.template "app/views/#{vw}/new.html.erb", "app/views/#{vw}/new.html.erb"
   end
 
   def add_login_permissions(m)

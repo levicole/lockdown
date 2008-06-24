@@ -3,7 +3,7 @@ module UserGroupsHelper
     if <%= action_name %> == "show"
        h @user_group.name 
     else
-       text_field_tag "user_group[name]", @user_group.name
+       text_field :user_group, :name
     end
   end
 
@@ -18,8 +18,8 @@ module UserGroupsHelper
         checked = (@user_group.permission_ids.include?(perm.id) ? "checked" : "")
         bg << "_" << checked if checked.length > 0
         rvalue << <<-HTML
-          <li class="#{bg}">
-            <label id="lbl_#{input_id}" for="#{input_id}" onclick="do_highlight('#{input_id}')">
+          <li class="#{bg}" id="li_#{input_id}">
+            <label for="#{input_id}" onclick="do_highlight('#{input_id}')">
               <input id="#{input_id}" name="#{input_id}" type="checkbox" #{checked}/>&nbsp;&nbsp;#{perm.name}
             </label>
           </li>

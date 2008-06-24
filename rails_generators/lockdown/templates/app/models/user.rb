@@ -1,7 +1,11 @@
 require 'digest/sha1'
 class User < ActiveRecord::Base
   has_and_belongs_to_many :user_groups
-  belongs_to :profile
+  # depends_on functionality is from the classy-inheritance gem 
+  # that is bundled with lockdown.
+  # For more info: http://stonean.com
+  #
+  depends_on :profile, :attrs => [:first_name, :last_name, :email]
   
   # Virtual attributes
   attr_accessor :password
@@ -14,12 +18,10 @@ class User < ActiveRecord::Base
   validates_length_of       :login,    :within => 3..40
   validates_uniqueness_of   :login, :case_sensitive => false
   
-  validates_presence_of :profile
-	validates_associated	:profile
-  
 	before_save :prepare_for_save
 
-  attr_accessible :login, :password, :password_confirmation
+  attr_accessible :login, :password, :password_confirmation, 
+                  :first_name, :last_name, :email
   
   # Authenticates a user by their login name and unencrypted password.  
   # Returns the user or nil.
@@ -42,19 +44,14 @@ class User < ActiveRecord::Base
     crypted_password == encrypt(password)
   end
   
-  def email
-    self.profile.email
-  end
-  
   def full_name
-    self.profile.first_name + " " + self.profile.last_name
+    self.first_name + " " + self.last_name
   end
   
   protected
 
   def prepare_for_save
     encrypt_password
-    self.profile.save
   end
       
   def encrypt_password

@@ -95,9 +95,11 @@ begin
   RubiGen::Scripts::Generate.new.run(ARGV, :generator => 'lockdown', :framework => @framework)
 
   File.open(config_file, "a") do |f|
+    require_classy = %Q(require "lockdown/classy-inheritance")
     require_lockdown =  %Q(require "lockdown/init")
 
-    f << %Q(\n\n#{require_lockdown}\n\n) unless configuration_file_has?(require_lockdown)
+    f << %Q(\n#{require_classy}\n) unless configuration_file_has?(require_classy)
+    f << %Q(\n#{require_lockdown}\n) unless configuration_file_has?(require_lockdown)
   end
 rescue Exception => e
   puts e.backtrace.join("\n")

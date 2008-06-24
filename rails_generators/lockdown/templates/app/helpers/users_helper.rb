@@ -1,25 +1,25 @@
 module UsersHelper
-  def profile_first_name_value
+  def user_first_name_value
     if <%= action_name %> == "show"
-      h @profile.first_name 
+      h @user.first_name 
     else
-      text_field_tag "profile[first_name]", @profile.first_name
+      text_field :user, :first_name
     end
   end
 
-  def profile_last_name_value
+  def user_last_name_value
     if <%= action_name %> == "show"
-      h @profile.last_name 
+      h @user.last_name 
     else
-      text_field_tag "profile[last_name]", @profile.last_name
+      text_field :user, :last_name
     end
   end
 
-  def profile_email_value
+  def user_email_value
     if <%= action_name %> == "show"
-      h @profile.email 
+      h @user.email 
     else
-      text_field_tag "profile[email]", @profile.email 
+      text_field :user, :email 
     end
   end
 
@@ -27,7 +27,7 @@ module UsersHelper
     if <%= action_name %> == "show"
       h @user.login 
     else
-      text_field_tag "user[login]", @user.login
+      text_field :user, :login
     end
   end
 
@@ -63,8 +63,8 @@ module UsersHelper
         checked = (@user.user_group_ids.include?(ug.id) ? "checked" : "")
         bg << "_" << checked if checked.length > 0
         rvalue << <<-HTML
-          <li class="#{bg}">
-            <label id="lbl_#{input_id}" for="#{input_id}" onclick="do_highlight('#{input_id}')">
+          <li class="#{bg}" id="li_#{input_id}">
+            <label for="#{input_id}" onclick="do_highlight('#{input_id}')">
             <input id="#{input_id}" name="#{input_id}" type="checkbox" #{checked}/>&nbsp;&nbsp;#{ug.name}
             </label>
           </li>

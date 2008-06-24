@@ -25,7 +25,6 @@ class UsersController < ApplicationController
   # GET /users/new.xml
   def new
 		@user = User.new
-		@profile = Profile.new
     @user_groups_for_user = Lockdown::System.user_groups_assignable_for_user(current_user)
 		respond_to do |format|
      format.html # new.html.erb
@@ -42,9 +41,7 @@ class UsersController < ApplicationController
   # POST /users.xml
   def create
     @user = User.new(params[:user])
-    @profile = Profile.new(params[:profile])
 
-    @user.profile = @profile
 		if @user.save
 			flash[:notice] = "Thanks for signing up!"
 			redirect_to(users_path)
@@ -58,7 +55,6 @@ class UsersController < ApplicationController
   # PUT /users/1
   # PUT /users/1.xml
   def update
-		@user.profile.attributes = params[:profile]
 		@user.attributes = params[:user]
 
     respond_to do |format|
@@ -101,7 +97,6 @@ class UsersController < ApplicationController
 		end
 		@user = User.find(params[:id])
 		raise SecurityError.new if @user.nil?
-		@profile = @user.profile
 	end
 
 	def update_user_groups

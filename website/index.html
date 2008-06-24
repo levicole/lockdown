@@ -33,7 +33,7 @@
     <h1>Lockdown</h1>
     <div id="version" class="clickable" onclick='document.location = "http://rubyforge.org/projects/lockdown"; return false'>
       <p>Get Version</p>
-      <a href="http://rubyforge.org/projects/lockdown" class="numbers">0.5.9</a>
+      <a href="http://rubyforge.org/projects/lockdown" class="numbers">0.5.10</a>
     </div>
     <h2>What</h2>
 
@@ -41,281 +41,25 @@
 	<p>Lockdown is a authentication/authorization system for RubyOnRails (ver 2.x). While Merb functionality is in place, it is not complete.  There will be a release solely focused on getting the Merb functionality up to par with Rails.</p>
 
 
-	<h2>Consolidation of information</h2>
+	<h2>New Home</h2>
 
 
 	<p>Maintaining this page, the wiki at GitHub, the Google Group and no issue tracker is not an ideal setup.  So, everything is moving to <a href="http://stonean.com">stonean.com</a> where I&#8217;m giving <a href="http://redmine.org">Redmine</a> a shot a running everything for me. I&#8217;ll be posting release announcements to the news feed for each project and keeping the docs up-to-date.  Hopefully this will be better for everyone.</p>
 
 
+	<h2>Quick links</h2>
+
+
+	<p><a href="http://stonean.com/wiki/lockdown">Wiki</a></p>
+
+
+	<p><a href="http://stonean.com/projects/lockdown/boards">Forum</a></p>
+
+
 	<p>Thanks for your interest in Lockdown,<br/>
 -andy</p>
-
-
-	<h2>Installing</h2>
-
-
-<pre>
-$ sudo gem install lockdown
-$ cd &lt;your_project_directory&gt;
-$ lockdown .
-</pre>
-
-	<p>This will create a &#8220;lockdown&#8221; directory in the lib dir add two files: init.rb and session.rb.  
-Modify init.rb to set configuration options and define the permissions and user groups that apply to your system.</p>
-
-
-	<p><strong> Please keep the following in mind:</strong>
-<ul>
-<li><strong>All Permissions are defined in init.rb, they cannot be defined via the administration screens.</strong></li>
-<li><strong>All User Groups should be defined in init.rb. The administration screens can be used to create user groups, but doing so should be reserved for the unexpected. Creating User Groups via the administration screens will only add more work for you if you want to run tests using those groups.</strong></li>
-<li><strong>Lockdown will sync up the rules (Permissions and User Groups) defined in init.rb with your database.  You can turn off this feature.</strong></li>
-</ul></p>
-
-
-	<p>To help you with your new application, Lockdown comes with a generator called lockdown that has various options for you to pick which templates you desire.</p>
-
-
-<pre>
-$ cd &lt;your_project_directory&gt;
-$ ./script/generate lockdown --all
-</pre>
-
-This will install resources such as:
-<ul>
-  <li>Models</li>
-  <li>Controllers</li>
-  <li>Views</li>
-  <li>Helpers</li>
-  <li>Migrations</li>
-  <li>Routes</li>
-</ul>
-
-	<p>Please refer to the <a href="generator.html">generator page</a> for more detail.</p>
-
-
-	<h2>How it works</h2>
-
-
-When Lockdown is installed, it adds the following line to your environment.rb (init.rb for Merb):
-<pre>
-  require "lockdown/init" 
-</pre>
-This is the default init.rb included with Lockdown:
-<pre class='syntax'>
-<span class="ident">require</span> <span class="punct">&quot;</span><span class="string">lockdown</span><span class="punct">&quot;</span>
-<span class="ident">require</span> <span class="constant">File</span><span class="punct">.</span><span class="ident">join</span><span class="punct">(</span><span class="constant">File</span><span class="punct">.</span><span class="ident">dirname</span><span class="punct">(</span><span class="constant">__FILE__</span><span class="punct">),</span> <span class="punct">&quot;</span><span class="string">session</span><span class="punct">&quot;)</span>
-
-<span class="constant">Lockdown</span><span class="punct">::</span><span class="constant">System</span><span class="punct">.</span><span class="ident">configure</span> <span class="keyword">do</span>
-
-  <span class="comment">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
-  <span class="comment"># Configuration Options</span>
-  <span class="comment">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
-  <span class="comment"># Options with defaults:</span>
-  <span class="comment">#</span>
-  <span class="comment"># Set timeout to 1 hour:</span>
-  <span class="comment">#       options[:session_timeout] = (60 * 60)</span>
-  <span class="comment">#</span>
-  <span class="comment"># Set system to logout if unauthorized access is attempted:</span>
-  <span class="comment">#       options[:logout_on_access_violation] = false</span>
-  <span class="comment">#</span>
-  <span class="comment"># Set redirect to path on unauthorized access attempt:</span>
-  <span class="comment">#       options[:access_denied_path] = &quot;/&quot;</span>
-  <span class="comment">#</span>
-  <span class="comment"># Set redirect to path on successful login:</span>
-  <span class="comment">#       options[:successful_login_path] = &quot;/&quot;</span>
-  <span class="comment">#</span>
-  <span class="comment"># Set the system to sync the Permissions and UserGroups defined here</span>
-  <span class="comment"># with the database. </span>
-  <span class="comment">#       options[:sync_init_rb_with_db] = true</span>
-  <span class="comment">#</span>
-  <span class="comment">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
-  <span class="comment"># Define permissions</span>
-  <span class="comment">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
-  <span class="comment">#</span>
-  <span class="comment"># set_permission(:product_management, all_methods(:products))</span>
-  <span class="comment">#</span>
-  <span class="comment"># :product_management is the name of the permission which is later</span>
-  <span class="comment"># referenced by the set_user_group method</span>
-  <span class="comment">#</span>
-  <span class="comment"># :all_methods(:products) will return an array of all controller actions</span>
-  <span class="comment"># for the products controller</span>
-  <span class="comment">#</span>
-  <span class="comment"># if products is your standard RESTful resource you'll get:</span>
-  <span class="comment">#   [&quot;products/index , &quot;products/show&quot;,</span>
-  <span class="comment">#    &quot;products/new&quot;, &quot;products/edit&quot;,</span>
-  <span class="comment">#    &quot;products/create&quot;, &quot;products/update&quot;,</span>
-  <span class="comment">#    &quot;products/destroy&quot;]</span>
-  <span class="comment">#</span>
-  <span class="comment"># You can pass multiple parameters to concat permissions such as:</span>
-  <span class="comment">#      </span>
-  <span class="comment">#	  set_permission(:security_management,all_methods(:users),</span>
-  <span class="comment">#                                       all_methods(:user_groups),</span>
-  <span class="comment">#                                       all_methods(:permissions) )</span>
-  <span class="comment">#</span>
-  <span class="comment"># In addition to all_methods(:controller) there are:</span>
-  <span class="comment">#</span>
-  <span class="comment">#       only_methods(:controller, :only_method_1, :only_method_2)</span>
-  <span class="comment">#</span>
-  <span class="comment">#       all_except_methods(:controller, :except_method_1, :except_method_2)</span>
-  <span class="comment">#</span>
-  <span class="comment"># Some other sample permissions:</span>
-  <span class="comment"># </span>
-  <span class="comment">#  set_permission(:sessions, all_methods(:sessions))</span>
-  <span class="comment">#  set_permission(:my_account, only_methods(:users, :edit, :update, :show))</span>
-  <span class="comment"># </span>
-  <span class="comment"># Define your permissions here:</span>
-
-  <span class="comment">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
-  <span class="comment"># Built-in user groups</span>
-  <span class="comment">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
-  <span class="comment">#  You can assign the above permission to one of the built-in user groups</span>
-  <span class="comment">#  by using the following:</span>
-  <span class="comment"># </span>
-  <span class="comment">#  To allow public access on the permissions :sessions and :home:</span>
-  <span class="comment">#    set_public_access :sessions, :home</span>
-  <span class="comment">#     </span>
-  <span class="comment">#  Restrict :my_account access to only authenticated users:</span>
-  <span class="comment">#    set_protected_access :my_account</span>
-  <span class="comment">#</span>
-  <span class="comment"># Define the built-in user groups here:</span>
-
-  <span class="comment">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
-  <span class="comment"># Define user groups</span>
-  <span class="comment">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
-  <span class="comment">#</span>
-  <span class="comment">#  set_user_group(:catalog_management, :category_management, </span>
-  <span class="comment">#                                      :product_management) </span>
-  <span class="comment">#</span>
-  <span class="comment">#  :catalog_management is the name of the user group</span>
-  <span class="comment">#  :category_management and :product_management refer to permission names</span>
-  <span class="comment">#</span>
-  <span class="comment"># </span>
-  <span class="comment"># Define your user groups here:</span>
-
-<span class="keyword">end</span> 
-</pre>
-
-As you can see, the first line requires lockdown.  This will load the Lockdown system which consists of various parts:
-<ul>
-  <li>
-    Controller<br/>
-    <p>The controller functionality will add before filters to test each request agains the defined access_rights for the current user.  If the current request is not in the access_rights list, access right is denied.</p>
-  </li>  
-  <li>
-    Model<br/>
-    <p>The model functionality will automatically set the updated_by/created_by fields of your model to the current_profile_id.</p>
-  </li>  
-  <li>
-    View<br/>
-    <p>The view functionality intercepts the link_to method (aliases it).  If the current user does not have rights to the link, the link will not show.<br/>There is also a link_to_or_show method (same params as link_to) that will print out just the name of the link (no anchor tag) if the current user does not have access. </p>
-  </li>
-</ul>
-
-When referring to access rights: if you have a standard <span class="caps">REST</span> users controller, the access rights would be:
-<pre>
-  users/index
-  users/show
-  users/edit
-  users/update
-  users/new
-  users/create
-  users/destroy (delete for Merb)
-</pre>
-
-	<h2>The internals</h2>
-
-
-	<p>All configuration of Lockdown (Permissions and User Groups) are done in lib/lockdown/init.rb.  The database functionality is merely an extension of the definitions to allow for the dynamic creation of User Groups.  Permissions can not be created via the administration screens.</p>
-
-
-	<p>Lockdown doesn&#8217;t have a concept of Roles. Instead, Lockdown users can be associated to one or many User Groups to allow for flexibility.  In addition, you can use the admin screens to add new User Groups to the database. User groups are nothing more than a grouping mechanism for Permissions to ease management.</p>
-
-
-	<p>Here are the parts to Lockdown:</p>
-
-
-<div style="text-align:center">
-<img src="model.jpg" alt="" />
-</div>
-
-<ul>
- <li><strong>Profiles</strong><br/>
-    <p>The profile model contains all non-user information related to person.  Lockdown uses the profile record as the reference for updated_by and created_by.  This allows you to remove the user record completely when you want to revoke access, but you still retain the foreign key for history.<br/>Here are the fields you have to start with:</p>
-    <ul>
-      <li>first_name : string</li>
-      <li>last_name : string</li>
-      <li>email : string</li>
-    </ul>
-<br/>
-  </li>
- <li><strong>Users</strong><br/>
-    <p>The user model contains all user information related to person.<br/>Here are the fields you have to start with:</p>
-    <ul>
-      <li>login : string</li>
-      <li>crypted_password : string</li>
-      <li>salt : string</li>
-      <li>profile_id : integer</li>
-    </ul>
-<br/>
-  </li>
- <li><strong>User Groups</strong><br/>
-    <p>User Groups exist only to group Permissions.  All functionality for your site should be covered by the user groups you define in init.rb.  You can use the admin screen to create new user groups if the need arises. The database model only has one field:  </p>
-    <ul>
-      <li>name : string</li>
-    </ul>
-<br/>
-  </li>
- <li><strong>Permissions</strong><br/>
-    <p>Permissions are the security building blocks of your system and are defined in init.rb.  A permission maps to controller(s)/action(s) in your system. Please refer back to the documenation in init.rb on how to create permissions.
- As permissions relate to system functionality, they cannot be created via the admin screen.  The database model only has one field:  </p>
-    <ul>
-      <li>name : string</li>
-    </ul>
-  </li>
-</ul>
-
-	<h2>Roadmap to 1.0</h2>
-
-
-	<p><strong>**this is tentative and the feature order may change</strong></p>
-
-
-<ul>
-  <li><strong>0.5.0: </strong>More generators to ease installation into existing projects</li>
-  <li><strong>0.6.0: </strong>Password reset/reminder, Registration page template generators</li>
-  <li><strong>0.7.0: </strong>OpenId support</li>
-  <li><strong>0.8.0: </strong>RSpec tests and helper methods for your application</li>
-  <li><strong>0.9.0: </strong>Merb Support</li>
-  <li><strong>1.0.0: </strong>Model level security</li>
-</ul>
-
-	<h2>Github</h2>
-
-
-	<p>The Clone <span class="caps">URL</span>: git://github.com/stonean/lockdown.git</p>
-
-
-	<p>Read the <a href="http://drnicwilliams.com/2007/06/01/8-steps-for-fixing-other-peoples-code/">8 steps for fixing other people&#8217;s code</a>.</p>
-
-
-	<p>I&#8217;m new to git and this whole opensource project admin gig, so please be patient with my stumbling around.</p>
-
-
-	<h2>Contact</h2>
-
-
-	<p>Please use the <a href="http://stonean.com/projects/lockdown/boards">forum</a> to ask questions and the <a href="http://stonean.com/projects/lockdown/issues">issue tracker</a> to report problems or submit a pull request.</p>
-
-
-	<h2>License</h2>
-
-
-	<p>This code is free to use under the terms of the <span class="caps">MIT</span> license.</p>
-
-
-	<p>Copyright&#169; 2008 Andrew Stone</p>
     <p class="coda">
-      11th June 2008<br/>
+      24th June 2008<br/>
       Theme extended from <a href="http://rb2js.rubyforge.org/">Paul Battley</a>
     </p>
 </div>

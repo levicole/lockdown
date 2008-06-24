@@ -1,3 +1,11 @@
+== 0.5.10 2008-06-24
+* Modified: Classy Inheritance is now bundled with Lockdown to simplify the user management screens.
+* Fixed: Templates: Use m.template with views to test for rails version for action_name issue 
+* Added: Templates: Missing javascript for do_highlight
+* Fixed: Templates: Usage of ul for permissions and user groups. 
+* Clean: Templates: Removed unnecessary :locals => {:f => f} attribute in _form partials
+* Clean: Templates: Changed text_field_tag to text_field.  
+
 == 0.5.9 2008-06-19
 * Fixed: Added url.strip! to account for spaces.  URI::split(url) was bombing if url contained spaces.
 
