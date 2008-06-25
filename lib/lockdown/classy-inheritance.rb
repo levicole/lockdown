@@ -39,7 +39,7 @@ module Stonean
           define_can_be_method_on_requisite_class(model_sym, options[:as])
         end
 
-        options[:attrs].each{|attr| define_accessors(model_sym, attr, options[:prefix])}
+        options[:attrs].each{|attr| define_accessors(model_sym, attr, options)}
       end
 
 
@@ -65,7 +65,7 @@ module Stonean
 
       def define_relationship(model_sym, options)
         opts = options.dup
-        opts.delete(:attrs)
+        [:attrs, :prefix].each{|key| opts.delete(key)}
         if opts[:as]
           as_opt = opts.delete(:as)
           opts = polymorphic_constraints(as_opt).merge(opts)
@@ -115,8 +115,8 @@ module Stonean
         end
       end
 
-      def define_accessors(model_sym, attr, prefix)
-        accessor_method_name = ( prefix ? "#{model_sym}_#{attr}" : attr)
+      def define_accessors(model_sym, attr, options)
+        accessor_method_name = ( options[:prefix] ? "#{model_sym}_#{attr}" : attr)
 
         define_method accessor_method_name do
           eval("self.#{model_sym} ? self.#{model_sym}.#{attr} : nil")
@@ -126,7 +126,7 @@ module Stonean
           model_defined = eval("self.#{model_sym}")
 
           unless model_defined
-            klass = model_sym.to_s.classify
+            klass = options[:class_name] || model_sym.to_s.classify
             eval("self.#{model_sym} = #{klass}.new")
           end
 
