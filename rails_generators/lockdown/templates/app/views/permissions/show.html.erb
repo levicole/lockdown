@@ -1,3 +1,3 @@
 <%%= render :partial => "data"  %>
 
-<%%= link_to 'Back', permissions_path %>
+<%%= link_to 'Back', <%= namespace.blank? ? 'permissions_path' : "#{namespace}_permissions_path" %> %>

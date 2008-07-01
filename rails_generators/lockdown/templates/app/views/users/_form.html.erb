@@ -6,7 +6,7 @@
 <%%= error_messages_for :profile %>
 <%%= error_messages_for :user %>
 
-<%% form_for(@user) do |f| %>
+<%% form_for(<%= namespace.blank? ? "@user" : "[:#{namespace}, @user]" %>) do |f| %>
   <%%= render :partial => "data" %>
   <p> <%%= f.submit submit_label %> </p>
 <%% end %>

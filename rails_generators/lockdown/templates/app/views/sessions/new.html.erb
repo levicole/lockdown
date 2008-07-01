@@ -1,7 +1,7 @@
 <%= flash[:notice] if flash[:notice] %>
 <%= flash[:error] if flash[:error] %>
 
-<% form_tag sessions_path do -%>
+<% form_tag <%= namespace.blank? ? 'sessions_path' : ":url => #{@namspace}_sessions_path, :method => :post" %> do -%>
 	<p><label for="login">Login</label><br/>
 	<%= text_field_tag 'login' %></p>
 

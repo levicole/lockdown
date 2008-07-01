@@ -1,4 +1,4 @@
-class UsersController < ApplicationController
+class <%= "#{namespace.camelcase}::" if @namspace >UsersController < ApplicationController
 	before_filter :find_user, :only => [:show, :edit, :update, :destroy]
 	after_filter :update_user_groups, :only => [:create, :update]
   # GET /users
@@ -60,7 +60,11 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @user.save
         flash[:notice] = 'User was successfully updated.'
-        format.html { redirect_to(@user) }
+        <%- if namespace -%>
+          format.html { redirect_to(<%= namespace %>_user_path(@user_group)) }
+        <% else %>
+          format.html { redirect_to(@user) }
+        <% end %>
         format.xml  { head :ok }
       else
         @user_groups_for_user = Lockdown::System.user_groups_assignable_for_user(current_user)

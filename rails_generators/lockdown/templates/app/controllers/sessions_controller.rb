@@ -1,5 +1,5 @@
 # This controller handles the login/logout function of the site.  
-class SessionsController < ApplicationController
+class <%= "#{namespace.camelcase}::" if @namspace >SessionsController < ApplicationController
   def new
     #Stub required for Lockdown to grant access
   end

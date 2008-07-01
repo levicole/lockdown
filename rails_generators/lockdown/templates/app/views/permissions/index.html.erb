@@ -8,7 +8,7 @@
 <%% for permission in @permissions %>
   <tr>
     <td><%%=h permission.name %></td>
-    <td><%%= link_to 'Show', permission %></td>
+    <td><%%= link_to 'Show', <%= namespace.blank? ? 'permision' : "#{namespace}_permision_path(permision)" %> %></td>
   </tr>
 <%% end %>
 </table>

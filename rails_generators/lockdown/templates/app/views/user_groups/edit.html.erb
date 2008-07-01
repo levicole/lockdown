@@ -1,6 +1,16 @@
 <h1>Editing Usergroup</h1>
 
-<%%= render :partial => "form" %>
+<%%
+  submit_label = "Update"
+  submit_label = "Create" if @user_group.new_record?
+-%>
 
-<%%= link_to 'Show', @user_group %> |
-<%%= link_to 'Back', user_groups_path %>
+<%%= error_messages_for :user_group %>
+
+<%% form_for(<%= namespace.blank? ? '@user_group' : ":url => #{@namspace}_user_groups_path, :method => :put"  %>) do |f| %>
+  <%%= render :partial => "data" %>
+  <p> <%%= f.submit submit_label %> </p>
+<%% end %>
+
+<%%= link_to 'Show', <%= namespace.blank? ? '@user_group' : "#{namespace}_user_group_path(@user_group)" %> %> |
+<%%= link_to 'Back', <%= namespace.blank? ? 'user_groups_path' : "#{namespace}_user_groups_path" %> %>

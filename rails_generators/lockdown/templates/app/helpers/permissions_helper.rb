@@ -8,6 +8,6 @@ module PermissionsHelper
   end
 
   def permission_users_value
-    @permission.all_users.collect{|u| link_to_or_show(u.full_name, u)}.join("<br/>")
+    @permission.all_users.collect{|u| link_to_or_show(u.full_name, <%= namespace.blank? ? 'u' : "#{namespace}_user_path(u)" %>)}.join("<br/>")
   end
 end

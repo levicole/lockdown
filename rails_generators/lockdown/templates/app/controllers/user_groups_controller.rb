@@ -1,4 +1,4 @@
-class UserGroupsController < ApplicationController
+class <%= "#{namespace.camelcase}::" if @namspace >UserGroupsController < ApplicationController
 	before_filter :find_user_group, :only => [:show, :edit, :update, :destroy]
 	after_filter :update_permissions, :only => [:create, :update]
 
@@ -48,7 +48,11 @@ class UserGroupsController < ApplicationController
     respond_to do |format|
       if @user_group.save
         flash[:notice] = 'UserGroup was successfully created.'
-        format.html { redirect_to(@user_group) }
+        <%- if namespace -%>
+          format.html { redirect_to(<%= namespace %>_user_group_path(@user_group)) }
+        <% else %>
+          format.html { redirect_to(@user_group) }
+        <% end %>
         format.xml  { render :xml => @user_group, :status => :created, :location => @user_group }
       else
 				@all_permissions = Lockdown::System.permissions_assignable_for_user(current_user)
@@ -64,7 +68,11 @@ class UserGroupsController < ApplicationController
     respond_to do |format|
       if @user_group.update_attributes(params[:user_group])
         flash[:notice] = 'UserGroup was successfully updated.'
-        format.html { redirect_to(@user_group) }
+        <%- if namespace -%>
+          format.html { redirect_to(<%= namespace %>_user_group_path(@user_group)) }
+        <% else %>
+          format.html { redirect_to(@user_group) }
+        <% end %>
         format.xml  { head :ok }
       else
 				@all_permissions = Lockdown::System.permissions_assignable_for_user(current_user)

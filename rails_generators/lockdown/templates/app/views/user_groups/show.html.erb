@@ -1,6 +1,6 @@
 <%%= render :partial => "data" %>
 
 <%% unless Lockdown::System.has_user_group?(@user_group) %>
-  <%%= link_to 'Edit', edit_user_group_path(@user_group) %> |
+  <%%= link_to 'Edit', <%= namespace.blank? ? 'edit_user_groups_path(@user_group)' : "edit_#{namespace}_user_groups_path(@user_group)" %> %> |
 <%% end %>
-<%%= link_to 'Back', user_groups_path %>
+<%%= link_to 'Back', <%= namespace.blank? ? 'user_groups_path' : "#{namespace}_user_groups_path" %> %>

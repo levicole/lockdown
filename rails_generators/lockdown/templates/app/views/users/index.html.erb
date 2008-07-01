@@ -10,13 +10,13 @@
   <tr>
     <td><%%=h user.login %></td>
     <td><%%=h user.full_name %></td>
-    <td><%%= link_to 'Show', user %></td>
-    <td><%%= link_to 'Edit', edit_user_path(user) %></td>
-    <td><%%= link_to 'Destroy', user, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%%= link_to 'Show', <%= namespace.blank? ? "user" : "#{namespace}_user_path(user)" %> %></td>
+    <td><%%= link_to 'Edit', <%= namespace.blank? ? "edit_user(user)" : "edit_#{namespace}_user_path(user)" %> %></td>
+    <td><%%= link_to 'Destroy', <%= namespace.blank? ? "user" : "#{namespace}_userpath(user)" %>, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <%% end %>
 </table>
 
 <br />
 
-<%%= link_to 'New User', new_user_path %>
+<%%= link_to 'New User', <%= namespace.blank? ? "new_user_path" : "new_#{namespace}_user_path" %> %>

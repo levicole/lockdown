@@ -30,6 +30,6 @@ module UserGroupsHelper
   end
 
   def user_group_users_value
-    @user_group.all_users.collect{|u| link_to_or_show(u.full_name, u)}.join("<br/>")
+    @user_group.all_users.collect{|u| link_to_or_show(u.full_name, <%= namespace.blank? ? 'u' : "#{namespace}_user_path(u)" %>)}.join("<br/>")
   end
 end

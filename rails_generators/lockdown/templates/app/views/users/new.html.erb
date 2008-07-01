@@ -2,4 +2,4 @@
 
 <%%= render :partial => "form" %>
 
-<%%= link_to 'Back', users_path %>
+<%%= link_to 'Back', <%= namespace.blank? ? "users_path" : "#{namespace}_users_path" %> %>
