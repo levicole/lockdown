@@ -1,4 +1,8 @@
-class <%= "#{namespace.camelcase}::" if @namspace >UserGroupsController < ApplicationController
+<% if namespace %>
+  class <%= namespace.camelcase %>::UserGroupsController < ApplicationController
+<% else %>
+  class UserGroupsController < ApplicationController
+<% end %>
 	before_filter :find_user_group, :only => [:show, :edit, :update, :destroy]
 	after_filter :update_permissions, :only => [:create, :update]
 
@@ -48,7 +52,7 @@ class <%= "#{namespace.camelcase}::" if @namspace >UserGroupsController < Applic
     respond_to do |format|
       if @user_group.save
         flash[:notice] = 'UserGroup was successfully created.'
-        <%- if namespace -%>
+        <% if namespace %>
           format.html { redirect_to(<%= namespace %>_user_group_path(@user_group)) }
         <% else %>
           format.html { redirect_to(@user_group) }
@@ -68,7 +72,7 @@ class <%= "#{namespace.camelcase}::" if @namspace >UserGroupsController < Applic
     respond_to do |format|
       if @user_group.update_attributes(params[:user_group])
         flash[:notice] = 'UserGroup was successfully updated.'
-        <%- if namespace -%>
+        <% if namespace %>
           format.html { redirect_to(<%= namespace %>_user_group_path(@user_group)) }
         <% else %>
           format.html { redirect_to(@user_group) }

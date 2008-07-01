@@ -7,7 +7,7 @@
 
 <%%= error_messages_for :user_group %>
 
-<%% form_for(<%= namespace.blank? ? '@user_group' : ":url => #{@namspace}_user_groups_path, :method => :put"  %>) do |f| %>
+<%% form_for(<%= namespace.blank? ? '@user_group' : ":url => #{@namespace}_user_groups_path, :method => :put"  %>) do |f| %>
   <%%= render :partial => "data" %>
   <p> <%%= f.submit submit_label %> </p>
 <%% end %>

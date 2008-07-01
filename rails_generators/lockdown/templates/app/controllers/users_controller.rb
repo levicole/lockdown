@@ -1,4 +1,8 @@
-class <%= "#{namespace.camelcase}::" if @namspace >UsersController < ApplicationController
+<% if namespace %>
+  class <%= namespace.camelcase %>::UsersController < ApplicationController
+<% else %>
+  class UsersController < ApplicationController
+<% end %>
 	before_filter :find_user, :only => [:show, :edit, :update, :destroy]
 	after_filter :update_user_groups, :only => [:create, :update]
   # GET /users
@@ -60,7 +64,7 @@ class <%= "#{namespace.camelcase}::" if @namspace >UsersController < Application
     respond_to do |format|
       if @user.save
         flash[:notice] = 'User was successfully updated.'
-        <%- if namespace -%>
+        <% if namespace %>
           format.html { redirect_to(<%= namespace %>_user_path(@user_group)) }
         <% else %>
           format.html { redirect_to(@user) }

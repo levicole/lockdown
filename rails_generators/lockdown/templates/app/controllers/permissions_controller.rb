@@ -1,4 +1,8 @@
-class <%= "#{namespace.camelcase}::" if @namspace >PermissionsController < ApplicationController
+<% if namespace %>
+  class <%= namespace.camelcase %>::PermissionsController < ApplicationController
+<% else %>
+  class PermissionsController < ApplicationController
+<% end %>
   # GET /permissions
   # GET /permissions.xml
   def index

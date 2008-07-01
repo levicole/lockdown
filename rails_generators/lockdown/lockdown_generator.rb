@@ -11,7 +11,7 @@ end
 class LockdownGenerator < Rails::Generator::Base
   attr_accessor :file_name
   attr_accessor :action_name
-  attr_accessor :namspace, :view_path, :controller_path
+  attr_accessor :namespace, :view_path, :controller_path
   def initialize(runtime_args, runtime_options = {})
     super
     if Rails::VERSION::MAJOR >= 2 && Rails::VERSION::MINOR >= 1
@@ -19,24 +19,30 @@ class LockdownGenerator < Rails::Generator::Base
     else
       @action_name = "@action_name"
     end
-    @namespace = runtime_options[:namespace] if runtime_options[:namespace]
-
+    @namespace = options[:namespace] if options[:namespace]
+    if @namespace
+      @view_path = "app/views/#{@namespace}"
+      @controller_path = "app/controllers/#{@namespace}"
+    else
+      @view_path = "app/views"
+      @controller_path = "app/controllers"
+    end
   end
 
   def manifest
+    puts @namespace
     record do |m|
       # Ensure appropriate folder(s) exists
       m.directory 'app/helpers'
       m.directory "#{@view_path}"
       m.directory "#{@controller_path}"
-
       if options[:all]
         options[:management] = true
         options[:login] = true
       end
-      add_management(m, ) if options[:management]
+      add_management(m) if options[:management]
 
-      add_login(m, ) if options[:login]
+      add_login(m) if options[:login]
 
       add_models(m)
     end #record do |m|
@@ -225,6 +231,8 @@ EOS
     opt.separator 'Options:'
     opt.on("--all",
       "Install all Lockdown templates") { |v| options[:all] = v }
+    opt.on("--namespace NAMESPACE",
+      "Install lockdown templates with a namespace") { |v| options[:namespace] = v }
     opt.on("--models",
       "Install only models and migrations (skip migrations by --no_migrations).") { |v| options[:models] = v }
     opt.on("--management",
