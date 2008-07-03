@@ -1,8 +1,4 @@
-<% if namespace %>
-  class <%= namespace.camelcase %>::UserGroupsController < ApplicationController
-<% else %>
-  class UserGroupsController < ApplicationController
-<% end %>
+class <%= "#{namespace.camelcase}::" unless namespace.blank? %>UserGroupsController < ApplicationController
 	before_filter :find_user_group, :only => [:show, :edit, :update, :destroy]
 	after_filter :update_permissions, :only => [:create, :update]
 
@@ -92,7 +88,7 @@
     @user_group.destroy
 
     respond_to do |format|
-      format.html { redirect_to(user_groups_url) }
+      format.html { redirect_to(<%= namespace.blank? ? 'user_groups_url' : "#{namespace}_user_groups_url" %>) }
       format.xml  { head :ok }
     end
   end

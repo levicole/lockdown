@@ -11,8 +11,8 @@
     <td><%%=h user.login %></td>
     <td><%%=h user.full_name %></td>
     <td><%%= link_to 'Show', <%= namespace.blank? ? "user" : "#{namespace}_user_path(user)" %> %></td>
-    <td><%%= link_to 'Edit', <%= namespace.blank? ? "edit_user(user)" : "edit_#{namespace}_user_path(user)" %> %></td>
-    <td><%%= link_to 'Destroy', <%= namespace.blank? ? "user" : "#{namespace}_userpath(user)" %>, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%%= link_to 'Edit', <%= namespace.blank? ? "edit_user_path(user)" : "edit_#{namespace}_user_path(user)" %> %></td>
+    <td><%%= link_to 'Destroy', <%= namespace.blank? ? "user" : "#{namespace}_user_path(user)" %>, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <%% end %>
 </table>

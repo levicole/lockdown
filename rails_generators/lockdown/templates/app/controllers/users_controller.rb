@@ -1,8 +1,4 @@
-<% if namespace %>
-  class <%= namespace.camelcase %>::UsersController < ApplicationController
-<% else %>
-  class UsersController < ApplicationController
-<% end %>
+class <%= "#{namespace.camelcase}::" unless namespace.blank? %>UsersController < ApplicationController
 	before_filter :find_user, :only => [:show, :edit, :update, :destroy]
 	after_filter :update_user_groups, :only => [:create, :update]
   # GET /users
@@ -48,7 +44,7 @@
 
 		if @user.save
 			flash[:notice] = "Thanks for signing up!"
-			redirect_to(users_path)
+			redirect_to(<%= namespace.blank? ? 'users_url' : "#{namespace}_users_url" %>)
 		else
 			@user_groups_for_user = Lockdown::System.user_groups_assignable_for_user(current_user)
 			flash[:error] = "Please correct the following issues"
@@ -64,11 +60,7 @@
     respond_to do |format|
       if @user.save
         flash[:notice] = 'User was successfully updated.'
-        <% if namespace %>
-          format.html { redirect_to(<%= namespace %>_user_path(@user_group)) }
-        <% else %>
-          format.html { redirect_to(@user) }
-        <% end %>
+          format.html { redirect_to(<%= namespace.blank?  ? '@user' : "#{namespace}_user_url(@user)"%>) }
         format.xml  { head :ok }
       else
         @user_groups_for_user = Lockdown::System.user_groups_assignable_for_user(current_user)
@@ -84,7 +76,7 @@
     @user.destroy
 
     respond_to do |format|
-      format.html { redirect_to(users_url) }
+      format.html { redirect_to(<%= namespace.blank? ? 'users_url' : "#{namespace}_users_url" %>) }
       format.xml  { head :ok }
     end
   end

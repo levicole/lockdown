@@ -9,9 +9,7 @@ if Rails::VERSION::MAJOR >= 2 && Rails::VERSION::MINOR >= 1
 end
 
 class LockdownGenerator < Rails::Generator::Base
-  attr_accessor :file_name
-  attr_accessor :action_name
-  attr_accessor :namespace, :view_path, :controller_path
+  attr_accessor :file_name, :action_name, :namespace, :view_path, :controller_path
   def initialize(runtime_args, runtime_options = {})
     super
     if Rails::VERSION::MAJOR >= 2 && Rails::VERSION::MINOR >= 1
@@ -20,6 +18,8 @@ class LockdownGenerator < Rails::Generator::Base
       @action_name = "@action_name"
     end
     @namespace = options[:namespace] if options[:namespace]
+    # so if the namespace option exists it sets the correct view path and controller path,
+    # I didn't change the helpers path, since they are automatically loaded anyway in application_helper...
     if @namespace
       @view_path = "app/views/#{@namespace}"
       @controller_path = "app/controllers/#{@namespace}"
@@ -86,9 +86,11 @@ class LockdownGenerator < Rails::Generator::Base
     m.template "app/views/permissions/show.html.erb",
       "#{@view_path}/permissions/show.html.erb"
 
-    m.route_resources "permissions"
-    m.route_resources "user_groups"
-    m.route_resources "users"
+    if @namespace.blank?
+      m.route_resources "permissions"
+      m.route_resources "user_groups"
+      m.route_resources "users"
+    end
 
     add_management_permissions(m)
   end
@@ -96,13 +98,13 @@ class LockdownGenerator < Rails::Generator::Base
   def add_login(m)
     m.directory "#{@view_path}/sessions"
 
-    m.file "app/controllers/sessions_controller.rb",
+    m.template "app/controllers/sessions_controller.rb",
       "#{@controller_path}/sessions_controller.rb"
 
-    m.file "app/views/sessions/new.html.erb",
+    m.template "app/views/sessions/new.html.erb",
       "#{@view_path}/sessions/new.html.erb"
     
-    m.route_resources "sessions"
+    m.route_resources "sessions" if @namespace.blank?
 
     add_login_permissions(m)
     add_login_routes(m)
@@ -174,17 +176,17 @@ class LockdownGenerator < Rails::Generator::Base
   end
 
   def add_login_permissions(m)
-    add_permissions m, "set_permission :sessions_management, all_methods(:sessions)"
+    add_permissions m, "set_permission :sessions_management, all_methods(:#{@namespace.blank? ? "sessions" : "admin__sessions"})"
     
     add_predefined_user_group m, "set_public_access :sessions_management"
   end
 
   def add_management_permissions(m)
     perms = []
-    perms << "set_permission :users_management, all_methods(:users)"
-    perms << "set_permission :user_groups_management, all_methods(:user_groups)"
-    perms << "set_permission :permissions_management, all_methods(:permissions)"
-    perms << "set_permission :my_account, only_methods(:users, :edit, :update, :show)"
+    perms << "set_permission :users_management, all_methods(:#{@namespace.blank? ? "users" : "#{@namespace}__users"})"
+    perms << "set_permission :user_groups_management, all_methods(:#{@namespace.blank? ? "user_groups" : "#{@namespace}__user_groups"})"
+    perms << "set_permission :permissions_management, all_methods(:#{@namespace.blank? ? "permissions" : "#{@namespace}__permissions"})"
+    perms << "set_permission :my_account, only_methods(:#{@namespace.blank? ? "users" : "#{@namespace}__users"}, :edit, :update, :show)"
 
     add_permissions m, perms.join("\n  ")
     
@@ -206,14 +208,22 @@ class LockdownGenerator < Rails::Generator::Base
   end
 
   def add_login_routes(m)
-    home = %Q(map.home '', :controller => 'sessions', :action => 'new')
-    login = %Q(map.login '/login', :controller => 'sessions', :action => 'new')
-    logout =%Q(map.logout '/logout', :controller => 'sessions', :action => 'destroy')
-			
+    if @namespace.blank?
+      home = %Q(\tmap.home '', :controller => 'sessions', :action => 'new')
+      login = %Q(\tmap.login '/login', :controller => 'sessions', :action => 'new')
+      logout =%Q(\tmap.logout '/logout', :controller => 'sessions', :action => 'destroy')
+      routes = [home, login, logout].join("\n\n")
+    else
+      home = %Q(\tmap.home '', :controller => '#{@namespace}/sessions', :action => 'new')
+      login = %Q(\tmap.login '/login', :controller => '#{@namespace}/sessions', :action => 'new')
+      logout =%Q(\tmap.logout '/logout', :controller => '#{@namespace}/sessions', :action => 'destroy')
+      resources = %Q(\tmap.namespace :#{@namespace} do |#{@namespace}|\n\t\t#{@namespace}.resources :sessions\n\t\t#{@namespace}.resources :permissions\n\t\t#{@namespace}.resources :users\n\t\t#{@namespace}.resources :user_groups\n\tend)
+      routes = [home,  login, logout, resources].join("\n\n")
+    end
     sentinel = 'ActionController::Routing::Routes.draw do |map|'
                 
     m.gsub_file 'config/routes.rb', /(#{Regexp.escape(sentinel)})/mi do |match|
-      "#{match}\n  #{home}\n\n  #{login}\n\n  #{logout}\n"
+      "#{match}\n #{routes}\n"
     end
   end
 
